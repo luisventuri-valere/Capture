@@ -1,0 +1,287 @@
+{
+  "id": "opp-001",
+  "noticeId": "DHS-2026-CLOUD-0042",
+  "title": "Enterprise Cloud Migration and Modernization Services",
+  "lastUpdated": "2026-02-10T14:30:00Z",
+  "_provenance": "DERIVED MOCK — no SOL-001 capture exists for opp-001. Synthesized 2026-06-11 from opp-001-strategy.json (WT-01..03, D-01..04), opp-001-teaming.json (CG-01..03, partners), opp-001-datacalls.json (DC-001 quality notes), and the X-ray Solutioning surface. Pending Greg ratification. Never present as live agent output.",
+  "generatedBy": "Solutioning Agent (SOL-001) · validated by Strength Validator (STV-001) · v3 · 2026-02-10",
+  "overallConfidence": 72,
+  "overview": {
+    "winThemes": [
+      { "id": "WT-01", "theme": "Accelerated Mission Outcomes Through Proven Methodology", "source": "Strategy §2 (CSA-001 cascade)" },
+      { "id": "WT-02", "theme": "Zero-Day Compliance Through FedRAMP High Authorization", "source": "Strategy §2 (CSA-001 cascade)" },
+      { "id": "WT-03", "theme": "Mission-Focused Security Integration, Not Bolted-On Compliance", "source": "Strategy §2 (CSA-001 cascade)" }
+    ],
+    "goalCoverage": {
+      "percent": 75,
+      "covered": ["M.1 Technical Approach", "M.2 Management Approach", "M.3 Past Performance"],
+      "uncovered": [
+        { "factor": "M.4 — Transition & Staffing", "note": "No win theme or validated strength targets this factor yet. Staffing tab inputs (Key Personnel LOIs, clearance pipeline) are the natural source — flagged to Staffing." }
+      ]
+    },
+    "counts": { "validated": 3, "needsWork": 2, "shaping": 1, "stvPassed": 3, "stvConditional": 2, "stvFailed": 1 },
+    "howThreshold": 70
+  },
+  "solutionElements": [
+    {
+      "id": "sol-1",
+      "category": "Cloud Migration Execution",
+      "title": "Wave-Planned Migration Factory for the 340+ Application Portfolio",
+      "status": "validated",
+      "linkage": { "winThemes": ["WT-01"], "discriminators": ["D-02"], "capabilityGaps": ["CG-01"], "partner": "DataBridge Analytics" },
+      "customerSaid": "Migrate and modernize 340+ applications, including 160+ legacy database systems (Oracle 11g, IBM DB2, Sybase ASE) requiring schema transformation, data cleansing, and validation for cloud-native architectures.",
+      "customerReallyWants": "Confidence the migration will not slip again. GAO findings on DHS timeline slippage have leadership exposed, and industry day signals confirmed the incumbent is behind on wave planning. They need a contractor who arrives with the portfolio already understood — not one who spends the first six months discovering it.",
+      "customerDoesntKnow": "CloudPathfinder, our AI-powered assessment tool, cuts the migration planning phase by 40% and finds the failure points humans miss — at the VA it assessed 180 applications in 3.5 months versus a 6-month estimate and identified 23 undocumented dependencies that would have caused migration failures. Paired with DataBridge's ETL factory (2M+ records/day throughput), the wave plan for all 340+ applications is produced at a pace no manual assessment can match.",
+      "solution": {
+        "statement": "Deliver a wave-planned migration of the full 340+ application portfolio, sequenced by CloudPathfinder dependency analysis and executed through a DataBridge-operated ETL factory sized for 160+ legacy database systems.",
+        "method": "CloudPathfinder automated portfolio assessment and dependency mapping across all 340+ applications. Wave grouping by dependency cluster and mission criticality, validated with DHS OCIO. ETL pipelines (Oracle/DB2/Sybase to PostgreSQL/Aurora) operated by DataBridge at 2M+ records/day with data quality assessment and remediation gates per wave. Continuous validation against DHS data classification and handling requirements.",
+        "metric": "Full-portfolio assessment at the pace proven at the VA (180 applications in 3.5 months vs. a 6-month estimate); zero migration failures attributable to undocumented dependencies; every wave passes data-quality gates before cutover.",
+        "proof": "VA Migration — completed 4 months ahead of schedule; CloudPathfinder identified 23 undocumented dependencies that would have caused migration failures. CloudPathfinder delivers a 40% reduction in migration planning."
+      },
+      "evidence": [
+        "VA Migration — 4 months ahead of schedule (WT-01 evidence anchor)",
+        "Army Enterprise Cloud Migration (Very Good CPARS) — largest prior data migration, 180 applications; CloudPathfinder metrics documented (DC-001-02)",
+        "DataBridge Analytics — incumbent-side ETL experience across DHS legacy schemas; USCIS Data Modernization ($4.2M, Satisfactory CPARS)"
+      ],
+      "howRatio": 86,
+      "sbsValidation": {
+        "overall": "PASSED",
+        "rules": {
+          "demonstrable": { "verdict": "PASS", "rationale": "Backed by completed contracts with CPARS of record and tool-generated metrics (CloudPathfinder assessment pace, dependency catch)." },
+          "differentiating": { "verdict": "PASS", "rationale": "Per D-02, no competitor offers an equivalent AI-powered assessment; the closest alternative is manual assessment taking twice as long." },
+          "defensible": { "verdict": "PASS", "rationale": "Evidence anchors are recent, same-domain, and verifiable through CPARS and CORs confirmed in DC-001." }
+        },
+        "suggestions": []
+      },
+      "gapResolution": null,
+      "envelope": {
+        "confidence": 82,
+        "aiReasoning": "This element pairs the strongest discriminator with the largest capability gap: CloudPathfinder (D-02) answers the customer's slippage anxiety, and DataBridge closes CG-01 at a scale 2x TechForward's largest prior migration. The claim is method-led (86% HOW), which is what M.1 evaluators reward.",
+        "sources": [
+          { "label": "CSA-001 Strategy — WT-01 / D-02" },
+          { "label": "TMI-001 Teaming — CG-01 (DataBridge)" },
+          { "label": "DC-001 Past Performance data call — Army package" },
+          { "label": "Industry Day notes — 2026-01-15" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Generated from Strategy WT-01/D-02 and Teaming CG-01 cascade" }]
+      }
+    },
+    {
+      "id": "sol-2",
+      "category": "Cloud Security & Compliance",
+      "title": "Zero-Day Compliance: FedRAMP High From Award Day One",
+      "status": "validated",
+      "linkage": { "winThemes": ["WT-02"], "discriminators": ["D-01"], "capabilityGaps": [], "partner": null },
+      "customerSaid": "All cloud services must operate within FedRAMP-authorized environments with continuous compliance monitoring throughout migration and operations.",
+      "customerReallyWants": "Certainty that authorization will not become the schedule. Every new cloud deployment at DHS has been hostage to a 6–12 month authorization timeline, and the incumbent's agency ATO expiration makes continuity a live risk at exactly the moment of contract transition.",
+      "customerDoesntKnow": "TechForward is already operational: 3 active FedRAMP High ATOs maintained since 2023 with zero audit findings across 6 assessments. While competitors seek authorization, we begin migrating — there is no authorization gap to manage, and no continuity risk at transition.",
+      "solution": {
+        "statement": "Operate the entire migration within TechForward's active FedRAMP High environment from award day one, eliminating the authorization timeline as a schedule risk and de-risking the incumbent-transition window.",
+        "method": "Land all migration workloads in the existing FedRAMP High authorized environment. Maintain continuous compliance monitoring with the same zero-findings posture demonstrated across 6 assessments. Transition continuity plan keyed to the incumbent's agency ATO expiration so DHS carries no authorization gap.",
+        "metric": "Zero authorization-related schedule risk; compliance posture continuous through the award transition; audit-finding record maintained at zero.",
+        "proof": "3 active FedRAMP High ATOs maintained since 2023 with zero findings across 6 assessments (D-01 proof). Peraton's agency ATO expiration eliminates the incumbent's equivalent claim (WT-02 evidence anchor)."
+      },
+      "evidence": [
+        "3 active FedRAMP High ATOs — zero audit findings across 6 assessments",
+        "DHS Cybersecurity Modernization ($12.5M, Exceptional CPARS) — active DHS work under the same compliance regime",
+        "Treasury IT Modernization ($6.2M, Very Good CPARS) — FedRAMP compliance achievement (DC-001-03 narrative)"
+      ],
+      "howRatio": 74,
+      "sbsValidation": {
+        "overall": "PASSED",
+        "rules": {
+          "demonstrable": { "verdict": "PASS", "rationale": "ATOs are documents of record; the zero-findings assessment history is independently verifiable." },
+          "differentiating": { "verdict": "PASS", "rationale": "Per D-01, the only competitor with an active FedRAMP High for cloud migration services: Peraton's agency ATO is expiring, Leidos/NexGen holds Moderate only, CACI's single High is different scope." },
+          "defensible": { "verdict": "PASS", "rationale": "Claims rest on current authorizations, not past projects — the strongest possible evidence class under evaluator scrutiny." }
+        },
+        "suggestions": []
+      },
+      "gapResolution": null,
+      "envelope": {
+        "confidence": 89,
+        "aiReasoning": "The highest-confidence element on the board: the discriminator is a present-tense fact (active ATOs) rather than a past-performance claim, and the incumbent's expiring ATO converts it from advantage into displacement leverage at transition.",
+        "sources": [
+          { "label": "CSA-001 Strategy — WT-02 / D-01" },
+          { "label": "FedRAMP authorization records — own ATOs" },
+          { "label": "Competitive intel — CMP-001 (incumbent ATO status)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Generated from Strategy WT-02/D-01" }]
+      }
+    },
+    {
+      "id": "sol-3",
+      "category": "Security Architecture",
+      "title": "Mission-Embedded Zero Trust — Designed Into Every Wave",
+      "status": "validated",
+      "linkage": { "winThemes": ["WT-03"], "discriminators": ["D-04"], "capabilityGaps": [], "partner": null },
+      "customerSaid": "Implement zero trust architecture aligned to the CISA maturity model, with continuous compliance monitoring integrated into the migration rather than applied afterward.",
+      "customerReallyWants": "Security that is part of how the migration is built, not a compliance layer bolted on at the end — and a contractor that already understands DHS's specific security environment instead of learning it on contract.",
+      "customerDoesntKnow": "TechForward embedded zero trust from day one on DHS CISA work and reached ZTA Level 3 maturity in 8 months where others take 18+, with a 15-minute mean time to detect on the CISA SOC. Our migration wave design carries those same controls into every wave — DHS's security requirements are not new to us; they are our active practice on a sister component.",
+      "solution": {
+        "statement": "Embed zero trust architecture and continuous compliance monitoring into migration planning from day one, carrying the ZTA controls proven on DHS CISA into every migration wave.",
+        "method": "ZTA control baseline applied at wave design, not post-migration. Continuous compliance monitoring integrated with the FedRAMP High environment. Security architecture reviews gated per wave, run by the team that delivered ZTA Level 3 on DHS CISA in 8 months with a 15-minute MTTD.",
+        "metric": "ZTA maturity progression on the pace demonstrated at CISA (Level 3 in 8 months vs. an 18+ month industry norm); detection performance benchmarked to the 15-minute MTTD record; zero security findings introduced by migration waves.",
+        "proof": "DHS CISA ZTA implementation — Level 3 maturity in 8 months; 15-minute MTTD (WT-03 evidence anchors). Exceptional CPARS on active DHS cybersecurity work (D-04)."
+      },
+      "evidence": [
+        "DHS CISA ZTA implementation — zero trust Level 3 in 8 months (vs. 18+ typical)",
+        "15-minute MTTD on the CISA SOC (WT-03 evidence anchor)",
+        "DHS Cybersecurity Modernization ($12.5M, Exceptional CPARS) — proven DHS mission understanding (D-04)"
+      ],
+      "howRatio": 78,
+      "sbsValidation": {
+        "overall": "PASSED",
+        "rules": {
+          "demonstrable": { "verdict": "PASS", "rationale": "ZTA Level 3 timeline and MTTD are measured outcomes on a named, active DHS contract." },
+          "differentiating": { "verdict": "PASS", "rationale": "Same-department, same-security-regime experience (D-04): incumbent's weakness was confirmed at industry day; competitors argue transferable experience, TechForward shows DHS-resident experience." },
+          "defensible": { "verdict": "PASS", "rationale": "Evidence is current, same-agency, and CPARS-anchored — the combination evaluators can verify directly." }
+        },
+        "suggestions": []
+      },
+      "gapResolution": null,
+      "envelope": {
+        "confidence": 84,
+        "aiReasoning": "WT-03 converts a compliance obligation into a mission story: the CISA numbers (8 months to Level 3, 15-min MTTD) are the only same-department ZTA proof points in the field, which is why this element pairs with D-04 rather than standing alone.",
+        "sources": [
+          { "label": "CSA-001 Strategy — WT-03 / D-04" },
+          { "label": "CPARS — own contract records (DHS CISA)" },
+          { "label": "Industry Day notes — 2026-01-15 (incumbent weakness)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Generated from Strategy WT-03/D-04" }]
+      }
+    },
+    {
+      "id": "sol-4",
+      "category": "Cloud Operations & FinOps",
+      "title": "FinOps Cost Optimization Built Into Operations",
+      "status": "needs-work",
+      "linkage": { "winThemes": ["WT-01"], "discriminators": [], "capabilityGaps": [], "partner": null },
+      "customerSaid": "Provide ongoing cloud operations including cost management and optimization across the migrated portfolio.",
+      "customerReallyWants": "Cloud spend that leadership can predict and defend. A migration of this size creates a new, visible cost line — they want optimization treated as an operating discipline from cutover, not a one-time exercise after costs balloon.",
+      "customerDoesntKnow": "FinOps and cloud cost optimization is one of TechForward's core prime contributions (not subcontracted), delivered by the same team operating the migration waves — cost design happens at wave planning, where the savings are structural rather than corrective.",
+      "solution": {
+        "statement": "Operate FinOps as an embedded discipline from the first wave cutover: cost allocation, right-sizing, and optimization designed into the migration rather than retrofitted after spend accumulates.",
+        "method": "Cost model established per wave at planning time. Right-sizing and optimization reviews run as part of wave acceptance. FinOps reporting integrated into the program operating rhythm with DHS OCIO.",
+        "metric": "Cloud cost model in place before each wave cutover; optimization reviews completed at every wave acceptance; savings reported with verifiable baselines.",
+        "proof": "FinOps and cloud cost optimization is a named prime key contribution on this pursuit; FinOps savings metrics from the Army Cloud Migration package are documented but pending independent verification (DC-001-02)."
+      },
+      "evidence": [
+        "Prime key contribution — FinOps and cloud cost optimization (Teaming §1)",
+        "Army Enterprise Cloud Migration (Very Good CPARS) — FinOps savings data documented, verification pending (DC-001-02 quality note)"
+      ],
+      "howRatio": 80,
+      "sbsValidation": {
+        "overall": "CONDITIONAL",
+        "rules": {
+          "demonstrable": { "verdict": "PASS", "rationale": "FinOps delivery is documented in the Army past-performance package collected under DC-001." },
+          "differentiating": { "verdict": "CONDITIONAL", "rationale": "FinOps capability is widely claimed across the field; differentiation depends on the embedded-at-wave-planning method and on verified savings figures, not the capability itself." },
+          "defensible": { "verdict": "CONDITIONAL", "rationale": "DC-001-02 flags the Army FinOps savings data as needing independent verification — citing unverified dollar figures invites evaluator challenge." }
+        },
+        "suggestions": [
+          "Independently verify the Army FinOps savings data flagged in DC-001-02 before any dollar figure enters proposal text.",
+          "Sharpen differentiation around the embedded-at-wave-planning method (HOW), not the FinOps capability claim (WHAT)."
+        ]
+      },
+      "gapResolution": "Army FinOps savings metrics are documented but flagged 'needs independent verification' in DC-001-02. Verification task assigned within the past-performance data call; until complete, the claim runs method-led without specific savings percentages.",
+      "envelope": {
+        "confidence": 68,
+        "aiReasoning": "The method is strong (80% HOW) but the evidence chain has a flagged weak link: DC-001-02's verification note on the Army FinOps figures. Held at CONDITIONAL deliberately — promoting this to validated before verification would create exactly the evaluator exposure STV-001 exists to prevent.",
+        "sources": [
+          { "label": "TMI-001 Teaming — prime keyContributions" },
+          { "label": "DC-001 Past Performance data call — Army package quality notes" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Generated from prime key contributions; held conditional on DC-001-02 verification flag" }]
+      }
+    },
+    {
+      "id": "sol-5",
+      "category": "ITSM Integration",
+      "title": "DHS-Specific ServiceNow Integration",
+      "status": "needs-work",
+      "linkage": { "winThemes": [], "discriminators": [], "capabilityGaps": ["CG-02"], "partner": "GovFlow Technologies" },
+      "customerSaid": "All cloud services must integrate with the DHS enterprise ServiceNow instance for ITSM, CMDB, change management, and incident management.",
+      "customerReallyWants": "Integration specifics, not ServiceNow generalities. DHS OCIO's instance has component-level routing rules, approval chains, and CMDB conventions that generic ServiceNow experience does not cover — evaluators familiar with that complexity will probe for instance-specific knowledge.",
+      "customerDoesntKnow": "GovFlow Technologies — our ServiceNow subcontractor — has configured DHS-specific workflows on the department's own instance, with a Very Good CPARS on DHS ServiceNow integration work. The team that knows the routing rules is already on ours.",
+      "solution": {
+        "statement": "Deliver DHS ServiceNow integration through GovFlow Technologies, covering CMDB integration with cloud asset discovery, automated change management workflows, and component-level routing configuration on the DHS enterprise instance.",
+        "method": "GovFlow-led configuration of DHS-specific workflows and approval chains. CMDB integration with cloud asset discovery tooling as waves migrate. Automated change management aligned to DHS OCIO conventions, with component-level routing per CG-02 required capabilities.",
+        "metric": "Every migrated service registered and routed correctly on the DHS instance at wave acceptance; change and incident workflows operational per OCIO conventions from cutover.",
+        "proof": "GovFlow Technologies — DHS ServiceNow Integration ($3.1M, Very Good CPARS, partner-provided reference)."
+      },
+      "evidence": [
+        "GovFlow Technologies — DHS ServiceNow Integration ($3.1M, Very Good CPARS, partner-provided)",
+        "CG-02 required capabilities — DHS instance configuration, CMDB integration, automated change management, component-level routing"
+      ],
+      "howRatio": 62,
+      "sbsValidation": {
+        "overall": "CONDITIONAL",
+        "rules": {
+          "demonstrable": { "verdict": "CONDITIONAL", "rationale": "The capability is real but lives in a partner whose teaming agreement is not yet executed (NDA signed, TA pending per CG-02) — TechForward cannot yet demonstrate it as team capability of record." },
+          "differentiating": { "verdict": "CONDITIONAL", "rationale": "DHS-instance-specific experience differentiates, but the alternate-partner list for CG-02 (Accenture Federal SB teaming, Greystone Federal) shows competitors can assemble similar coverage." },
+          "defensible": { "verdict": "PASS", "rationale": "GovFlow's CPARS is verifiable and the reference is same-agency, same-platform." }
+        },
+        "suggestions": [
+          "Execute the GovFlow teaming agreement (term sheet stage, est. 2026-02-20) — the element cannot be claimed as team capability until the TA is signed.",
+          "Raise the HOW ratio above the 70 threshold: lead with the configuration method (routing, CMDB, approval chains), not the partnership fact."
+        ]
+      },
+      "gapResolution": "CG-02 status: FILLING — GovFlow NDA signed, TA pending (term sheet, est. 2026-02-20). Element promotes to validated on TA execution plus a HOW-led rewrite of the claim.",
+      "envelope": {
+        "confidence": 61,
+        "aiReasoning": "Everything here depends on a signature: the capability, the reference, and the differentiation all route through GovFlow, whose TA is at term-sheet stage. The 62% HOW ratio compounds the issue — the current claim leans on who the partner is rather than how the integration is done.",
+        "sources": [
+          { "label": "TMI-001 Teaming — CG-02 (GovFlow)" },
+          { "label": "Partner-provided reference — GovFlow DHS ServiceNow ($3.1M)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Generated from Teaming CG-02; conditional pending TA execution" }]
+      }
+    },
+    {
+      "id": "sol-6",
+      "category": "Legacy Modernization",
+      "title": "Mainframe Application Modernization (12 z/OS Applications)",
+      "status": "shaping",
+      "linkage": { "winThemes": [], "discriminators": [], "capabilityGaps": ["CG-03"], "partner": "MainframeNext Inc. (unsigned)" },
+      "customerSaid": "Modernize the 12 applications running on IBM z/OS mainframes as part of the portfolio migration, including application decomposition and re-platforming to cloud-native architectures.",
+      "customerReallyWants": "A credible answer for the hardest 3.5% of the portfolio. The 12 z/OS applications are where migrations stall — they want evidence the team has a real mainframe approach, not a line item that assumes the problem away.",
+      "customerDoesntKnow": "The z/OS scope itself is ambiguous in the draft PWS — whether all 12 applications are migration targets or some are retirement candidates materially changes the approach. We are shaping that scope through the formal Q&A channel rather than guessing, which is itself the disciplined answer evaluators reward.",
+      "solution": {
+        "statement": "Deliver mainframe modernization for the 12 z/OS applications through a specialized subcontractor (MainframeNext Inc., sourcing in progress), with scope sharpened through draft-PWS clarifying questions before the approach is finalized.",
+        "method": "Pending scope clarification: application decomposition and re-platforming approach per CG-03 required capabilities, executed by the mainframe partner. Clarifying questions on migrate-vs-retire disposition of the 12 applications submitted through the Q&A channel (due 2026-02-20).",
+        "metric": "To be finalized on scope clarification and partner signature — no metric is claimable while the partner is unsigned and the application disposition is unconfirmed.",
+        "proof": "None claimable yet. TechForward has no z/OS past performance of record; the proof case depends on MainframeNext (NDA in legal review, est. 2026-02-12) or the named alternate."
+      },
+      "evidence": [
+        "CG-03 — 12 of DHS's 340+ applications run on IBM z/OS (≈3.5% of portfolio)",
+        "MainframeNext Inc. — recommended partner, NDA in legal review (est. 2026-02-12)",
+        "Astadia Federal — named alternate partner (CG-03)"
+      ],
+      "howRatio": 55,
+      "sbsValidation": {
+        "overall": "FAILED",
+        "rules": {
+          "demonstrable": { "verdict": "FAIL", "rationale": "No signed partner and no TechForward z/OS past performance of record — the capability cannot currently be demonstrated as belonging to the team." },
+          "differentiating": { "verdict": "FAIL", "rationale": "Without a committed partner there is no basis to claim advantage; competitors with in-house mainframe practices currently hold the stronger position on this element." },
+          "defensible": { "verdict": "CONDITIONAL", "rationale": "The shaping posture (formal Q&A on scope) is defensible as process, but no capability claim would survive evaluator scrutiny today." }
+        },
+        "suggestions": [
+          "Execute the MainframeNext NDA (in legal review, est. 2026-02-12) and accelerate toward TA — the element cannot enter the proposal unsigned.",
+          "Submit the z/OS migrate-vs-retire clarifying questions through the Q&A channel (due 2026-02-20); the answer may shrink or reshape the requirement.",
+          "Hold Astadia Federal warm as the alternate; if MainframeNext stalls past the TA milestone, switch rather than slip.",
+          "Do not draft proposal language for this element until a partner is signed — a WHAT-only claim here is an evaluator target."
+        ]
+      },
+      "gapResolution": "CG-03 status: IDENTIFYING. Partner unsigned (MainframeNext NDA in legal review, est. 2026-02-12; Astadia Federal alternate). Scope ambiguity on the 12 z/OS applications being shaped via clarifying questions due 2026-02-20. Element is deliberately held at FAILED until both close — this is the honest state, not a defect.",
+      "envelope": {
+        "confidence": 48,
+        "aiReasoning": "Lowest-confidence element on the board, and correctly so: the capability gap is real (CG-03), the partner is unsigned, and the requirement itself is ambiguous in the draft PWS. Confidence below 50 reflects limited data — the shaping actions (NDA, Q&A) are the path to re-scoring, and the ANALYZE workflow can sharpen the z/OS intelligence.",
+        "sources": [
+          { "label": "TMI-001 Teaming — CG-03 (MainframeNext, Astadia alternate)" },
+          { "label": "Draft PWS analysis — z/OS application inventory" },
+          { "label": "Customer Engagement §4 — Q&A clarifying questions (due 2026-02-20)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Generated from Teaming CG-03; held at shaping pending partner signature and scope clarification" }]
+      }
+    }
+  ]
+}

@@ -1,0 +1,360 @@
+{
+  "id": "opp-001",
+  "noticeId": "DHS-2026-CLOUD-0042",
+  "title": "Enterprise Cloud Migration and Modernization Services",
+  "lastUpdated": "2026-02-10T11:20:00Z",
+  "teamingStrategy": {
+    "approach": "Prime Contractor",
+    "rationale": "TechForward's 8(a) certification, FedRAMP High ATO, and DHS past performance position us as the natural prime. Subcontractors fill targeted capability gaps in data migration, ServiceNow integration, and mainframe modernization without diluting our discriminators. Prime position maximizes our win probability and contract control.",
+    "sbTarget": 35,
+    "sbTargetBasis": "DHS OSDBU guidance mandates minimum 33% SB subcontracting for contracts exceeding $10M. We target 35% to exceed minimum and demonstrate genuine SB commitment. All three subcontractors are certified small businesses.",
+    "teamValues": [
+      "Mission-first: Every team member must contribute directly to DHS outcomes",
+      "Complementary capabilities: No redundancy — each partner fills a specific gap",
+      "Past performance: All partners must have Satisfactory or better CPARS",
+      "Cultural fit: Agile, collaborative, low bureaucracy",
+      "Financial stability: Partners must demonstrate 3+ years of positive cash flow"
+    ],
+    "teamStructure": {
+      "prime": {
+        "name": "TechForward Solutions",
+        "role": "Prime Contractor — Cloud Migration, Security, DevSecOps, Program Management",
+        "workshare": 55,
+        "certifications": ["8(a)", "SDVOSB", "FedRAMP High ATO"],
+        "keyContributions": [
+          "Program management and overall delivery accountability",
+          "Cloud migration planning and execution (AWS/Azure)",
+          "Zero trust architecture implementation",
+          "DevSecOps pipeline design and operations",
+          "FedRAMP continuous monitoring",
+          "FinOps and cloud cost optimization",
+          "CloudPathfinder AI assessment tool"
+        ]
+      },
+      "subcontractors": [
+        {
+          "name": "DataBridge Analytics",
+          "role": "Data Migration & ETL Execution",
+          "workshare": 20,
+          "relationship": "Subcontractor",
+          "certifications": ["SBA 8(a)", "SDB"]
+        },
+        {
+          "name": "GovFlow Technologies",
+          "role": "ServiceNow Integration & ITSM",
+          "workshare": 15,
+          "relationship": "Subcontractor",
+          "certifications": ["SBA 8(a)", "HUBZone"]
+        },
+        {
+          "name": "MainframeNext Inc.",
+          "role": "Mainframe Application Modernization",
+          "workshare": 10,
+          "relationship": "Subcontractor",
+          "certifications": ["Small Business", "WOSB"]
+        }
+      ]
+    }
+  },
+  "capabilityGaps": [
+    {
+      "id": "CG-01",
+      "capability": "Enterprise-Scale Data Migration & ETL",
+      "severity": "HIGH",
+      "gapDescription": "DHS has 340+ applications with complex data migration requirements including legacy databases (Oracle 11g, IBM DB2, Sybase ASE) requiring schema transformation, data cleansing, and validation for cloud-native architectures. TechForward's largest data migration was 180 applications at the Army — this effort is nearly 2x that scale with more complex data interdependencies.",
+      "impactIfUnfilled": "Unable to credibly propose data migration execution for 160+ legacy database systems. Evaluators would identify significant risk in technical approach.",
+      "recommendedPartner": "DataBridge Analytics",
+      "alternatePartners": ["MigrationPro Federal", "Attain Federal"],
+      "requiredCapabilities": [
+        "Oracle/DB2/Sybase to PostgreSQL/Aurora migration",
+        "ETL pipeline design for 2M+ records/day throughput",
+        "Data quality assessment and remediation",
+        "DHS-specific data classification and handling"
+      ],
+      "status": "FILLING",
+      "filledBy": "DataBridge Analytics (TA in negotiation)"
+    },
+    {
+      "id": "CG-02",
+      "capability": "DHS-Specific ServiceNow Integration",
+      "severity": "MEDIUM",
+      "gapDescription": "DHS OCIO mandates all cloud services integrate with the enterprise ServiceNow instance for ITSM, CMDB, change management, and incident management. TechForward has general ServiceNow experience but has not configured DHS-specific workflows, approval chains, or component-level routing rules.",
+      "impactIfUnfilled": "Technical approach would lack specificity on DHS ITSM integration. Evaluators familiar with ServiceNow complexity would view this as a gap.",
+      "recommendedPartner": "GovFlow Technologies",
+      "alternatePartners": ["Accenture Federal Services (SB teaming)", "Greystone Federal"],
+      "requiredCapabilities": [
+        "DHS ServiceNow instance configuration experience",
+        "CMDB integration with cloud asset discovery tools",
+        "Automated change management workflow design",
+        "Component-level routing and approval configuration"
+      ],
+      "status": "FILLING",
+      "filledBy": "GovFlow Technologies (NDA signed, TA pending)"
+    },
+    {
+      "id": "CG-03",
+      "capability": "Mainframe Application Modernization",
+      "severity": "MEDIUM",
+      "gapDescription": "12 of DHS's 340+ applications run on IBM z/OS mainframes. These require specialized modernization approaches including application decomposition, re-platforming to cloud-native containers, and COBOL-to-Java conversion. TechForward has no mainframe modernization past performance.",
+      "impactIfUnfilled": "12 applications (~3.5% of portfolio) would lack credible migration plan. While not critical mass, evaluators may view this as incomplete technical approach.",
+      "recommendedPartner": "MainframeNext Inc.",
+      "alternatePartners": ["Astadia Federal", "Micro Focus (through SB partner)"],
+      "requiredCapabilities": [
+        "IBM z/OS application assessment and decomposition",
+        "COBOL-to-Java automated conversion tools",
+        "Mainframe data extraction and re-platforming",
+        "Strangler fig pattern implementation for gradual migration"
+      ],
+      "status": "IDENTIFYING",
+      "filledBy": "MainframeNext Inc. (initial contact made)"
+    }
+  ],
+  "partnerPipeline": [
+    {
+      "id": "TP-01",
+      "name": "DataBridge Analytics",
+      "uei": "HM7KP3QW2X84",
+      "cage": "8BN42",
+      "size": "Small Business",
+      "certifications": ["SBA 8(a)", "SDB"],
+      "employees": 65,
+      "annualRevenue": 9200000,
+      "coreCapability": "Enterprise Data Migration & ETL",
+      "relevantExperience": "Currently subcontractor on this exact DHS contract under Peraton. 4 years of DHS data migration experience with intimate knowledge of all legacy database schemas.",
+      "stage": "Committed",
+      "stageHistory": [
+        { "stage": "Identified", "date": "2026-01-29", "notes": "Identified through incumbent subcontractor analysis" },
+        { "stage": "Contacted", "date": "2026-01-31", "notes": "Initial outreach — CEO receptive due to Peraton payment dispute" },
+        { "stage": "Negotiating", "date": "2026-02-03", "notes": "NDA executed. TA terms under negotiation." },
+        { "stage": "Committed", "date": "2026-02-08", "notes": "Verbal commitment. TA in final legal review." }
+      ],
+      "ndaStatus": { "signed": true, "signedDate": "2026-02-03", "expirationDate": "2027-02-03" },
+      "teamingAgreementStatus": { "signed": false, "status": "Legal Review", "estimatedSignDate": "2026-02-15", "keyTerms": "20% workshare, FFP basis, IP ownership retained by DataBridge for proprietary ETL tools" },
+      "workshare": 20,
+      "estimatedValue": 9000000,
+      "keyPersonnel": [
+        { "name": "Robert Chang", "role": "Data Migration Lead", "clearance": "TS/SCI", "yearsExperience": 14, "available": true },
+        { "name": "Deepa Rajesh", "role": "ETL Architect", "clearance": "TS/SCI", "yearsExperience": 9, "available": true },
+        { "name": "Thomas Greene", "role": "Database Administrator", "clearance": "Secret", "yearsExperience": 7, "available": true }
+      ],
+      "pastPerformance": [
+        { "contract": "DHS Cloud Migration (Peraton sub)", "value": 3100000, "cpars": "Satisfactory", "agency": "DHS OCIO" },
+        { "contract": "USCIS Data Modernization", "value": 4200000, "cpars": "Satisfactory", "agency": "DHS USCIS" }
+      ],
+      "risks": [
+        { "risk": "OCI concerns from incumbent subcontractor status", "severity": "MEDIUM", "mitigation": "Formal ethical wall. No proprietary data transfer. Legal OCI mitigation plan." },
+        { "risk": "Peraton may invoke non-compete clause", "severity": "LOW", "mitigation": "Legal reviewed DataBridge TA with Peraton — non-compete expires with current contract period." }
+      ],
+      "strengthForTeam": "Irreplaceable DHS data migration knowledge. Their participation eliminates data migration risk and provides evaluators confidence in our understanding of the environment.",
+      "competitorInterest": "CACI/Vertex has also contacted DataBridge. Our offer is more attractive due to higher workshare (20% vs 12%) and prime stability."
+    },
+    {
+      "id": "TP-02",
+      "name": "GovFlow Technologies",
+      "uei": "NR5FL8KM3Y62",
+      "cage": "5KT89",
+      "size": "Small Business",
+      "certifications": ["SBA 8(a)", "HUBZone"],
+      "employees": 42,
+      "annualRevenue": 5800000,
+      "coreCapability": "ServiceNow Integration & Federal ITSM",
+      "relevantExperience": "Active DHS ServiceNow enterprise deployment contract. Configured ServiceNow for 6 DHS components. Very Good CPARS.",
+      "stage": "Negotiating",
+      "stageHistory": [
+        { "stage": "Identified", "date": "2026-02-01", "notes": "Identified through DHS OSDBU matchmaking event" },
+        { "stage": "Contacted", "date": "2026-02-03", "notes": "Initial meeting with CEO at OSDBU event" },
+        { "stage": "Negotiating", "date": "2026-02-07", "notes": "NDA executed. Discussing workshare and key personnel." }
+      ],
+      "ndaStatus": { "signed": true, "signedDate": "2026-02-07", "expirationDate": "2027-02-07" },
+      "teamingAgreementStatus": { "signed": false, "status": "Term Sheet Discussion", "estimatedSignDate": "2026-02-20", "keyTerms": "15% workshare, T&M basis for integration work, GovFlow retains ServiceNow IP" },
+      "workshare": 15,
+      "estimatedValue": 6750000,
+      "keyPersonnel": [
+        { "name": "Amanda Foster", "role": "ServiceNow Architect", "clearance": "Secret", "yearsExperience": 11, "available": true },
+        { "name": "Kevin Park", "role": "ITSM Integration Developer", "clearance": "Secret", "yearsExperience": 6, "available": true }
+      ],
+      "pastPerformance": [
+        { "contract": "DHS ServiceNow Enterprise Deployment", "value": 3100000, "cpars": "Very Good", "agency": "DHS OCIO" },
+        { "contract": "CBP IT Service Management", "value": 2400000, "cpars": "Satisfactory", "agency": "DHS CBP" }
+      ],
+      "risks": [
+        { "risk": "Small firm — capacity concerns for DHS-scale integration", "severity": "LOW", "mitigation": "ServiceNow work is well-scoped at 15%. GovFlow has handled similar scale on current DHS contract." },
+        { "risk": "CACI/Vertex may also pursue GovFlow", "severity": "MEDIUM", "mitigation": "Accelerate TA execution to secure commitment. Our higher workshare is more attractive." }
+      ],
+      "strengthForTeam": "DHS-specific ServiceNow expertise eliminates integration risk. Their Very Good CPARS on the exact platform adds credibility.",
+      "competitorInterest": "Unknown if other competitors have approached GovFlow. Accelerating TA to lock in commitment."
+    },
+    {
+      "id": "TP-03",
+      "name": "MainframeNext Inc.",
+      "uei": "QW8JR2DN4P19",
+      "cage": "7PM23",
+      "size": "Small Business",
+      "certifications": ["Small Business", "WOSB"],
+      "employees": 28,
+      "annualRevenue": 3400000,
+      "coreCapability": "Mainframe Application Modernization",
+      "relevantExperience": "Completed 3 federal mainframe-to-cloud migrations including IRS and SSA. AWS Migration Competency partner specializing in z/OS decomposition.",
+      "stage": "Negotiating",
+      "stageHistory": [
+        { "stage": "Identified", "date": "2026-02-04", "notes": "Identified through AWS Partner Network referral" },
+        { "stage": "Contacted", "date": "2026-02-06", "notes": "Initial call with CEO. Interested in DHS opportunity." },
+        { "stage": "Negotiating", "date": "2026-02-10", "notes": "NDA in legal review. Discussing workshare allocation." }
+      ],
+      "ndaStatus": { "signed": false, "status": "Legal Review", "estimatedSignDate": "2026-02-12" },
+      "teamingAgreementStatus": { "signed": false, "status": "Pre-Discussion", "estimatedSignDate": "2026-02-22", "keyTerms": "10% workshare, mainframe-specific scope only, key personnel commitment" },
+      "workshare": 10,
+      "estimatedValue": 4500000,
+      "keyPersonnel": [
+        { "name": "Dr. Linda Hayes", "role": "Mainframe Modernization Architect", "clearance": "Secret", "yearsExperience": 22, "available": true },
+        { "name": "Mark Sullivan", "role": "COBOL Migration Specialist", "clearance": "Secret (eligible for TS)", "yearsExperience": 15, "available": true }
+      ],
+      "pastPerformance": [
+        { "contract": "IRS Legacy Modernization Phase II", "value": 2800000, "cpars": "Very Good", "agency": "IRS" },
+        { "contract": "SSA Mainframe Cloud Migration", "value": 1900000, "cpars": "Satisfactory", "agency": "SSA" }
+      ],
+      "risks": [
+        { "risk": "Very small firm — 28 employees, capacity for dedicated DHS team uncertain", "severity": "MEDIUM", "mitigation": "Mainframe scope is well-bounded (12 applications). Requires 3-4 FTE. Within their capacity." },
+        { "risk": "Key personnel clearance upgrades needed (Secret to TS/SCI)", "severity": "LOW", "mitigation": "Sponsor clearance upgrades through TechForward facility clearance. 90-day upgrade timeline." }
+      ],
+      "strengthForTeam": "Fills the only technical gap that no other team member covers. Mainframe modernization is highly specialized — credible proposal requires dedicated expertise.",
+      "competitorInterest": "Unlikely to be pursued by other competitors. MainframeNext is a niche firm not widely known."
+    },
+    {
+      "id": "TP-04",
+      "name": "Coalfire Federal",
+      "uei": "LP3TM7HN5K48",
+      "cage": "4QR67",
+      "size": "Small Business",
+      "certifications": ["Small Business"],
+      "employees": 180,
+      "annualRevenue": 28000000,
+      "coreCapability": "FedRAMP Assessment & Cloud Security",
+      "relevantExperience": "Leading FedRAMP 3PAO. Assessed 200+ cloud services. Deep knowledge of FedRAMP High requirements.",
+      "stage": "Contacted",
+      "stageHistory": [
+        { "stage": "Identified", "date": "2026-02-05", "notes": "Considered as FedRAMP advisory support" },
+        { "stage": "Contacted", "date": "2026-02-09", "notes": "Preliminary discussion. They may have OCI as 3PAO for Peraton's ATO." }
+      ],
+      "ndaStatus": { "signed": false, "status": "Pending OCI Review" },
+      "teamingAgreementStatus": { "signed": false, "status": "On Hold", "estimatedSignDate": null, "keyTerms": "Advisory role only — no workshare allocation" },
+      "workshare": 0,
+      "estimatedValue": 0,
+      "keyPersonnel": [],
+      "pastPerformance": [],
+      "risks": [
+        { "risk": "Potential OCI — Coalfire may be Peraton's current 3PAO", "severity": "HIGH", "mitigation": "OCI review in progress. If confirmed, Coalfire cannot participate." }
+      ],
+      "strengthForTeam": "Would add FedRAMP assessment depth. However, TechForward's existing FedRAMP High ATO may make this unnecessary.",
+      "competitorInterest": "Leidos has already approached Coalfire for their NexGen team."
+    },
+    {
+      "id": "TP-05",
+      "name": "Nightwing Analytics",
+      "uei": "XT9KN4BJ7R23",
+      "cage": "2WH56",
+      "size": "Small Business",
+      "certifications": ["SDVOSB", "8(a)"],
+      "employees": 35,
+      "annualRevenue": 4200000,
+      "coreCapability": "Cloud FinOps & Cost Optimization",
+      "relevantExperience": "Specialized federal cloud FinOps consultancy. FinOps Foundation Certified. 5 federal FinOps implementations.",
+      "stage": "Identified",
+      "stageHistory": [
+        { "stage": "Identified", "date": "2026-02-10", "notes": "Identified through FinOps Foundation federal directory. Could strengthen our FinOps response to OIG findings." }
+      ],
+      "ndaStatus": { "signed": false, "status": "Not Initiated" },
+      "teamingAgreementStatus": { "signed": false, "status": "Not Initiated", "estimatedSignDate": null, "keyTerms": null },
+      "workshare": 0,
+      "estimatedValue": 0,
+      "keyPersonnel": [],
+      "pastPerformance": [],
+      "risks": [
+        { "risk": "Adding a 4th subcontractor increases team management complexity", "severity": "LOW", "mitigation": "Only pursue if FinOps gap identified as significant weakness in capture review." }
+      ],
+      "strengthForTeam": "Would directly address OIG finding on $40M cloud waste. Strengthens our FinOps narrative. However, TechForward has internal FinOps capability — may not need dedicated partner.",
+      "competitorInterest": "Unknown."
+    }
+  ],
+  "workshareAllocation": {
+    "total": 100,
+    "prime": {
+      "name": "TechForward Solutions",
+      "workshare": 55,
+      "estimatedValue": 24750000,
+      "scope": [
+        "Program management and contract administration",
+        "Cloud migration planning, assessment (CloudPathfinder), and execution",
+        "Zero trust architecture design and implementation",
+        "DevSecOps pipeline development and operations",
+        "FedRAMP continuous monitoring and compliance",
+        "Cloud cost optimization and FinOps",
+        "Transition planning and execution",
+        "Quality assurance and performance reporting"
+      ],
+      "fte": 18,
+      "sbCredit": true,
+      "sbCategory": "8(a) / SDVOSB"
+    },
+    "subcontractors": [
+      {
+        "name": "DataBridge Analytics",
+        "workshare": 20,
+        "estimatedValue": 9000000,
+        "scope": [
+          "Legacy database assessment and migration planning",
+          "ETL pipeline design and implementation",
+          "Data quality assessment and remediation",
+          "Oracle/DB2/Sybase to Aurora/PostgreSQL migration execution",
+          "Data validation and integrity verification"
+        ],
+        "fte": 7,
+        "sbCredit": true,
+        "sbCategory": "8(a) / SDB"
+      },
+      {
+        "name": "GovFlow Technologies",
+        "workshare": 15,
+        "estimatedValue": 6750000,
+        "scope": [
+          "DHS ServiceNow instance integration design",
+          "CMDB configuration for cloud asset management",
+          "Automated change management workflow implementation",
+          "Incident management integration with cloud monitoring",
+          "Component-level routing and approval configuration"
+        ],
+        "fte": 5,
+        "sbCredit": true,
+        "sbCategory": "8(a) / HUBZone"
+      },
+      {
+        "name": "MainframeNext Inc.",
+        "workshare": 10,
+        "estimatedValue": 4500000,
+        "scope": [
+          "IBM z/OS application assessment and decomposition",
+          "COBOL-to-Java automated conversion",
+          "Mainframe data extraction and cloud re-platforming",
+          "Strangler fig pattern implementation for 12 mainframe applications",
+          "Legacy application testing and validation"
+        ],
+        "fte": 3,
+        "sbCredit": true,
+        "sbCategory": "Small Business / WOSB"
+      }
+    ],
+    "sbSummary": {
+      "totalSbWorkshare": 100,
+      "sbGoal": 35,
+      "sbActual": 100,
+      "breakdown": {
+        "8a": 90,
+        "sdvosb": 55,
+        "wosb": 10,
+        "hubzone": 15,
+        "sdb": 20
+      },
+      "notes": "Entire team is small business. All workshare counts toward DHS small business goals. Dual-credit categories (e.g., TechForward counts toward both 8(a) and SDVOSB) maximize DHS socioeconomic goal achievement."
+    }
+  }
+}

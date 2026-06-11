@@ -1,0 +1,749 @@
+{
+  "opportunityId": "opp-001",
+  "opportunityTitle": "DHS CISA Cybersecurity Operations Support Services (COSS)",
+  "solicitationNumber": "70RSAT24R00000001",
+  "agency": "DHS / CISA",
+  "generatedBy": "Capture Strategy Agent",
+  "agentVersion": "v3",
+  "generatedAt": "2026-02-10T08:30:00Z",
+  "overall_confidence": 72,
+  "capturePhase": "Pre-RFP Development",
+  "sections": [
+    {
+      "id": "strategicPositioning",
+      "sectionNumber": 1,
+      "title": "Strategic Positioning",
+      "thesis": "Prime with SB set-aside targeting 35% — strong incumbent overlap, pWin 35% and climbing after February Intel Day.",
+      "status": "confirmed",
+      "confidence": 78,
+      "lastReviewed": "2026-02-08",
+      "reviewedBy": "J. Martinez",
+      "feeds": ["teaming", "pricing"],
+      "propagated_to": [
+        { "tab": "Teaming", "what": "positioning, sbTarget", "when": "2026-02-08T14:22:00Z" },
+        { "tab": "Pricing", "what": "contractValue, sbTarget", "when": "2026-02-08T14:22:00Z" }
+      ],
+      "conflicts": [],
+      "ai_reasoning": "Vehicle selection as prime on an IDIQ GWAC best fits our $42M PTW and prior CISA support work. Set-aside at 35% SB is required by statute for this NAICS and is achievable given our established small business network. pWin trajectory from 25% to 35% is driven by the February Industry Day relationship signal and confirmed GS-15 champion access.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "Agent generated initial positioning recommendation based on SAM.gov and USAspending FY23–25 analysis." }
+      ],
+      "chatSeed": [
+        { "q": "Why prime instead of sub?", "a": "Our past performance on CISA SOC-as-a-service (Contract #70RSAT21C00123) and the $42M PTW put us squarely in prime territory. Subbing would cede win-theme ownership on C2/SOC tooling — our strongest discriminator. The SB utilization obligation is manageable given the DataBridge and ClearPath relationships already in the pipeline." },
+        { "q": "What would move pWin above 40%?", "a": "Three things: (1) confirming a second GS-15 relationship at CISA — currently only one contact at that level; (2) resolving the OCI flag on the DataBridge teaming arrangement before Draft RFP; (3) getting a commitment letter from the incumbent key personnel named in the IGCE leak." }
+      ],
+      "facts": {
+        "vehicle": "DHS EAGLE III IDIQ — Task Order",
+        "setAside": "Total Small Business (per FAR 19.502-2)",
+        "naics": "541519 — Other Computer Related Services",
+        "psc": "D307",
+        "estimatedValue": "$42,000,000 (5-year base + 2 options)",
+        "contractType": "CPFF with FFP CLIN structure",
+        "basePerformancePeriod": "12 months",
+        "optionYears": "4 × 12-month options",
+        "anticipatedRFP": "2026-04-01",
+        "anticipatedAward": "2026-09-15",
+        "incumbentContinuity": "Partial — incumbent BAH has 3 of 8 critical positions expiring",
+        "sources": [
+          { "label": "SAM.gov", "ref": "SAM-70RSAT24R00000001", "retrievedAt": "2026-01-28", "excerpt": "Set-aside confirmed Total SB. NAICS 541519. Estimated value $42M." },
+          { "label": "USAspending FY23–25", "ref": "USAS-CISA-FY25", "retrievedAt": "2026-01-30", "excerpt": "CISA SOC support spend trend: FY23 $8.1M, FY24 $9.3M, FY25 $10.2M. Prime: Booz Allen Hamilton." },
+          { "label": "Industry Day 01/15", "ref": "ID-2026-0115", "retrievedAt": "2026-01-15", "excerpt": "Government confirmed CPFF preferred. SB utilization plan required. Oral presentations included in source selection." }
+        ]
+      },
+      "analysis": {
+        "primeSubRationale": "Priming maximizes win-theme ownership on C2/SOC tooling and positions us to control key personnel designations. Our $28M ceiling on DHS EAGLE III qualifies us for the task order ceiling without teaming on prime lane.",
+        "pWinHistory": [
+          { "date": "2025-11-01", "pWin": 20, "trigger": "Initial pipeline entry — limited intel" },
+          { "date": "2026-01-15", "pWin": 28, "trigger": "Industry Day attendance; confirmed 2 relationships" },
+          { "date": "2026-02-08", "pWin": 35, "trigger": "GS-15 champion meeting confirmed; incumbent personnel attrition signal" }
+        ],
+        "sbTargetBasis": "CISA's historical SB utilization rate on EAGLE III task orders: 32–38%. Target of 35% is at the midpoint and defensible in the Teaming Plan narrative."
+      },
+      "intelligence": {
+        "competitivePosition": "BAH (incumbent) strong but exposed on key personnel attrition and DOGE-driven budget pressure. Leidos and SAIC both submitted RFI responses — likely competitors. ManTech confirmed no-bid per industry contact.",
+        "agencyHotButtons": ["Zero-trust architecture compliance", "Supply chain risk management (SCRM)", "24/7 SOC staffing continuity"],
+        "ghostingAngles": "BAH's incumbent SOC is predominantly offshore-managed for L1/L2 triage — internal framing only. RFP will likely require onshore staffing for all Tier 2+ work; their model cannot comply without significant restructuring."
+      },
+      "recommendations": [
+        { "id": "rec-1-1", "text": "Pursue as Prime contractor on DHS EAGLE III IDIQ task order vehicle.", "status": "accepted", "editable": true },
+        { "id": "rec-1-2", "text": "Target 35% SB utilization — assign DataBridge Analytics as primary SB sub (workshare 18%).", "status": "accepted", "editable": true },
+        { "id": "rec-1-3", "text": "Register strategic intent with DHS OSBU by March 1 to signal SB commitment early.", "status": "proposed", "editable": true }
+      ]
+    },
+    {
+      "id": "winStrategy",
+      "sectionNumber": 2,
+      "title": "Win Strategy",
+      "thesis": "Three interlocking win themes anchored to CISA's zero-trust mandate and SOC modernization — differentiated by speed-to-deploy and workforce continuity.",
+      "status": "needs_review",
+      "confidence": 81,
+      "lastReviewed": "2026-02-05",
+      "reviewedBy": "A. Chen",
+      "feeds": ["solutioning"],
+      "propagated_to": [],
+      "conflicts": [
+        { "id": "con-2-1", "description": "Win Theme 2 (Workforce Continuity) partially conflicts with §3 Team Strategy — ClearPath LOI not yet signed; storyline assumes continuity guarantee.", "severity": "medium" }
+      ],
+      "ai_reasoning": "Evaluation factors from the Industry Day confirm technical approach (M), management (M), and price (M/A). Win themes are mapped to the M/M factors and supported by CPARS evidence from the incumbent CISA contract and the USDA zero-trust program. Discriminators are validated against named competitor intelligence from the USAspending database and OSINT.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "Initial win theme generation based on Industry Day slides and eval factor analysis." },
+        { "version": 2, "changed_at": "2026-02-05T11:15:00Z", "changed_by": "A. Chen", "change_summary": "User marked Win Theme 3 (Price-to-Win Integration) as needs_review pending updated PTW model from §7." }
+      ],
+      "chatSeed": [
+        { "q": "How are our win themes different from BAH's?", "a": "BAH will lead with scale and incumbency. Our differentiation is on speed-to-zero-trust (we have a pre-built ZTA assessment playbook tested on USDA) and workforce retention (named key personnel with existing CISA clearances vs. BAH's mid-year attrition signal). We're not trying to out-scale them — we're out-executing them on the specific CISA pain points." },
+        { "q": "Which eval factor does Theme 2 score highest on?", "a": "Management Approach (subfactor: Personnel and Transition). Theme 2 directly addresses the government's stated concern about continuity risk from incumbent key personnel departures — three identified in the IGCE leak. The LOI from ClearPath Staffing locks in 6 of the 8 critical billets before RFP release." }
+      ],
+      "facts": {
+        "evalFactors": [
+          { "factor": "Technical Approach", "weight": "Most Important", "subfactors": ["ZTA Architecture", "SOC Modernization Plan", "Tool Integration"] },
+          { "factor": "Management Approach", "weight": "Most Important", "subfactors": ["Key Personnel", "Transition Plan", "Quality Assurance"] },
+          { "factor": "Price/Cost", "weight": "Moderately Important", "subfactors": ["Total Evaluated Price", "Direct Labor Rates"] }
+        ],
+        "sources": [
+          { "label": "Industry Day 01/15", "ref": "ID-2026-0115-slides", "retrievedAt": "2026-01-15", "excerpt": "Section 5: Evaluation factors confirmed. Technical and Management equally Most Important. Price Moderately Important." },
+          { "label": "CPARS", "ref": "CPARS-70RSAT21C00123", "retrievedAt": "2026-01-22", "excerpt": "Rating: Exceptional. 'Contractor demonstrated superior ZTA roadmap execution within compressed 6-month timeline.'" }
+        ]
+      },
+      "analysis": {
+        "winThemes": [
+          {
+            "id": "wt-1",
+            "title": "Zero-Trust at CISA Speed",
+            "narrative": "We deliver CISA's ZTA mandate on a 90-day runway — not 18 months. Our pre-built ZTA assessment playbook, validated on the USDA Enterprise ZTA program (FY24, $12.4M), maps directly to CISA's NIST SP 800-207 compliance gaps identified in the FY25 IG report. Competitors will propose bespoke architectures; we'll propose a proven pattern.",
+            "evidenceAnchors": ["CPARS-70RSAT21C00123 Exceptional rating", "USDA ZTA Program FY24 — 90-day deployment record", "FY25 CISA IG Report finding on ZTA gap"],
+            "evaluationFactorTarget": "Technical Approach — ZTA Architecture subfactor",
+            "strengthRating": "High"
+          },
+          {
+            "id": "wt-2",
+            "title": "Workforce Continuity Guarantee",
+            "narrative": "We will name 6 of 8 key personnel with active CISA clearances and commit to a no-personnel-change guarantee for the base year. The incumbent (BAH) has 3 billets expiring in Q1 FY27; we have LOIs from 2 of those personnel. This is a direct answer to the government's oral-presentation question about transition risk.",
+            "evidenceAnchors": ["ClearPath LOIs (in progress — 2 of 6 signed)", "CISA clearance verification — TS/SCI × 4 confirmed", "BAH personnel attrition signal from industry contact"],
+            "evaluationFactorTarget": "Management Approach — Key Personnel subfactor",
+            "strengthRating": "Medium"
+          },
+          {
+            "id": "wt-3",
+            "title": "Competitive Price with Transparent Rate Basis",
+            "narrative": "Our blended rate of $148/hr undercuts BAH's estimated $162/hr by 8.6% while maintaining 12% fee. We will submit a detailed labor mix justification showing how our SB sub utilization (DataBridge at $118/hr blended) drives cost efficiency without degrading quality.",
+            "evidenceAnchors": ["PTW model v2.1 — Feb 2026", "DataBridge GSA Schedule rates", "BAH DHS EAGLE III rate deck (FY25 FOIA)"],
+            "evaluationFactorTarget": "Price/Cost — Direct Labor Rates subfactor",
+            "strengthRating": "Medium"
+          }
+        ],
+        "discriminators": [
+          {
+            "id": "disc-1",
+            "title": "Pre-built ZTA Assessment Playbook",
+            "impact": "High",
+            "proof": "USDA Enterprise ZTA — deployed in 83 days vs. industry average 14 months",
+            "competitorGap": "BAH does not have a reusable ZTA playbook; their USDA equivalent took 16 months. Leidos has no relevant ZTA CPARS above $5M."
+          },
+          {
+            "id": "disc-2",
+            "title": "Named Key Personnel with Active CISA Clearances",
+            "impact": "High",
+            "proof": "6 LOIs secured (4 signed, 2 pending) — all TS/SCI, CISA-badged within 24 months",
+            "competitorGap": "Competitors must hire/clear new personnel — 4–6 month lead time. Our personnel can onboard Day 1."
+          },
+          {
+            "id": "disc-3",
+            "title": "SB Sub Network — DataBridge + ClearPath",
+            "impact": "Medium",
+            "proof": "Combined capacity covers 35% SB requirement with proven quality track record on DHS work",
+            "competitorGap": "SAIC typically relies on large-sub teaming; their SB utilization on EAGLE III historically falls 3–5% short of targets, creating compliance risk."
+          },
+          {
+            "id": "disc-4",
+            "title": "24/7 Onshore SOC Staffing Model",
+            "impact": "High",
+            "proof": "Current CISA contract operates 24/7 onshore with 0 missed SLA incidents in 18 months",
+            "competitorGap": "BAH's incumbent model uses offshore Tier 1/2 triage (Philippines NOC) — expected to be non-compliant if RFP mandates onshore."
+          }
+        ]
+      },
+      "intelligence": {
+        "ghostingAngles": "BAH offshore SOC model will be non-compliant with anticipated onshore staffing requirement — do not name BAH; write the requirement language in the executive summary to make the point implicitly.",
+        "incumbentPosture": "BAH will likely protest any onshore mandate as a material change from current contract. Signal through industry contacts that we support the requirement in any industry Q&A period.",
+        "agencyHotButtons": ["Oral presentation storytelling — government wants to 'meet the team'", "ZTA compliance timeline realism — prior vendor overpromised"]
+      },
+      "recommendations": [
+        { "id": "rec-2-1", "text": "Lead technical volume with ZTA Speed win theme — open with USDA proof point.", "status": "accepted", "editable": true },
+        { "id": "rec-2-2", "text": "Lock ClearPath LOI before RFP release to fully activate Win Theme 2.", "status": "proposed", "editable": true },
+        { "id": "rec-2-3", "text": "Include oral presentation rehearsal with mock evaluation panel by July 1.", "status": "proposed", "editable": true },
+        { "id": "rec-2-4", "text": "Do NOT name competitors in the proposal — use the ghosting angles strategy.", "status": "accepted", "editable": false }
+      ]
+    },
+    {
+      "id": "teamStrategy",
+      "sectionNumber": 3,
+      "title": "Team Strategy",
+      "thesis": "Three capability gaps require targeted SB subs — DataBridge for data migration, ClearPath for staffing depth, and NovaSec for SCRM tooling.",
+      "status": "needs_review",
+      "confidence": 65,
+      "lastReviewed": "2026-02-07",
+      "reviewedBy": "B. Thompson",
+      "feeds": ["teaming"],
+      "propagated_to": [],
+      "conflicts": [],
+      "ai_reasoning": "Capability gap analysis derived from the RFI gap assessment and comparison to the PWS draft sections. DataBridge coverage of data migration is essential given our bench has no FedRAMP-certified cloud migration PM available until Q4. ClearPath's staffing pipeline is the contingency for the key personnel risk in §2. NovaSec's SCRM tooling is the fastest path to closing the NIST SP 800-161 gap identified in the IG report.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "Initial capability gap and partner recommendation based on RFI gap analysis and subcontractor database." }
+      ],
+      "chatSeed": [
+        { "q": "What is the OCI risk on DataBridge?", "a": "DataBridge has a current CISA advisory services contract (70RSAT23C00087). If the COSS PWS includes any advisory language overlapping their current scope, there's an OCI exposure. Mitigation: request a scope exclusion for the DataBridge workshare; have legal review the teaming agreement against CISA's conflict matrix before signing. Deadline: March 15 for OCI memo to capture file." },
+        { "q": "Can we replace ClearPath if the LOI falls through?", "a": "Yes — fallback option is GovTalent Inc., a 8(a) SB with a CISA staffing bench. They're slower (4-week onboarding) but cleared and available. Workshare would drop from 12% to 8%, requiring DataBridge to absorb an additional 4% to maintain 35% SB target." }
+      ],
+      "facts": {
+        "capabilityGaps": [
+          {
+            "id": "gap-1",
+            "area": "Cloud Data Migration",
+            "description": "COSS PWS §4.3 requires FedRAMP-authorized cloud migration capability for CISA's on-prem SOC data warehouse. Our bench has no FedRAMP-certified cloud migration PM available until Q4 FY26. This is a hard gap — not a thin-bench issue.",
+            "severity": "High",
+            "targetPartner": "DataBridge Analytics"
+          },
+          {
+            "id": "gap-2",
+            "area": "Staffing Depth — TS/SCI Pipeline",
+            "description": "We have 4 cleared billets confirmed but need 8 for Day 1 staffing. The gap of 4 billets must come from a sub with an active cleared bench. Internal pipeline cannot fill in the transition window.",
+            "severity": "High",
+            "targetPartner": "ClearPath Staffing Solutions"
+          },
+          {
+            "id": "gap-3",
+            "area": "Supply Chain Risk Management (SCRM) Tooling",
+            "description": "PWS §5.1 references NIST SP 800-161 Rev.1 compliance. We have SCRM process expertise but lack a deployed tooling stack. NovaSec's C-SCRM platform is pre-authorized on FedRAMP and deployed at DHS ICE — a direct precedent.",
+            "severity": "Medium",
+            "targetPartner": "NovaSec LLC"
+          }
+        ],
+        "sources": [
+          { "label": "RFI Response Analysis", "ref": "RFI-COSS-2025-12", "retrievedAt": "2026-01-10", "excerpt": "Government questions focused on cloud migration approach and SCRM tooling — confirms PWS scope." },
+          { "label": "Company Profile", "ref": "INT-BENCH-FY26Q1", "retrievedAt": "2026-02-01", "excerpt": "Available cleared staff: 4 TS/SCI, 2 Secret. FedRAMP PM available Q4 FY26 earliest." }
+        ]
+      },
+      "analysis": {
+        "gapSeverityReasoning": "Gap-1 is the critical path item — without DataBridge, we cannot technically comply with PWS §4.3. Gap-2 is the proposal risk — without ClearPath LOI, we cannot name 6 key personnel. Gap-3 is manageable via teaming but must be closed before RFP to allow integration testing narrative.",
+        "coverageMath": "DataBridge (18%) + ClearPath (12%) + NovaSec (5%) = 35% SB workshare. Each partner's workshare is defined by meaningful work, not token passing — aligns with FAR 52.219-14 limitations on subcontracting.",
+        "primeSub Rationale": "Prime controls key personnel designations and technical volume narrative. All three subs are in defined swim lanes with no overlap — reduces internal teaming conflict risk."
+      },
+      "intelligence": {
+        "partnerRisks": [
+          {
+            "partner": "DataBridge Analytics",
+            "risk": "OCI exposure — active CISA advisory contract (70RSAT23C00087)",
+            "riskNote": "Competitor (SAIC) is also courting DataBridge. If SAIC offers higher workshare, DataBridge may defect. Lockup needed by March 1.",
+            "mitigation": "Sign teaming agreement with exclusivity clause by March 1. Route OCI memo to capture file."
+          },
+          {
+            "partner": "ClearPath Staffing Solutions",
+            "risk": "LOI not yet signed — only verbal commitment",
+            "riskNote": "ClearPath is negotiating with BAH on a separate GSA MAS opportunity. Dual allegiance risk.",
+            "mitigation": "Offer ClearPath $500K minimum workshare guarantee in teaming agreement to lock exclusivity."
+          },
+          {
+            "partner": "NovaSec LLC",
+            "risk": "Low risk — no competing teaming discussions identified",
+            "riskNote": "Small firm, capacity-constrained. Confirm their availability for the base year.",
+            "mitigation": "Execute teaming agreement by April 1."
+          }
+        ]
+      },
+      "recommendations": [
+        { "id": "rec-3-1", "text": "Execute teaming agreement with DataBridge Analytics (18% workshare, exclusivity) by March 1.", "status": "proposed", "editable": true },
+        { "id": "rec-3-2", "text": "Execute teaming agreement with ClearPath Staffing Solutions (12% workshare, LOI for 4 billets) by March 15.", "status": "proposed", "editable": true },
+        { "id": "rec-3-3", "text": "Execute teaming agreement with NovaSec LLC (5% workshare, SCRM tooling) by April 1.", "status": "proposed", "editable": true },
+        { "id": "rec-3-4", "text": "File OCI avoidance memo for DataBridge arrangement — route to legal by March 15.", "status": "proposed", "editable": true },
+        { "id": "rec-3-5", "text": "Establish GovTalent Inc. as fallback teaming option if ClearPath LOI fails.", "status": "proposed", "editable": true }
+      ]
+    },
+    {
+      "id": "customerEngagement",
+      "sectionNumber": 4,
+      "title": "Customer Engagement",
+      "thesis": "Five key relationships — two warm, three cold. Priority: activate the Deputy CIO and neutralize the frustrated-with-incumbent signal before draft RFP.",
+      "status": "draft",
+      "confidence": 58,
+      "lastReviewed": "2026-02-03",
+      "reviewedBy": "J. Martinez",
+      "feeds": ["teaming"],
+      "propagated_to": [],
+      "conflicts": [],
+      "ai_reasoning": "Relationship strength assessment derived from CRM last-contact dates and post-Industry Day debrief notes. The Deputy CIO frustration signal is unverified — one source — but actionable. Three cold relationships with technical evaluators are the primary engagement gap; failing to warm these contacts before RFP release reduces our probability of shaping the evaluation criteria.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "Relationship map generated from CRM data and Industry Day debrief notes." }
+      ],
+      "chatSeed": [
+        { "q": "How do we reach the technical evaluators?", "a": "Best path: request a technical interchange meeting (TIM) through the CO, citing our RFI response and desire to clarify PWS ambiguities in §4.3 and §5.1. Government cannot refuse a pre-solicitation TIM. This gives us 60 minutes with the evaluation panel without it being a one-on-one that triggers CICA concerns." },
+        { "q": "What's the Deputy CIO frustration about exactly?", "a": "Single-source intelligence from our CISA Comms contact: 'Deputy CIO is tired of weekly status meetings that produce no resolution on the SOC dashboard latency issue.' BAH's Program Manager has reportedly been escalating for 3 months without a fix. This is our opening — our Win Theme 1 (ZTA Speed) addresses the root cause. Frame our solution as the dashboard performance fix, not just compliance." }
+      ],
+      "facts": {
+        "relationships": [
+          {
+            "id": "rel-1",
+            "name": "M. Johnson",
+            "title": "Deputy CIO",
+            "org": "CISA / Office of the CIO",
+            "strength": "Warm",
+            "lastContact": "2026-01-15",
+            "lastContactType": "Industry Day",
+            "notes": "Expressed frustration with incumbent's slow dashboard performance resolution. Receptive to new approaches.",
+            "nextAction": "Request 1:1 briefing on ZTA speed approach — frame as dashboard fix",
+            "nextActionDue": "2026-03-01",
+            "owner": "J. Martinez"
+          },
+          {
+            "id": "rel-2",
+            "name": "K. Williams",
+            "title": "Program Manager, COSS",
+            "org": "CISA / Cybersecurity Division",
+            "strength": "Warm",
+            "lastContact": "2026-01-22",
+            "lastContactType": "Post-Industry Day coffee",
+            "notes": "Confirmed CPFF preference and oral presentation importance. Mentioned evaluation team size: 5 evaluators.",
+            "nextAction": "Send ZTA case study aligned to COSS PWS scope",
+            "nextActionDue": "2026-02-20",
+            "owner": "A. Chen"
+          },
+          {
+            "id": "rel-3",
+            "name": "R. Patel",
+            "title": "Lead Technical Evaluator",
+            "org": "CISA / Technology Directorate",
+            "strength": "Cold",
+            "lastContact": "2025-09-10",
+            "lastContactType": "Conference",
+            "notes": "Met briefly at GovCyber Summit. No substantive engagement since.",
+            "nextAction": "Request TIM — technical questions on PWS §4.3 and §5.1",
+            "nextActionDue": "2026-03-15",
+            "owner": "B. Thompson"
+          },
+          {
+            "id": "rel-4",
+            "name": "S. Lee",
+            "title": "Contracting Officer",
+            "org": "CISA / Office of Procurement",
+            "strength": "Cold",
+            "lastContact": "2025-11-01",
+            "lastContactType": "RFI submission acknowledgement",
+            "notes": "Standard interaction only. Need to establish relationship before draft RFP to influence Q&A process.",
+            "nextAction": "Introduce J. Martinez as capture lead via formal letter",
+            "nextActionDue": "2026-02-28",
+            "owner": "J. Martinez"
+          },
+          {
+            "id": "rel-5",
+            "name": "D. Brown",
+            "title": "Small Business Specialist",
+            "org": "DHS OSDBU",
+            "strength": "Cold",
+            "lastContact": "2025-08-15",
+            "lastContactType": "OSDBU matchmaking event",
+            "notes": "Met at DHS OSDBU event. No follow-up. Important for SB compliance narrative.",
+            "nextAction": "Submit SB strategic intent form; request brief on teaming plan",
+            "nextActionDue": "2026-03-01",
+            "owner": "B. Thompson"
+          }
+        ],
+        "sources": [
+          { "label": "Industry Day 01/15", "ref": "ID-2026-0115-notes", "retrievedAt": "2026-01-15", "excerpt": "Attendance log and post-event debrief notes from J. Martinez and A. Chen." },
+          { "label": "Company Profile", "ref": "CRM-CISA-FY26", "retrievedAt": "2026-02-01", "excerpt": "CRM records: last contact dates, interaction types, notes from 5 CISA contacts." }
+        ]
+      },
+      "analysis": {
+        "engagementPosture": "Two warm relationships (Deputy CIO, Program Manager) provide access to evaluation priorities. Three cold relationships (Technical Evaluator, CO, SB Specialist) represent risk — technical evaluators scoring M/M factors must be warmed before RFP. The 45-day window to draft RFP is the engagement deadline.",
+        "warmColdMap": "Deputy CIO: frustrated, high influence, easy access. PM: cooperative, medium influence. Technical evaluator: unknown, highest scoring influence, hard to reach. CO: neutral, administrative. SB Specialist: administrative but can derail SB compliance review.",
+        "engagementGap": "No current relationship with lead technical evaluator — the person most likely to score technical volume. A TIM is the fastest compliant path to a substantive exchange."
+      },
+      "intelligence": {
+        "deputyCIOFrustration": "Deputy CIO frustrated with incumbent's 3-month unresolved SOC dashboard latency issue — single source, unverified but credible.",
+        "evaluationPanelSize": "5 evaluators confirmed by PM K. Williams at post-Industry Day meeting.",
+        "incumbentPMRisk": "BAH PM reportedly escalating dashboard issue for 3 months without resolution — creates opportunity to position our responsiveness."
+      },
+      "recommendations": [
+        { "id": "rec-4-1", "text": "Schedule 1:1 briefing with Deputy CIO M. Johnson — ZTA speed framing as dashboard fix — by March 1 (owner: J. Martinez).", "status": "proposed", "editable": true },
+        { "id": "rec-4-2", "text": "Send ZTA case study to PM K. Williams by Feb 20 (owner: A. Chen).", "status": "proposed", "editable": true },
+        { "id": "rec-4-3", "text": "Request Technical Interchange Meeting (TIM) on PWS §4.3 and §5.1 by March 15 (owner: B. Thompson).", "status": "proposed", "editable": true },
+        { "id": "rec-4-4", "text": "Introduce capture lead to CO S. Lee via formal letter by Feb 28 (owner: J. Martinez).", "status": "proposed", "editable": true },
+        { "id": "rec-4-5", "text": "Submit SB strategic intent form to DHS OSDBU D. Brown by March 1 (owner: B. Thompson).", "status": "proposed", "editable": true }
+      ]
+    },
+    {
+      "id": "staffingStrategy",
+      "sectionNumber": 5,
+      "title": "Staffing Strategy",
+      "thesis": "Eight critical positions — four from internal bench, four from ClearPath LOI — all TS/SCI. Key risk: two LOIs still unsigned.",
+      "status": "draft",
+      "confidence": 62,
+      "lastReviewed": "2026-02-06",
+      "reviewedBy": "B. Thompson",
+      "feeds": ["staffing"],
+      "propagated_to": [],
+      "conflicts": [],
+      "ai_reasoning": "Critical position map is derived from the PWS §3 staffing matrix and cross-referenced against internal bench availability and clearance status. Clearance capacity at 18 TS/SCI (10 internal + 8 ClearPath pipeline) exceeds the 8 Day-1 requirement but the LOI gap creates a proposal naming risk. The ethical wall note on two candidates is a legal constraint that must be resolved before submittal.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "Staffing matrix generated from PWS §3 and internal bench/ClearPath candidate database." }
+      ],
+      "chatSeed": [
+        { "q": "What's the ethical wall issue with the two candidates?", "a": "Candidates 7 and 8 (SCRM Analysts) previously supported a CISA competitor assessment that our BD team contributed intel to. Legal requires an ethical wall certification before they can be named in a CISA proposal. The wall can be certified in 2 weeks — action item for legal by Feb 28. No blocking risk if actioned now." },
+        { "q": "Can we name ClearPath personnel in the proposal?", "a": "Yes — FAR 52.215-23 permits naming anticipated subcontractor key personnel. ClearPath must provide written consent (the LOI functions as consent for the 4 signed). The 2 unsigned LOIs are the gap — without written consent, we cannot name those individuals. Fallback: name the billet and indicate 'to be proposed' — but this weakens our management score vs. competitors who will name everyone." }
+      ],
+      "facts": {
+        "criticalPositions": [
+          { "id": "pos-1", "lcat": "Program Manager", "clearance": "TS/SCI", "designation": "Key Personnel", "source": "Internal", "candidate": "T. Harrison", "loiStatus": "Signed", "notes": "15 years federal IT PM; current CISA PM" },
+          { "id": "pos-2", "lcat": "Deputy PM / Technical Lead", "clearance": "TS/SCI", "designation": "Key Personnel", "source": "Internal", "candidate": "L. Santos", "loiStatus": "Signed", "notes": "ZTA architect; USDA ZTA program lead" },
+          { "id": "pos-3", "lcat": "SOC Manager", "clearance": "TS/SCI", "designation": "Key Personnel", "source": "Internal", "candidate": "R. Kim", "loiStatus": "Signed", "notes": "Current CISA SOC Manager — incumbent" },
+          { "id": "pos-4", "lcat": "Cloud Migration Architect", "clearance": "TS/SCI", "designation": "Key Personnel", "source": "ClearPath", "candidate": "M. Torres", "loiStatus": "Signed", "notes": "DataBridge-seconded; FedRAMP PM" },
+          { "id": "pos-5", "lcat": "Cybersecurity Engineer (ZTA)", "clearance": "TS/SCI", "designation": "Non-Key", "source": "ClearPath", "candidate": "J. Okafor", "loiStatus": "Signed — awaiting ethics clearance", "notes": "Cleared; ethics review in progress" },
+          { "id": "pos-6", "lcat": "SOC Analyst Lead (Tier 3)", "clearance": "TS/SCI", "designation": "Non-Key", "source": "Internal", "candidate": "A. Rivera", "loiStatus": "Verbal Only", "notes": "Current CISA contractor — needs offer letter" },
+          { "id": "pos-7", "lcat": "SCRM Analyst", "clearance": "Secret", "designation": "Non-Key", "source": "ClearPath", "candidate": "P. Nguyen", "loiStatus": "Unsigned — ethical wall pending", "notes": "Ethics wall cert required before naming" },
+          { "id": "pos-8", "lcat": "SCRM Analyst", "clearance": "Secret", "designation": "Non-Key", "source": "ClearPath", "candidate": "C. Davis", "loiStatus": "Unsigned — ethical wall pending", "notes": "Ethics wall cert required before naming" }
+        ],
+        "clearanceCapacity": {
+          "tsSci": 18,
+          "secret": 24,
+          "tsSciInternal": 10,
+          "tsSciClearPath": 8
+        },
+        "sources": [
+          { "label": "Company Profile", "ref": "INT-BENCH-FY26Q1", "retrievedAt": "2026-02-01", "excerpt": "Cleared staff roster: 10 TS/SCI internal. ClearPath pipeline: 8 TS/SCI available Q2 FY26." },
+          { "label": "SAM.gov", "ref": "PWS-COSS-§3", "retrievedAt": "2026-01-28", "excerpt": "PWS §3 staffing matrix: 8 key/designated positions listed; PM, Deputy PM, SOC Manager designated Key Personnel." }
+        ]
+      },
+      "analysis": {
+        "pipelineRead": "Day-1 staffing is achievable with 4 internal + 4 ClearPath — but the 2 unsigned LOIs and 2 ethical wall certifications must be resolved before proposal submittal. Risk window: 45 days.",
+        "clearanceCapacityRead": "18 TS/SCI across internal and ClearPath pipeline exceeds the 8-billet Day-1 requirement by 125%. No clearance capacity risk for the base year. Option year growth (up to 12 billets) is covered by the combined pipeline.",
+        "sourcingIntel": "R. Kim (pos-3) is the incumbent CISA SOC Manager under BAH — the most valuable hire. He has verbally committed but has not signed LOI. BAH is likely aware and may make a counter-offer. Action: escalate to J. Martinez for a direct retention conversation by Feb 15."
+      },
+      "intelligence": {
+        "loiGap": "2 LOIs unsigned (pos-7, pos-8) due to ethical wall requirement. 1 LOI verbal only (pos-6 — R. Kim). Total gap: 3 of 8 positions at risk.",
+        "ethicalWallNote": "Candidates 7 and 8 require ethical wall certification from legal before they can be named in any CISA proposal. Estimated 2 weeks to process.",
+        "incumbentRetentionRisk": "R. Kim (incumbent CISA SOC Manager) is the most strategically valuable hire. Delay in LOI creates BAH counter-offer risk."
+      },
+      "recommendations": [
+        { "id": "rec-5-1", "text": "Secure LOI from R. Kim (pos-6) by Feb 15 — J. Martinez to make direct retention offer.", "status": "proposed", "editable": true },
+        { "id": "rec-5-2", "text": "Route ethical wall certification for P. Nguyen and C. Davis to legal by Feb 28.", "status": "proposed", "editable": true },
+        { "id": "rec-5-3", "text": "Confirm ClearPath availability for all 4 billets — countersign teaming agreement by March 15.", "status": "proposed", "editable": true },
+        { "id": "rec-5-4", "text": "Prepare 'to be proposed' contingency language for pos-7 and pos-8 in case ethics clearance delays.", "status": "proposed", "editable": true }
+      ]
+    },
+    {
+      "id": "pastPerformance",
+      "sectionNumber": 6,
+      "title": "Past Performance",
+      "thesis": "Three lead references with CPARS Exceptional/Very Good ratings — CISA SOC directly relevant; USDA ZTA and DHS ICE SCRM strongly analogous.",
+      "status": "confirmed",
+      "confidence": 88,
+      "lastReviewed": "2026-02-08",
+      "reviewedBy": "J. Martinez",
+      "feeds": ["pp"],
+      "propagated_to": [
+        { "tab": "Past Performance Tab", "what": "leadReferences", "when": "2026-02-08T14:22:00Z" }
+      ],
+      "conflicts": [],
+      "ai_reasoning": "Three references map directly to the COSS scope: the CISA SOC contract is the clearest analog (same agency, similar scope, CPARS Exceptional). USDA ZTA is the proof point for Win Theme 1. DHS ICE SCRM closes the §5 gap. Partner references from DataBridge add corroborating depth. All CORs are current and reachable.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "Past performance slate generated from CPARS database and contract file review." }
+      ],
+      "chatSeed": [
+        { "q": "Should we use the DHS ICE contract or the DoJ contract for the third slot?", "a": "DHS ICE is the stronger choice. It's within the DHS family (same agency group as CISA), the SCRM scope is a direct analog to COSS §5.1, and the CPARS is Very Good with a specific SCRM callout. DoJ has a higher dollar value but the scope is IT helpdesk — tangential at best. Evaluators will score relevance over recency." }
+      ],
+      "facts": {
+        "leadReferences": [
+          {
+            "id": "ref-1",
+            "contractNumber": "70RSAT21C00123",
+            "title": "CISA Cybersecurity SOC Support Services",
+            "value": "$18,500,000",
+            "period": "Oct 2021 – Sep 2024",
+            "agency": "DHS / CISA",
+            "cor": "M. Williams, CISA",
+            "cparsRating": "Exceptional",
+            "cparsHighlights": ["Zero missed SLA incidents over 36 months", "SOC MTTR reduced 42% vs. baseline", "ZTA roadmap delivered 90 days ahead of schedule"],
+            "relevanceFactors": ["Same agency (CISA)", "Same SOC support scope", "Same NAICS 541519"],
+            "sources": [{ "label": "CPARS", "ref": "CPARS-70RSAT21C00123", "retrievedAt": "2026-01-22", "excerpt": "Exceptional rating. 'Contractor demonstrated superior performance across all evaluation factors.'" }]
+          },
+          {
+            "id": "ref-2",
+            "contractNumber": "USDA-12ABCD-22-C-0045",
+            "title": "USDA Enterprise Zero Trust Architecture Program",
+            "value": "$12,400,000",
+            "period": "Jan 2022 – Dec 2024",
+            "agency": "USDA / Office of the CIO",
+            "cor": "P. Anderson, USDA",
+            "cparsRating": "Exceptional",
+            "cparsHighlights": ["ZTA baseline deployed in 83 days — 10 months ahead of milestone", "NIST SP 800-207 compliance achieved in Phase 1", "Zero security incidents during migration"],
+            "relevanceFactors": ["ZTA architecture (Win Theme 1 proof)", "CPFF contract type", "Similar scope complexity"],
+            "sources": [{ "label": "CPARS", "ref": "CPARS-USDA-22-C-0045", "retrievedAt": "2026-01-22", "excerpt": "Exceptional. 'The 83-day ZTA deployment is the fastest recorded across USDA enterprise programs.'" }]
+          },
+          {
+            "id": "ref-3",
+            "contractNumber": "70CTD423C00019",
+            "title": "DHS ICE Supply Chain Risk Management Support",
+            "value": "$6,800,000",
+            "period": "Apr 2023 – Mar 2025",
+            "agency": "DHS / ICE",
+            "cor": "R. Chen, DHS ICE",
+            "cparsRating": "Very Good",
+            "cparsHighlights": ["C-SCRM framework deployed per NIST SP 800-161 Rev.1", "Zero supply chain incidents during period", "Delivered 3 data calls on time"],
+            "relevanceFactors": ["DHS agency family", "SCRM scope matches COSS §5.1", "NIST SP 800-161 compliance directly referenced"],
+            "sources": [{ "label": "CPARS", "ref": "CPARS-70CTD423C00019", "retrievedAt": "2026-01-22", "excerpt": "Very Good. 'SCRM framework delivery was thorough and NIST-compliant. Would reuse for similar programs.'" }]
+          }
+        ],
+        "partnerReferences": [
+          {
+            "partner": "DataBridge Analytics",
+            "contract": "CISA Cloud Migration Support (70RSAT23C00087)",
+            "cparsRating": "Very Good",
+            "relevance": "FedRAMP cloud migration — directly analogous to COSS §4.3 data migration requirement"
+          }
+        ]
+      },
+      "analysis": {
+        "relevanceReasoningPerRef": [
+          { "refId": "ref-1", "reasoning": "Highest relevance: same agency, same SOC scope, same NAICS. CPARS Exceptional is the ceiling rating. COR M. Williams is reachable and has agreed to respond positively to a PPIRS query." },
+          { "refId": "ref-2", "reasoning": "Win Theme 1 proof point. Evaluators will connect the 83-day ZTA deployment to our proposed COSS ZTA timeline. CPARS Exceptional on a comparable-value contract." },
+          { "refId": "ref-3", "reasoning": "Closes the SCRM scope gap. DHS family reference strengthens the agency-fit narrative. CPARS Very Good is solid; not Exceptional — consider whether a higher-rated alternative exists." }
+        ]
+      },
+      "intelligence": {
+        "corReachability": "All three CORs confirmed reachable and cooperative. M. Williams (ref-1) has proactively offered to speak positively if queried by source selection.",
+        "partnerCPARS": "DataBridge's Very Good CPARS on CISA work strengthens the teaming narrative and addresses the SB past performance question."
+      },
+      "recommendations": [
+        { "id": "rec-6-1", "text": "Use CISA SOC contract (ref-1) as lead reference — anchor proposal narrative to it.", "status": "accepted", "editable": true },
+        { "id": "rec-6-2", "text": "Use USDA ZTA (ref-2) as Win Theme 1 proof — feature the 83-day deployment prominently.", "status": "accepted", "editable": true },
+        { "id": "rec-6-3", "text": "Use DHS ICE SCRM (ref-3) unless a higher-rated DHS ref can be identified by March 1.", "status": "accepted", "editable": true },
+        { "id": "rec-6-4", "text": "Brief all three CORs on COSS before RFP release — confirm they will respond to PPIRS queries.", "status": "proposed", "editable": true }
+      ]
+    },
+    {
+      "id": "pricingStrategy",
+      "sectionNumber": 7,
+      "title": "Pricing Strategy",
+      "thesis": "PTW $42M at $148/hr blended — 8.6% below estimated incumbent rate, 12% fee, with SCRM tooling as a cost differentiator.",
+      "status": "needs_review",
+      "confidence": 70,
+      "lastReviewed": "2026-02-07",
+      "reviewedBy": "J. Martinez",
+      "feeds": ["pricing"],
+      "propagated_to": [],
+      "conflicts": [],
+      "ai_reasoning": "PTW basis derived from USAspending FY23–25 actuals ($27.6M over 3 years extrapolated to 5-year ceiling) and FOIA-obtained BAH DHS EAGLE III rate deck. Philosophy anchors to 12% fee floor — below this, teaming margins compress to unacceptable levels. Three pricing risks are identified; the SB labor mix risk is highest probability.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "PTW model v2.1 generated from USAspending actuals and BAH rate deck analysis." }
+      ],
+      "chatSeed": [
+        { "q": "Why 12% fee and not higher?", "a": "At 12%, we're at the industry median for CPFF CISA work per the GovCon fee survey. Going above 14% risks a cost realism flag — government auditors will benchmark us against our own CISA SOC contract where we bid 11.5%. Below 12%, the DataBridge and ClearPath teaming margins become unworkable. 12% is the defensible floor that keeps everyone in the deal." },
+        { "q": "What if BAH bids lower than $145/hr?", "a": "Our model shows $142/hr is our floor before we're below cost on the SCRM and cloud migration LCATs. If BAH goes below $145, they are almost certainly underpricing the TS/SCI clearance premium — which is $18–22/hr above the uncleared rate. We should be prepared to defend our rate realism in a potential competitive range discussion." }
+      ],
+      "facts": {
+        "ptw": "$42,000,000",
+        "blendedRate": "$148/hr",
+        "marginTargets": {
+          "fee": "12%",
+          "primeMargin": "8%",
+          "subMargin": "4–6%"
+        },
+        "laborMix": {
+          "prime": "65%",
+          "databridge": "18%",
+          "clearpath": "12%",
+          "novasec": "5%"
+        },
+        "sources": [
+          { "label": "USAspending FY23–25", "ref": "USAS-CISA-FY25", "retrievedAt": "2026-01-30", "excerpt": "CISA SOC support spend: FY23 $8.1M, FY24 $9.3M, FY25 $10.2M — $27.6M over 3 years." },
+          { "label": "Industry Day 01/15", "ref": "ID-2026-0115-IGCE", "retrievedAt": "2026-01-15", "excerpt": "Government IGCE leaked via industry contact: ~$41M–44M range for 5-year ceiling." }
+        ]
+      },
+      "analysis": {
+        "ptwBasis": "USAspending FY23–25 CISA SOC actuals total $27.6M over 3 years, implying a 5-year run rate of $46M. We discount to $42M to reflect anticipated efficiency gains from ZTA tooling (reduced L1 analyst hours). The IGCE leak confirms $41–44M range — our $42M is mid-IGCE, conservative.",
+        "philosophy": "Price to be in the competitive range, not to win on price. Technical and management are Most Important; price is Moderately Important. A $42M bid that is 8.6% below the incumbent's estimated rate creates a compelling cost story without triggering a cost realism review. Fee at 12% is non-negotiable — below this, subcontractor margins become unsustainable.",
+        "competitorRateEstimates": [
+          { "competitor": "BAH (incumbent)", "estimatedRate": "$162/hr blended", "basis": "FY25 FOIA rate deck via DHS EAGLE III task order files", "ourGap": "8.6% below" },
+          { "competitor": "Leidos", "estimatedRate": "$155/hr blended", "basis": "Leidos GSA Schedule and comparable DHS EAGLE III awards", "ourGap": "4.5% below" },
+          { "competitor": "SAIC", "estimatedRate": "$150/hr blended", "basis": "SAIC DHS task order pricing from FOIA — FY24", "ourGap": "1.3% below" }
+        ],
+        "pricingRisks": [
+          { "id": "pr-1", "risk": "SB Labor Mix Rate Pressure", "likelihood": "High", "description": "ClearPath and DataBridge blended rates are higher than projected if they escalate in teaming negotiations. A 5% rate increase from either sub pushes our blended rate to $155/hr, closing the BAH gap to ~4%.", "mitigation": "Cap sub rates in teaming agreements. Include CPI escalation ceiling of 3% per year." },
+          { "id": "pr-2", "risk": "Government Challenges Clearance Premium", "likelihood": "Medium", "description": "CO or DCAA may question the TS/SCI clearance premium ($18–22/hr above uncleared) if competitors understate it. Risk of downward cost negotiation.", "mitigation": "Prepare clearance cost justification memo citing DHS and OPM clearance processing cost data." },
+          { "id": "pr-3", "risk": "SCRM Tooling License Cost Uncertainty", "likelihood": "Low", "description": "NovaSec C-SCRM platform licensing for the 5-year period is estimated at $420K but not yet under contract. Actual cost could be higher.", "mitigation": "Get a binding price quote from NovaSec by April 1 for inclusion in cost proposal." }
+        ]
+      },
+      "intelligence": {
+        "competitorRates": "BAH FOIA-sourced FY25 rate deck confirms $162/hr blended. SAIC at $150/hr is the closest competitor — our margin against them is thin.",
+        "igceLeak": "IGCE range $41–44M confirmed by PM K. Williams post-Industry Day — single source but credible.",
+        "incumbentCostRisk": "BAH may attempt to rebid lower to retain the contract. Their cost structure is higher (offshore management overhead), limiting how far they can cut."
+      },
+      "recommendations": [
+        { "id": "rec-7-1", "text": "Set final PTW at $42M — mid-IGCE, 8.6% below BAH estimate.", "status": "needs_review", "editable": true },
+        { "id": "rec-7-2", "text": "Cap sub rates in teaming agreements — CPI escalation ceiling 3% per year.", "status": "proposed", "editable": true },
+        { "id": "rec-7-3", "text": "Prepare clearance cost justification memo by April 15 for cost proposal.", "status": "proposed", "editable": true },
+        { "id": "rec-7-4", "text": "Get binding NovaSec SCRM tooling price quote by April 1.", "status": "proposed", "editable": true }
+      ]
+    },
+    {
+      "id": "timeline",
+      "sectionNumber": 8,
+      "title": "Timeline & Milestones",
+      "thesis": "8 milestones from now to award — critical path runs through Draft RFP Q&A and proposal development; 3-week float after final submission.",
+      "status": "draft",
+      "confidence": 74,
+      "lastReviewed": "2026-02-04",
+      "reviewedBy": "J. Martinez",
+      "feeds": ["solutioning"],
+      "propagated_to": [],
+      "conflicts": [],
+      "ai_reasoning": "Milestone dates derived from the anticipated solicitation schedule from the Industry Day and standard DHS EAGLE III procurement timelines. The April 1 RFP release is confirmed by PM Williams. The critical path runs through the Draft RFP Q&A window — losing a TIM slot in that window compresses the technical volume writing time by 2–3 weeks.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "Milestone timeline generated from Industry Day schedule and DHS EAGLE III procurement history." }
+      ],
+      "chatSeed": [
+        { "q": "Which milestone is most at risk?", "a": "Milestone 3 (Teaming Agreements — March 15). If DataBridge or ClearPath teaming agreements slip past March 15, we cannot name all key personnel in the proposal and the LOI timeline collapses. All downstream milestones (proposal writing, oral prep) assume teaming is locked by then. This is the most critical dependency." }
+      ],
+      "facts": {
+        "milestones": [
+          { "id": "ms-1", "name": "Internal Go/No-Go Decision", "date": "2026-02-20", "status": "upcoming", "owner": "J. Martinez", "deliverables": ["Capture review deck", "B&P authorization memo"], "slack": "0 days — hard gate" },
+          { "id": "ms-2", "name": "Customer Engagement Complete (TIM + 1:1s)", "date": "2026-03-15", "status": "upcoming", "owner": "B. Thompson", "deliverables": ["TIM meeting notes", "Contact report for each relationship"], "slack": "7 days" },
+          { "id": "ms-3", "name": "Teaming Agreements Signed", "date": "2026-03-15", "status": "upcoming", "owner": "J. Martinez", "deliverables": ["DataBridge TA", "ClearPath TA", "NovaSec TA"], "slack": "0 days — proposal dependency", "slippageSignal": "DataBridge OCI review may slip 1–2 weeks" },
+          { "id": "ms-4", "name": "Draft RFP Released", "date": "2026-03-25", "status": "upcoming", "owner": "S. Lee (CO)", "deliverables": ["Draft RFP review", "Draft Q&A submission"], "slack": "5 days" },
+          { "id": "ms-5", "name": "Final RFP Released", "date": "2026-04-10", "status": "upcoming", "owner": "S. Lee (CO)", "deliverables": ["Final RFP receipt confirmation", "Proposal kickoff meeting"], "slack": "3 days" },
+          { "id": "ms-6", "name": "Proposal Pink Team Review", "date": "2026-05-15", "status": "upcoming", "owner": "A. Chen", "deliverables": ["Pink team draft — Technical + Management volumes", "Reviewer feedback incorporated"], "slack": "5 days" },
+          { "id": "ms-7", "name": "Proposal Submission", "date": "2026-06-01", "status": "upcoming", "owner": "J. Martinez", "deliverables": ["Final proposal package", "Cost volume", "Past performance volume"], "slack": "3 weeks before projected evaluations begin" },
+          { "id": "ms-8", "name": "Oral Presentation", "date": "2026-07-15", "status": "upcoming", "owner": "T. Harrison (PM candidate)", "deliverables": ["Oral presentation script and slides", "Mock panel rehearsal × 2"], "slack": "10 days" }
+        ],
+        "sources": [
+          { "label": "Industry Day 01/15", "ref": "ID-2026-0115-schedule", "retrievedAt": "2026-01-15", "excerpt": "Procurement schedule slide: Draft RFP Mar 25, Final RFP Apr 10, Proposals Due Jun 1, Oral Presentations Jul 2026." }
+        ]
+      },
+      "analysis": {
+        "criticalPathRead": "The critical path is: Teaming Agreements (Mar 15) → Final RFP (Apr 10) → Proposal Writing (Apr 10–May 31) → Submission (Jun 1). Any slip in teaming compresses proposal writing. The proposal writing window is 52 days — tight for a 5-volume submission.",
+        "slackAnalysis": "Milestone 7 (Proposal Submission) has 3 weeks float before evaluations begin — this is the buffer for a late final RFP amendment. Milestone 3 (Teaming) has zero float; it is the critical dependency.",
+        "slippageSignals": "DataBridge OCI review may add 1–2 weeks to teaming agreement execution. If this slips past March 22, the proposal writing window shrinks from 52 to 39 days."
+      },
+      "intelligence": {
+        "governmentScheduleRisk": "CO S. Lee has a track record of 2–3 week slips on Draft RFP release. If Draft RFP slips to April 10, Final RFP could slip to April 25, compressing proposal to 37 days.",
+        "competitorIntelOnTimeline": "SAIC typically starts proposal writing before Final RFP — they will use the Draft RFP as a working document. We should do the same."
+      },
+      "recommendations": [
+        { "id": "rec-8-1", "text": "Approve Go/No-Go by Feb 20 — J. Martinez to present capture review deck to leadership.", "status": "proposed", "editable": true },
+        { "id": "rec-8-2", "text": "Begin proposal outline immediately on Draft RFP release (March 25) — do not wait for Final RFP.", "status": "proposed", "editable": true },
+        { "id": "rec-8-3", "text": "Build 2-week contingency into DataBridge teaming agreement timeline — target March 1 not March 15.", "status": "proposed", "editable": true },
+        { "id": "rec-8-4", "text": "Schedule oral presentation rehearsals for June 30 and July 10 — before July 15 oral.", "status": "proposed", "editable": true }
+      ]
+    },
+    {
+      "id": "riskRegister",
+      "sectionNumber": 9,
+      "title": "Risk Register",
+      "thesis": "Five risks identified — two High (teaming lock-up, key personnel LOI) demand immediate action; one Medium (OCI) requires legal resolution.",
+      "status": "draft",
+      "confidence": 82,
+      "lastReviewed": "2026-02-06",
+      "reviewedBy": "A. Chen",
+      "feeds": ["solutioning"],
+      "propagated_to": [],
+      "conflicts": [],
+      "ai_reasoning": "Risk register derived from the teaming gap analysis (§3), staffing LOI gap (§5), competitive intelligence (§2 intelligence), and procurement schedule analysis (§8). Likelihood and impact scores are calibrated to the COSS opportunity context — not generic risk ratings. The ethical wall risk for staffing is assessed as Medium-High given the 2-week resolution timeline vs. the proposal naming deadline.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "Risk register generated from cross-section gap analysis." }
+      ],
+      "chatSeed": [
+        { "q": "What's the highest priority risk action this week?", "a": "DataBridge OCI resolution (Risk 1). If we don't file the OCI avoidance memo and execute the teaming agreement by March 1, SAIC may lock up DataBridge and we lose both the FedRAMP cloud migration capability and the SB workshare needed for the 35% target. Everything else has more lead time." }
+      ],
+      "facts": {
+        "risks": [
+          { "id": "risk-1", "title": "DataBridge Competitor Defection", "category": "Teaming", "likelihood": 65, "impact": 90, "score": 58, "description": "DataBridge Analytics, our primary SB sub for cloud migration, is also being courted by SAIC. If DataBridge signs with SAIC first, we lose both the FedRAMP capability (Gap-1) and the workshare needed to hit 35% SB target.", "mitigation": "Execute teaming agreement with exclusivity clause by March 1. Offer minimum workshare guarantee of $7.5M.", "contingency": "Activate GovTalent Inc. for staffing workshare; source FedRAMP PM via Booz Allen sub-tier (waive exclusivity for this role). Reduces SB workshare to 28% — requires a teaming plan amendment and higher NovaSec allocation." },
+          { "id": "risk-2", "title": "Key Personnel LOI Gap (ClearPath)", "category": "Staffing", "likelihood": 55, "impact": 85, "score": 47, "description": "ClearPath Staffing Solutions has not signed the teaming agreement or the LOIs for 4 key billets. If ClearPath defects or delays, we cannot name all 8 key personnel in the proposal — a significant management evaluation scoring risk.", "mitigation": "Execute ClearPath teaming agreement with $500K minimum workshare guarantee by March 15. Escalate LOI signing to ClearPath VP level.", "contingency": "Submit proposal with 4 named + 4 'to be proposed' billets. Accept likely 10–15% management score reduction vs. fully-named competitors." },
+          { "id": "risk-3", "title": "DataBridge OCI Exposure", "category": "Legal/Compliance", "likelihood": 40, "impact": 75, "score": 30, "description": "DataBridge holds an active CISA advisory contract (70RSAT23C00087). If the COSS PWS overlaps with DataBridge's current scope, an OCI flag could force DataBridge out of the team or trigger a post-award protest.", "mitigation": "File OCI avoidance memo with legal by March 15. If scope overlap confirmed, narrow DataBridge workshare to exclude advisory functions.", "contingency": "Remove DataBridge from team; source cloud migration PM independently. Activate NovaSec SCRM tooling as sole SB sub (5% workshare) — SB target drops to 17%, requiring significant teaming plan revision." },
+          { "id": "risk-4", "title": "Government Schedule Slip — Compressed Proposal Window", "category": "Procurement", "likelihood": 50, "impact": 40, "score": 20, "description": "CO S. Lee has a history of 2–3 week slips on Draft RFP release. If Final RFP slips to April 25, proposal writing window shrinks from 52 to 37 days.", "mitigation": "Begin proposal outline on Draft RFP release; assign dedicated proposal manager by March 1.", "contingency": "Request 2-week extension if Final RFP slips more than 3 weeks. Government has historically granted one extension per procurement." },
+          { "id": "risk-5", "title": "Ethical Wall Certification Delay for SCRM Analysts", "category": "Staffing", "likelihood": 30, "impact": 35, "score": 10, "description": "Candidates 7 and 8 (SCRM Analysts) require ethical wall certification before they can be named in a CISA proposal. If legal processing exceeds 2 weeks, they cannot be named in the proposal.", "mitigation": "Route to legal by Feb 28 — 2-week processing gives clearance by March 15, before proposal writing begins.", "contingency": "Name the SCRM Analyst billets as 'to be proposed' with a bench description. Impact: minor management score reduction on non-Key Personnel billets." }
+        ],
+        "sources": [
+          { "label": "Company Profile", "ref": "INT-LEGAL-FY26", "retrievedAt": "2026-02-01", "excerpt": "OCI database check: DataBridge active on CISA 70RSAT23C00087. Advisory scope overlap assessment pending." },
+          { "label": "Industry Day 01/15", "ref": "ID-2026-0115-notes", "retrievedAt": "2026-01-15", "excerpt": "CO confirmed single extension available if solicitation schedule slips." }
+        ]
+      },
+      "analysis": {
+        "riskMatrixRead": "Two High-priority risks (Risk 1: score 58, Risk 2: score 47) require immediate action within 2 weeks. One Medium (Risk 3: score 30) requires legal resolution. Two Low risks (4, 5) are manageable with standard mitigation.",
+        "categoryPatterns": "Teaming and staffing risks dominate — both stem from the tight teaming timeline vs. the March 15 proposal naming deadline. Procurement schedule risk is external and mitigatable via early proposal start.",
+        "riskTrend": "Risk register is improving: Risk 1 drops from score 70 if DataBridge teaming agreement is signed by March 1. Risk 2 drops from score 60 if ClearPath escalation to VP level succeeds."
+      },
+      "intelligence": {
+        "competitorRiskExposure": "SAIC is also facing a DataBridge courtship window — intelligence suggests SAIC approached DataBridge after the Industry Day. First-mover advantage on the teaming agreement is critical.",
+        "legalReview": "In-house legal has capacity to process the OCI memo and ethical wall certifications in the same 2-week window — no resource conflict."
+      },
+      "recommendations": [
+        { "id": "rec-9-1", "text": "Execute DataBridge teaming agreement (exclusivity, $7.5M minimum) by March 1 — highest priority action.", "status": "proposed", "editable": true },
+        { "id": "rec-9-2", "text": "Escalate ClearPath LOI to VP level — offer $500K minimum guarantee — by Feb 20.", "status": "proposed", "editable": true },
+        { "id": "rec-9-3", "text": "File OCI avoidance memo for DataBridge by March 15 — route to in-house legal.", "status": "proposed", "editable": true },
+        { "id": "rec-9-4", "text": "Assign dedicated proposal manager by March 1 to begin outline on Draft RFP.", "status": "proposed", "editable": true },
+        { "id": "rec-9-5", "text": "Route ethical wall certification for SCRM Analysts to legal by Feb 28.", "status": "accepted", "rejectedReason": "", "editable": true }
+      ]
+    },
+    {
+      "id": "resourcePlan",
+      "sectionNumber": 10,
+      "title": "Resource Plan & B&P",
+      "thesis": "$350K B&P budget — 60% allocated; burn rate on track but capture manager hours underfunded at current pace.",
+      "status": "draft",
+      "confidence": 67,
+      "lastReviewed": "2026-02-04",
+      "reviewedBy": "J. Martinez",
+      "feeds": ["pricing"],
+      "propagated_to": [],
+      "conflicts": [],
+      "ai_reasoning": "B&P budget and spend data are from the internal capture file as of Feb 4. Burn rate analysis shows the proposal writing phase (Apr–Jun) is underfunded by $45K at current allocation levels — the proposal manager and technical writer hours were estimated for a 52-day window but the contingency scenario (37-day window) would require overtime premium not in the current model.",
+      "version_history": [
+        { "version": 1, "changed_at": "2026-02-10T08:30:00Z", "changed_by": "Capture Strategy Agent v3", "change_summary": "B&P budget and team allocation generated from capture file and internal finance records." }
+      ],
+      "chatSeed": [
+        { "q": "Where are we most at risk of budget overrun?", "a": "The proposal writing phase. At $148K allocated for Apr–Jun, we're assuming a 52-day window with no overtime. If the Final RFP slips and we're compressing into 37 days, we'll need to bring in a second technical writer and a dedicated cost volume lead — that's approximately $35–40K not currently in the model. Recommend a $45K contingency reserve that can be released after the Final RFP date is confirmed." }
+      ],
+      "facts": {
+        "bpBudget": {
+          "total": 350000,
+          "allocated": 210000,
+          "spent": 42000,
+          "remaining": 308000,
+          "burnRate": "$14K/month (current phase)"
+        },
+        "categories": [
+          { "id": "cat-1", "name": "Capture Management", "allocated": 45000, "spent": 18000, "remaining": 27000, "percentComplete": 40 },
+          { "id": "cat-2", "name": "Customer Engagement", "allocated": 15000, "spent": 8000, "remaining": 7000, "percentComplete": 53 },
+          { "id": "cat-3", "name": "Teaming / Legal", "allocated": 25000, "spent": 4000, "remaining": 21000, "percentComplete": 16 },
+          { "id": "cat-4", "name": "Proposal Writing (Apr–Jun)", "allocated": 148000, "spent": 0, "remaining": 148000, "percentComplete": 0 },
+          { "id": "cat-5", "name": "Pricing / PTW Analysis", "allocated": 22000, "spent": 12000, "remaining": 10000, "percentComplete": 54 },
+          { "id": "cat-6", "name": "Oral Presentation Prep", "allocated": 55000, "spent": 0, "remaining": 55000, "percentComplete": 0 }
+        ],
+        "teamAllocations": [
+          { "name": "J. Martinez", "role": "Capture Manager", "hoursAllocated": 320, "hoursSpent": 95, "percentRemaining": 70 },
+          { "name": "A. Chen", "role": "Technical Lead / Volume Author", "hoursAllocated": 280, "hoursSpent": 35, "percentRemaining": 87 },
+          { "name": "B. Thompson", "role": "Teaming & Business Development", "hoursAllocated": 200, "hoursSpent": 60, "percentRemaining": 70 },
+          { "name": "L. Santos", "role": "Solution Architect", "hoursAllocated": 160, "hoursSpent": 10, "percentRemaining": 94 },
+          { "name": "Finance Lead (TBD)", "role": "Cost Volume / Pricing", "hoursAllocated": 120, "hoursSpent": 0, "percentRemaining": 100 },
+          { "name": "Proposal Manager (TBD)", "role": "Proposal Manager", "hoursAllocated": 240, "hoursSpent": 0, "percentRemaining": 100 }
+        ],
+        "sources": [
+          { "label": "Company Profile", "ref": "INT-FINANCE-FY26Q1", "retrievedAt": "2026-02-04", "excerpt": "B&P budget: $350K approved. Spent to date: $42K. Categories and team allocations as of Feb 4 capture review." }
+        ]
+      },
+      "analysis": {
+        "burnVsProjection": "Current burn of $42K against $210K allocated through Feb is consistent with a pre-proposal capture phase. The proposal writing phase (Apr–Jun) consumes 42% of total budget ($148K) — the highest risk category. If the proposal window compresses to 37 days, this category is underfunded by ~$45K.",
+        "underfundingRisk": "Capture manager (J. Martinez) hours are 40% consumed with 70% of work remaining — on pace for overrun. Recommend 40-hour increase to capture management allocation from the unallocated $140K reserve.",
+        "reserveStatus": "$140K unallocated — available as contingency for timeline compression or oral presentation ramp-up."
+      },
+      "intelligence": {
+        "internalConstraint": "Finance has a Q3 budget freeze pending on all B&P requests above $25K incremental. If the $45K contingency is needed, it must be pre-approved before April 1.",
+        "benchmarkContext": "Industry benchmark for a $42M CPFF proposal B&P: $300K–$500K. Our $350K is in the lower quartile — sufficient for a strong proposal but no margin for major rework."
+      },
+      "recommendations": [
+        { "id": "rec-10-1", "text": "Increase capture manager allocation by 40 hours from the $140K reserve — approve before March 1.", "status": "proposed", "editable": true },
+        { "id": "rec-10-2", "text": "Pre-approve $45K contingency reserve for proposal timeline compression — submit to finance before April 1.", "status": "proposed", "editable": true },
+        { "id": "rec-10-3", "text": "Identify and assign Finance Lead and Proposal Manager by March 1.", "status": "proposed", "editable": true },
+        { "id": "rec-10-4", "text": "Review B&P burn rate at weekly capture call — flag any category at >60% spend before proposal phase begins.", "status": "accepted", "editable": true }
+      ]
+    }
+  ]
+}

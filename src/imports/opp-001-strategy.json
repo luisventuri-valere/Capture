@@ -1,0 +1,672 @@
+{
+  "id": "opp-001",
+  "noticeId": "DHS-2026-CLOUD-0042",
+  "title": "Enterprise Cloud Migration and Modernization Services",
+  "lastUpdated": "2026-02-10T16:45:00Z",
+  "captureManager": "Sarah Chen, VP Business Development",
+  "capturePhase": "Active Qualification",
+  "overallStatus": "ON_TRACK",
+  "sections": {
+    "strategicPositioning": {
+      "status": "CONFIRMED",
+      "lastReviewed": "2026-02-08",
+      "reviewedBy": "Executive Capture Team",
+      "positioning": {
+        "primeOrSub": "Prime",
+        "vehicle": "EAGLE II SB",
+        "setAsideCategory": "8(a)",
+        "sbTarget": 35,
+        "sbTargetBasis": "DHS OSDBU guidance for IT modernization contracts",
+        "naics": "541512",
+        "pscCode": "D302",
+        "competitionType": "Full and Open — 8(a) Set-Aside",
+        "pwin": 35,
+        "pwinHistory": [
+          { "date": "2026-01-28", "pwin": 28, "trigger": "Opportunity identified" },
+          { "date": "2026-02-01", "pwin": 32, "trigger": "Industry day attendance confirmed incumbent weakness" },
+          { "date": "2026-02-05", "pwin": 35, "trigger": "Go decision — FedRAMP High ATO confirmed as discriminator" }
+        ],
+        "targetAwardDate": "2026-07-15",
+        "contractType": "FFP Base / T&M Options",
+        "estimatedValue": 45000000,
+        "baseYearValue": 12500000,
+        "optionYearValue": 8125000,
+        "periodOfPerformance": "1 Base + 4 Option Years"
+      }
+    },
+    "winStrategy": {
+      "status": "CONFIRMED",
+      "lastReviewed": "2026-02-08",
+      "reviewedBy": "Capture Review Board",
+      "winThemes": [
+        {
+          "id": "WT-01",
+          "theme": "Accelerated Mission Outcomes Through Proven Methodology",
+          "narrative": "TechForward's CloudPathfinder methodology and AI-powered assessment tools have consistently delivered federal cloud migrations ahead of schedule. Our VA migration of 180 applications completed 4 months early, directly addressing GAO findings on DHS timeline slippage.",
+          "evidenceAnchors": ["VA Migration — 4 months ahead of schedule", "CloudPathfinder — 40% planning reduction", "DHS CISA ZTA — 8 months to Level 3"],
+          "evaluationFactorTarget": "M.1 Technical Approach",
+          "strengthRating": "STRONG"
+        },
+        {
+          "id": "WT-02",
+          "theme": "Zero-Day Compliance Through FedRAMP High Authorization",
+          "narrative": "Our active FedRAMP High ATO eliminates the 6-12 month authorization timeline that plagues every new cloud deployment. While competitors seek authorization, TechForward is already operational — reducing DHS risk and accelerating time-to-value.",
+          "evidenceAnchors": ["3 active FedRAMP High ATOs", "Zero audit findings across 6 assessments", "Agency ATO expiration eliminates incumbent"],
+          "evaluationFactorTarget": "M.1 Technical Approach / M.3 Past Performance",
+          "strengthRating": "STRONG"
+        },
+        {
+          "id": "WT-03",
+          "theme": "Mission-Focused Security Integration, Not Bolted-On Compliance",
+          "narrative": "TechForward embeds zero trust architecture and continuous compliance monitoring from day one of migration planning. Our CISA SOC experience proves we understand DHS's unique security requirements — achieving ZTA Level 3 maturity in 8 months where others take 18+.",
+          "evidenceAnchors": ["DHS CISA ZTA implementation", "15-min MTTD", "Zero trust Level 3 in 8 months"],
+          "evaluationFactorTarget": "M.1 Technical Approach / M.2 Management Approach",
+          "strengthRating": "STRONG"
+        }
+      ],
+      "discriminators": [
+        {
+          "id": "D-01",
+          "discriminator": "FedRAMP High ATO — Operational Day One",
+          "category": "Compliance",
+          "impact": "Eliminates 6-12 month authorization risk. Only competitor with active FedRAMP High for cloud migration services.",
+          "proof": "3 active FedRAMP High ATOs maintained since 2023 with zero findings",
+          "competitorGap": "Peraton (Agency ATO expiring), Leidos/NexGen (FedRAMP Moderate only), CACI (1 FedRAMP High — different scope)"
+        },
+        {
+          "id": "D-02",
+          "discriminator": "CloudPathfinder AI Assessment Tool",
+          "category": "Technical Innovation",
+          "impact": "40% reduction in migration planning phase. Automated dependency mapping identifies risks human assessment misses.",
+          "proof": "VA: 180 applications assessed in 3.5 months vs 6-month estimate. Identified 23 undocumented dependencies that would have caused migration failures.",
+          "competitorGap": "No competitor offers equivalent AI-powered assessment. Closest alternative is manual assessment taking 2x longer."
+        },
+        {
+          "id": "D-03",
+          "discriminator": "Dual SDVOSB + 8(a) Certification",
+          "category": "Socioeconomic",
+          "impact": "Maximizes small business credit for DHS. Single award counts toward both SDVOSB and 8(a) goals simultaneously.",
+          "proof": "Active certifications through 2028. SBA-verified SDVOSB and 8(a) status.",
+          "competitorGap": "Leidos/NexGen: Only 8(a) through protégé. CACI/Vertex: Only 8(a) through JV. Neither provides dual credit."
+        },
+        {
+          "id": "D-04",
+          "discriminator": "Proven DHS Mission Understanding",
+          "category": "Past Performance",
+          "impact": "Exceptional CPARS on active DHS cybersecurity contract demonstrates deep understanding of DHS operational environment, security requirements, and culture.",
+          "proof": "DHS Cybersecurity Modernization: Exceptional CPARS (FY2024). Army Cloud Migration: Very Good CPARS.",
+          "competitorGap": "No other 8(a) competitor has Exceptional CPARS with DHS."
+        }
+      ]
+    },
+    "teamStrategy": {
+      "status": "NEEDS_REVIEW",
+      "lastReviewed": "2026-02-05",
+      "reviewedBy": "Capture Manager",
+      "nextReviewDate": "2026-02-15",
+      "capabilityGaps": [
+        {
+          "id": "CG-01",
+          "gap": "Enterprise-Scale Data Migration & ETL",
+          "severity": "HIGH",
+          "description": "DHS has 340+ applications with complex data migration requirements including legacy databases (Oracle, DB2, Sybase) requiring transformation for cloud-native architectures. TechForward's data migration experience is limited to 180 applications.",
+          "recommendation": "Partner with DataBridge Analytics (incumbent sub) or MigrationPro Federal",
+          "status": "NEGOTIATING",
+          "targetPartner": "DataBridge Analytics"
+        },
+        {
+          "id": "CG-02",
+          "gap": "DHS-Specific ServiceNow Integration",
+          "severity": "MEDIUM",
+          "description": "DHS OCIO uses ServiceNow as primary ITSM platform. Cloud migration must integrate with existing ServiceNow workflows, CMDB, and change management processes. TechForward has ServiceNow experience but not DHS-specific configuration.",
+          "recommendation": "Partner with GovFlow Technologies — active DHS ServiceNow integrator",
+          "status": "CONTACTED",
+          "targetPartner": "GovFlow Technologies"
+        },
+        {
+          "id": "CG-03",
+          "gap": "Mainframe Application Modernization",
+          "severity": "MEDIUM",
+          "description": "12 of the 340+ applications run on legacy mainframes (IBM z/OS). TechForward has limited mainframe-to-cloud migration experience. Requires specialized skills in application decomposition and re-platforming.",
+          "recommendation": "Partner with MainframeNext Inc. or Astadia Federal",
+          "status": "IDENTIFIED",
+          "targetPartner": "MainframeNext Inc."
+        }
+      ],
+      "recommendedPartners": [
+        {
+          "name": "DataBridge Analytics",
+          "role": "Data Migration & ETL Execution",
+          "workshare": 15,
+          "rationale": "Currently Peraton's subcontractor on this exact contract. Intimately familiar with DHS data architectures. Actively interested in switching to TechForward team due to payment disputes with Peraton.",
+          "status": "NEGOTIATING",
+          "riskLevel": "MEDIUM",
+          "riskNotes": "OCI concerns if they share proprietary incumbent information. Must establish ethical wall."
+        },
+        {
+          "name": "GovFlow Technologies",
+          "role": "ServiceNow Integration & ITSM",
+          "workshare": 10,
+          "rationale": "Active DHS ServiceNow integrator with Satisfactory+ CPARS. 8(a) certified — contributes to SB workshare.",
+          "status": "CONTACTED",
+          "riskLevel": "LOW",
+          "riskNotes": "May also be pursued by CACI/Vertex team."
+        },
+        {
+          "name": "MainframeNext Inc.",
+          "role": "Mainframe Application Modernization",
+          "workshare": 8,
+          "rationale": "Specialized mainframe-to-cloud migration firm. AWS Migration Competency partner. Completed 3 federal mainframe modernizations.",
+          "status": "IDENTIFIED",
+          "riskLevel": "LOW",
+          "riskNotes": "Small firm — verify capacity to support DHS timeline."
+        }
+      ]
+    },
+    "customerEngagement": {
+      "status": "NEEDS_REVIEW",
+      "lastReviewed": "2026-02-03",
+      "reviewedBy": "Capture Manager",
+      "nextReviewDate": "2026-02-12",
+      "keyRelationships": [
+        {
+          "name": "Patricia Nguyen",
+          "title": "Deputy CIO for Infrastructure",
+          "organization": "DHS OCIO",
+          "relationshipStrength": "WARM",
+          "lastContact": "2026-01-15",
+          "contactMethod": "Industry Day Conversation",
+          "notes": "Expressed frustration with incumbent migration delays. Asked about our FedRAMP High ATO. Suggested we look at the upcoming RFP closely.",
+          "nextAction": "Schedule capabilities briefing — one-on-one",
+          "nextActionDate": "2026-02-15",
+          "owner": "Sarah Chen"
+        },
+        {
+          "name": "Robert Williams",
+          "title": "Contracting Officer",
+          "organization": "DHS OCIO Procurement",
+          "relationshipStrength": "NEUTRAL",
+          "lastContact": "2026-01-28",
+          "contactMethod": "RFI Response Submission",
+          "notes": "Professional interaction only. Acknowledged receipt of our RFI response. No substantive discussion.",
+          "nextAction": "Submit clarifying questions on draft PWS",
+          "nextActionDate": "2026-02-20",
+          "owner": "Contracts Manager"
+        },
+        {
+          "name": "Dr. Robert J. Eastman",
+          "title": "Chief Information Officer",
+          "organization": "DHS",
+          "relationshipStrength": "COLD",
+          "lastContact": null,
+          "contactMethod": null,
+          "notes": "No direct contact. CEO met briefly at AFCEA conference in Nov 2025. Need to develop this relationship through Deputy CIO channel.",
+          "nextAction": "Request introduction through Patricia Nguyen",
+          "nextActionDate": "2026-02-28",
+          "owner": "CEO"
+        },
+        {
+          "name": "Marcus Johnson",
+          "title": "Technical Evaluation Board Chair",
+          "organization": "DHS OCIO Engineering",
+          "relationshipStrength": "WARM",
+          "lastContact": "2025-12-10",
+          "contactMethod": "Technical Interchange Meeting (active DHS contract)",
+          "notes": "Knows TechForward's work quality from cybersecurity modernization contract. Likely TEB chair or member for this procurement. Positive impression of our zero trust implementation.",
+          "nextAction": "No direct engagement — procurement sensitive. Ensure oral presentation team is prepared for technical depth.",
+          "nextActionDate": null,
+          "owner": "Capture Manager"
+        },
+        {
+          "name": "Lisa Park",
+          "title": "OSDBU Small Business Specialist",
+          "organization": "DHS Office of Small & Disadvantaged Business Utilization",
+          "relationshipStrength": "WARM",
+          "lastContact": "2026-01-22",
+          "contactMethod": "SB Matchmaking Event",
+          "notes": "Supportive of TechForward's dual SDVOSB/8(a) status. Mentioned DHS is under pressure to increase SB cloud migration awards. Offered to facilitate introduction to OCIO acquisition team.",
+          "nextAction": "Accept introduction offer — coordinate with OCIO acquisition staff",
+          "nextActionDate": "2026-02-14",
+          "owner": "Sarah Chen"
+        }
+      ]
+    },
+    "staffingStrategy": {
+      "status": "DRAFT",
+      "lastReviewed": "2026-02-01",
+      "reviewedBy": "HR Director",
+      "nextReviewDate": "2026-02-14",
+      "criticalPositions": [
+        {
+          "lcat": "Program Manager",
+          "designation": "Key Personnel",
+          "clearance": "TS/SCI",
+          "status": "COMMITTED",
+          "candidate": "Angela Rodriguez",
+          "source": "Internal",
+          "startDate": "2026-08-01",
+          "notes": "15 years PMP experience. Currently TechForward's DHS Cybersecurity Modernization PM. Will transition upon award."
+        },
+        {
+          "lcat": "Technical Lead / Cloud Architect",
+          "designation": "Key Personnel",
+          "clearance": "TS/SCI",
+          "status": "LOI_SIGNED",
+          "candidate": "David Kim",
+          "source": "External — currently Booz Allen Hamilton",
+          "startDate": "2026-08-01",
+          "notes": "Former DHS OCIO cloud architect. AWS Solutions Architect Professional + Security Specialty. 12 years federal cloud experience."
+        },
+        {
+          "lcat": "Security Engineer Lead",
+          "designation": "Key Personnel",
+          "clearance": "TS/SCI",
+          "status": "LOI_SIGNED",
+          "candidate": "Rachel Foster",
+          "source": "External — currently Peraton (this contract)",
+          "startDate": "2026-08-01",
+          "notes": "Ethical wall protocols in place. No proprietary information transfer. Recruited independently."
+        },
+        {
+          "lcat": "DevSecOps Engineer Lead",
+          "designation": "Critical",
+          "clearance": "Secret",
+          "status": "COMMITTED",
+          "candidate": "Marcus Williams",
+          "source": "Internal",
+          "startDate": "2026-08-01",
+          "notes": "Currently on TechForward Army cloud program. AWS DevOps Engineer Professional certified."
+        },
+        {
+          "lcat": "Migration Architect",
+          "designation": "Critical",
+          "clearance": "TS/SCI",
+          "status": "SOURCING",
+          "candidate": null,
+          "source": "External pipeline — 3 candidates in review",
+          "startDate": "2026-08-01",
+          "notes": "Requires AWS Migration Competency and DHS experience. Recruiting priority."
+        },
+        {
+          "lcat": "FinOps Analyst",
+          "designation": "Important",
+          "clearance": "Secret",
+          "status": "IDENTIFIED",
+          "candidate": "Priya Sharma",
+          "source": "Internal — currently commercial practice",
+          "startDate": "2026-09-01",
+          "notes": "FinOps Certified Practitioner. Transitioning from commercial to federal."
+        },
+        {
+          "lcat": "Data Migration Lead",
+          "designation": "Critical",
+          "clearance": "TS/SCI",
+          "status": "PARTNER",
+          "candidate": "Provided by DataBridge Analytics",
+          "source": "Teaming partner",
+          "startDate": "2026-08-01",
+          "notes": "DataBridge will provide lead + 3 data engineers. Currently on incumbent contract."
+        },
+        {
+          "lcat": "ServiceNow Integration Specialist",
+          "designation": "Important",
+          "clearance": "Secret",
+          "status": "PARTNER",
+          "candidate": "Provided by GovFlow Technologies",
+          "source": "Teaming partner",
+          "startDate": "2026-09-01",
+          "notes": "GovFlow will provide DHS-certified ServiceNow developer. Contingent on teaming agreement."
+        }
+      ],
+      "clearancePipeline": {
+        "tsScicurrent": 18,
+        "secretCurrent": 32,
+        "inProcess": 8,
+        "averageTimeToFill": "45 days for cleared, 90 days for clearance processing",
+        "recruitingPartners": ["ClearanceJobs", "Cleared Recruiting Solutions", "MTSI Staffing"]
+      }
+    },
+    "pastPerformance": {
+      "status": "CONFIRMED",
+      "lastReviewed": "2026-02-07",
+      "reviewedBy": "Contracts Manager",
+      "leadReferences": [
+        {
+          "contractName": "DHS Cybersecurity Modernization Program",
+          "contractNumber": "70CMSD23C00045",
+          "agency": "Department of Homeland Security",
+          "component": "Cybersecurity and Infrastructure Security Agency",
+          "contractValue": 12500000,
+          "contractType": "FFP",
+          "periodOfPerformance": "Oct 2023 – Sep 2028",
+          "cparsRating": "Exceptional",
+          "relevance": "CRITICAL",
+          "relevanceFactors": ["DHS agency", "Cloud security", "Zero trust architecture", "Cleared workforce management"],
+          "cor": { "name": "Michelle Adams", "phone": "202-555-0147", "email": "michelle.adams@cisa.dhs.gov" },
+          "highlights": [
+            "Achieved ZTA Level 3 maturity in 8 months — 4 months ahead of schedule",
+            "Implemented microsegmentation across 12,000 endpoints with zero service disruption",
+            "Reduced MTTD from 45 minutes to 15 minutes — 67% improvement",
+            "Staffed 30 TS/SCI-cleared personnel within 45 days of award"
+          ]
+        },
+        {
+          "contractName": "Army Enterprise Cloud Migration Program",
+          "contractNumber": "W911QX-22-C-0078",
+          "agency": "Department of the Army",
+          "component": "Army CIO/G-6",
+          "contractValue": 8900000,
+          "contractType": "T&M",
+          "periodOfPerformance": "Mar 2022 – Mar 2027",
+          "cparsRating": "Very Good",
+          "relevance": "HIGH",
+          "relevanceFactors": ["Cloud migration at scale", "AWS/Azure multi-cloud", "DevSecOps pipeline", "FinOps implementation"],
+          "cor": { "name": "Lt. Col. James Whitaker", "phone": "703-555-0293", "email": "james.whitaker@army.mil" },
+          "highlights": [
+            "Migrated 180 applications to AWS GovCloud and Azure Government — 4 months ahead of schedule",
+            "Implemented CloudPathfinder assessment tool reducing planning from 6 months to 3.5 months",
+            "Achieved $12M annual savings through FinOps optimization — RI utilization from 28% to 87%",
+            "Zero data loss across all migration waves — 100% data integrity verified"
+          ]
+        },
+        {
+          "contractName": "Treasury IT Modernization Support",
+          "contractNumber": "2032H522C00091",
+          "agency": "Department of the Treasury",
+          "component": "Office of the CIO",
+          "contractValue": 6200000,
+          "contractType": "FFP",
+          "periodOfPerformance": "Jun 2021 – Jun 2026",
+          "cparsRating": "Very Good",
+          "relevance": "MEDIUM",
+          "relevanceFactors": ["IT modernization", "Cleared workforce", "FedRAMP compliance", "Agile delivery"],
+          "cor": { "name": "Karen Blackwell", "phone": "202-555-0384", "email": "karen.blackwell@treasury.gov" },
+          "highlights": [
+            "Modernized 45 legacy applications to cloud-native architecture",
+            "Staffed 22 cleared engineers in 38 days — below 45-day commitment",
+            "Achieved FedRAMP High compliance for 3 cloud services",
+            "Implemented CI/CD pipeline reducing deployment time from 2 weeks to 4 hours"
+          ]
+        }
+      ],
+      "partnerReferences": [
+        {
+          "partner": "DataBridge Analytics",
+          "contractName": "USCIS Data Modernization",
+          "contractNumber": "70CDCR23C00012",
+          "agency": "DHS — U.S. Citizenship and Immigration Services",
+          "contractValue": 4200000,
+          "cparsRating": "Satisfactory",
+          "relevance": "HIGH — DHS data migration directly relevant",
+          "highlights": ["Migrated 50TB of legacy USCIS data to AWS", "ETL pipeline processing 2M records/day"]
+        },
+        {
+          "partner": "GovFlow Technologies",
+          "contractName": "DHS ServiceNow Enterprise Deployment",
+          "contractNumber": "70CMSD24C00089",
+          "agency": "DHS — Office of the CIO",
+          "contractValue": 3100000,
+          "cparsRating": "Very Good",
+          "relevance": "HIGH — DHS OCIO ServiceNow integration directly relevant",
+          "highlights": ["Deployed ServiceNow ITSM across 6 DHS components", "Integrated with existing Splunk and Tenable environments"]
+        }
+      ]
+    },
+    "pricingStrategy": {
+      "status": "DRAFT",
+      "lastReviewed": "2026-02-03",
+      "reviewedBy": "Finance Director",
+      "nextReviewDate": "2026-02-18",
+      "priceToWin": 42000000,
+      "ptw_basis": "Analysis of 8 comparable DHS OCIO cloud migration awards (FY2023-2025). Adjusted for inflation, scope complexity, and FedRAMP requirements. Weighted average of bottom-up engineering estimate ($44.2M) and top-down competitive analysis ($39.8M).",
+      "philosophy": "Competitive but not lowest. Price above floor established by PTW analysis but below incumbent's current burn rate. Differentiate on value, not price. Accept that Leidos/NexGen may price lower — win on technical and past performance superiority.",
+      "blendedRate": 185,
+      "competitorRateEstimates": [
+        { "competitor": "Leidos/NexGen", "estimatedRate": 178, "basis": "GSA schedule + mentor-protégé discount" },
+        { "competitor": "CACI/Vertex", "estimatedRate": 192, "basis": "Recent DHS EAGLE II task order rates" },
+        { "competitor": "Peraton (incumbent)", "estimatedRate": 195, "basis": "Current contract billing rates — public data" }
+      ],
+      "marginTargets": {
+        "overall": 22,
+        "keyPersonnel": 18,
+        "commodityLabor": 25,
+        "odcs": 8,
+        "subcontractors": 5
+      },
+      "pricingRisks": [
+        "Leidos may subsidize NexGen's pricing through mentor-protégé arrangement",
+        "DHS OCIO evaluation methodology unknown — LPTA vs Best Value not yet confirmed",
+        "T&M option years create rate risk if labor market tightens"
+      ]
+    },
+    "timeline": {
+      "status": "CONFIRMED",
+      "lastReviewed": "2026-02-08",
+      "reviewedBy": "Capture Manager",
+      "milestones": [
+        {
+          "id": "MS-01",
+          "milestone": "Go/No-Go Decision",
+          "date": "2026-02-05",
+          "status": "COMPLETED",
+          "owner": "Executive Team",
+          "notes": "Unanimous GO decision. Board approved B&P budget of $350K.",
+          "deliverables": ["Go/No-Go briefing", "B&P authorization"]
+        },
+        {
+          "id": "MS-02",
+          "milestone": "Teaming Agreements Executed",
+          "date": "2026-02-20",
+          "status": "IN_PROGRESS",
+          "owner": "Contracts Manager",
+          "notes": "DataBridge NDA signed. TA in legal review. GovFlow NDA pending.",
+          "deliverables": ["NDAs (3)", "Teaming agreements (3)", "Workshare matrix"]
+        },
+        {
+          "id": "MS-03",
+          "milestone": "Customer Engagement Complete",
+          "date": "2026-02-28",
+          "status": "IN_PROGRESS",
+          "owner": "Capture Manager",
+          "notes": "Deputy CIO briefing scheduled Feb 15. OSDBU introduction pending.",
+          "deliverables": ["Capabilities briefing deck", "Call reports", "Updated CONOPS"]
+        },
+        {
+          "id": "MS-04",
+          "milestone": "RFP Release (Expected)",
+          "date": "2026-03-01",
+          "status": "PENDING",
+          "owner": "DHS OCIO",
+          "notes": "Based on procurement timeline from pre-solicitation notice. May slip 1-2 weeks.",
+          "deliverables": ["RFP analysis", "Compliance matrix", "Shred matrix"]
+        },
+        {
+          "id": "MS-05",
+          "milestone": "Proposal Kick-Off",
+          "date": "2026-03-03",
+          "status": "PENDING",
+          "owner": "Proposal Manager",
+          "notes": "Proposal team pre-staged. Templates and compliance matrix ready.",
+          "deliverables": ["Proposal management plan", "Author assignments", "Schedule"]
+        },
+        {
+          "id": "MS-06",
+          "milestone": "Pink Team Review",
+          "date": "2026-03-25",
+          "status": "PENDING",
+          "owner": "Quality Director",
+          "notes": "50% draft review. Focus on compliance and win theme integration.",
+          "deliverables": ["Pink team review comments", "Compliance matrix update"]
+        },
+        {
+          "id": "MS-07",
+          "milestone": "Red Team Review",
+          "date": "2026-04-15",
+          "status": "PENDING",
+          "owner": "Quality Director",
+          "notes": "90% draft review. External reviewers from advisory board.",
+          "deliverables": ["Red team review comments", "Strengths/weaknesses assessment"]
+        },
+        {
+          "id": "MS-08",
+          "milestone": "Proposal Submission",
+          "date": "2026-04-30",
+          "status": "PENDING",
+          "owner": "Proposal Manager",
+          "notes": "Submission deadline per pre-solicitation notice. Final 48 hours for executive review and production.",
+          "deliverables": ["Final proposal volumes", "Cost volume", "Administrative volume"]
+        }
+      ]
+    },
+    "riskRegister": {
+      "status": "NEEDS_REVIEW",
+      "lastReviewed": "2026-02-05",
+      "reviewedBy": "Capture Manager",
+      "nextReviewDate": "2026-02-15",
+      "risks": [
+        {
+          "id": "R-01",
+          "risk": "Teaming Partner DataBridge Analytics Raises OCI Concerns",
+          "category": "Teaming",
+          "likelihood": "MEDIUM",
+          "likelihoodScore": 3,
+          "impact": "HIGH",
+          "impactScore": 4,
+          "riskScore": 12,
+          "mitigation": "Establish formal ethical wall. DataBridge provides only publicly available migration data. Legal review of OCI mitigation plan. Prepare alternate partner (MigrationPro Federal) as backup.",
+          "contingency": "Replace DataBridge with MigrationPro Federal within 2 weeks. Teaming agreement includes OCI clause with termination provision.",
+          "owner": "Contracts Manager",
+          "status": "MONITORING",
+          "lastUpdated": "2026-02-08"
+        },
+        {
+          "id": "R-02",
+          "risk": "RFP Changes Evaluation to LPTA Instead of Best Value",
+          "category": "Procurement",
+          "likelihood": "LOW",
+          "likelihoodScore": 2,
+          "impact": "CRITICAL",
+          "impactScore": 5,
+          "riskScore": 10,
+          "mitigation": "Prepare dual pricing strategy — competitive rates ready for LPTA scenario. Maintain margin flexibility in commodity labor categories. Monitor procurement signals through OSDBU contact.",
+          "contingency": "Activate aggressive pricing model reducing PTW from $42M to $38M. Increase subcontractor workshare to leverage lower rates.",
+          "owner": "Pricing Lead",
+          "status": "MONITORING",
+          "lastUpdated": "2026-02-05"
+        },
+        {
+          "id": "R-03",
+          "risk": "Key Personnel David Kim (Tech Lead) Receives Counteroffer",
+          "category": "Staffing",
+          "likelihood": "MEDIUM",
+          "likelihoodScore": 3,
+          "impact": "HIGH",
+          "impactScore": 4,
+          "riskScore": 12,
+          "mitigation": "Signed LOI with competitive compensation package including retention bonus. Monthly check-ins with candidate. NDA prevents disclosure of pursuit details.",
+          "contingency": "Backup candidate Jason Patel (currently GDIT) — preliminary interest confirmed. Would require additional 2-week recruiting cycle.",
+          "owner": "HR Director",
+          "status": "ACTIVE",
+          "lastUpdated": "2026-02-10"
+        },
+        {
+          "id": "R-04",
+          "risk": "Incumbent Peraton Files Pre-Award Protest",
+          "category": "Procurement",
+          "likelihood": "LOW",
+          "likelihoodScore": 2,
+          "impact": "MEDIUM",
+          "impactScore": 3,
+          "riskScore": 6,
+          "mitigation": "Ensure all customer engagements follow procurement integrity guidelines. Document all interactions. No contact with evaluation board members during blackout period.",
+          "contingency": "Legal team prepared protest response template. Maintain proposal readiness through extended timeline.",
+          "owner": "Legal Counsel",
+          "status": "MONITORING",
+          "lastUpdated": "2026-02-05"
+        },
+        {
+          "id": "R-05",
+          "risk": "DHS Continuing Resolution Delays Award Beyond July 2026",
+          "category": "Budget",
+          "likelihood": "HIGH",
+          "likelihoodScore": 4,
+          "impact": "MEDIUM",
+          "impactScore": 3,
+          "riskScore": 12,
+          "mitigation": "TMF funding ($85M) is separate from annual appropriations — less susceptible to CR. Confirm with OSDBU that this procurement is TMF-funded. Maintain key personnel commitments through extended timeline.",
+          "contingency": "Extend all LOIs by 6 months. Negotiate TA extensions with teaming partners. Adjust B&P spend to extend runway.",
+          "owner": "Capture Manager",
+          "status": "ACTIVE",
+          "lastUpdated": "2026-02-08"
+        }
+      ]
+    },
+    "resourcePlan": {
+      "status": "CONFIRMED",
+      "lastReviewed": "2026-02-08",
+      "reviewedBy": "Finance Director",
+      "bpBudget": 350000,
+      "bpSpentToDate": 42000,
+      "bpBurnRate": 15000,
+      "bpProjectedTotal": 340000,
+      "bpCategories": [
+        { "category": "Labor — Capture", "budget": 120000, "spent": 22000 },
+        { "category": "Labor — Proposal", "budget": 140000, "spent": 5000 },
+        { "category": "Labor — Pricing", "budget": 35000, "spent": 8000 },
+        { "category": "Consultants / SMEs", "budget": 25000, "spent": 5000 },
+        { "category": "Travel", "budget": 15000, "spent": 2000 },
+        { "category": "Production / Submission", "budget": 15000, "spent": 0 }
+      ],
+      "teamMembers": [
+        {
+          "name": "Sarah Chen",
+          "role": "Capture Manager",
+          "allocation": 60,
+          "startDate": "2026-01-28",
+          "endDate": "2026-07-15",
+          "responsibilities": ["Customer engagement", "Teaming coordination", "Win strategy", "Go/No-Go briefings"]
+        },
+        {
+          "name": "James Rodriguez",
+          "role": "Proposal Manager",
+          "allocation": 20,
+          "startDate": "2026-02-01",
+          "endDate": "2026-05-15",
+          "responsibilities": ["Proposal planning", "Compliance matrix", "Author management", "Production"]
+        },
+        {
+          "name": "Dr. Amir Hassan",
+          "role": "Technical Solution Architect",
+          "allocation": 30,
+          "startDate": "2026-02-01",
+          "endDate": "2026-05-01",
+          "responsibilities": ["Technical approach development", "Oral presentation preparation", "Solution architecture"]
+        },
+        {
+          "name": "Lisa Wong",
+          "role": "Pricing Analyst",
+          "allocation": 25,
+          "startDate": "2026-02-15",
+          "endDate": "2026-05-01",
+          "responsibilities": ["Price to win analysis", "Cost volume development", "Rate analysis", "Basis of estimate"]
+        },
+        {
+          "name": "Michael Brown",
+          "role": "Contracts Manager",
+          "allocation": 15,
+          "startDate": "2026-02-01",
+          "endDate": "2026-05-15",
+          "responsibilities": ["Teaming agreements", "NDA management", "RFP compliance review", "Representations & certifications"]
+        },
+        {
+          "name": "Jennifer Davis",
+          "role": "Past Performance Lead",
+          "allocation": 15,
+          "startDate": "2026-03-01",
+          "endDate": "2026-04-30",
+          "responsibilities": ["Past performance volume", "Reference coordination", "CPARS documentation", "Relevance narratives"]
+        }
+      ]
+    }
+  }
+}

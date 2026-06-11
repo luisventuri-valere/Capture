@@ -1,0 +1,454 @@
+{
+  "id": "SOL-001",
+  "opportunityId": "opp-001",
+  "title": "Enterprise Cloud Migration and Modernization Services",
+  "noticeId": "DHS-2026-CLOUD-0042",
+  "generatedBy": "Solutioning Agent (SOL-001) · Strength Validator (STV-001) · v3 · 2026-02-10",
+  "lastGenerated": "2026-02-10",
+  "overallConfidence": 72,
+  "overview": {
+    "howThreshold": 70,
+    "validatedCount": 3,
+    "totalCount": 6,
+    "triageCounts": {
+      "passed": 3,
+      "conditional": 2,
+      "failed": 1
+    },
+    "winThemes": [
+      {
+        "id": "WT-01",
+        "title": "Proven FedRAMP High Migration at Scale",
+        "sourceRef": "Strategy §2"
+      },
+      {
+        "id": "WT-02",
+        "title": "DHS-Native ServiceNow & Workflow Integration",
+        "sourceRef": "Strategy §2"
+      },
+      {
+        "id": "WT-03",
+        "title": "8(a) Prime with Full Small Business Team",
+        "sourceRef": "Strategy §2"
+      }
+    ],
+    "goalCoverage": {
+      "percentage": 75,
+      "coveredFactors": ["M.1 — Technical Approach", "M.2 — Management Approach", "M.3 — Past Performance"],
+      "uncoveredFactor": {
+        "id": "M.4",
+        "label": "M.4 — Transition & Staffing",
+        "note": "No validated solution element addresses the RFP's transition-in staffing ramp requirement. Staffing strategy must produce a position-by-position plan before this factor can be covered.",
+        "feedsTab": "Staffing"
+      }
+    }
+  },
+  "elements": [
+    {
+      "id": "sol-1",
+      "title": "Wave-Based Application Migration",
+      "category": "Cloud Migration",
+      "status": "validated",
+      "winTheme": "WT-01",
+      "howRatio": 82,
+      "linkage": {
+        "winThemes": ["WT-01"],
+        "discriminators": ["D-01"],
+        "capabilityGaps": ["CG-01"],
+        "partners": ["DataBridge Analytics"]
+      },
+      "customerSaid": "The Government requires a structured approach to migrating 340+ applications from legacy on-premises infrastructure to a FedRAMP High authorized cloud environment within a 24-month base period, with minimal disruption to DHS mission operations.",
+      "customerReallyWants": "Zero mission outages during migration. The 340-application number is a floor — DHS expects the contractor to find and plan for applications the inventory missed. They want wave sequencing that protects high-criticality systems until the cloud baseline is proven.",
+      "customerDoesntKnow": "The current DHS application inventory undercounts by approximately 15–20% based on USAspending data patterns from the incumbent (Peraton). The incumbent's wave plan was built around their own tooling and will not transfer cleanly. TechForward's FedRAMP High ATO covers the exact AWS GovCloud regions DHS is targeting — a self-service advantage that eliminates the 4–6 week ATO reciprocity review competitors without an existing ATO will face.",
+      "solution": {
+        "statement": "TechForward will execute a five-wave migration sequenced by criticality tier, with DataBridge Analytics providing ETL and schema mapping for all legacy data stores, delivering 340+ applications to FedRAMP High cloud with zero Tier-1 mission outages.",
+        "method": "Waves 1–2 target non-mission-critical systems and establish the cloud baseline. Wave 3 introduces Tier-2 systems with dual-run parallel operation for 30 days. Waves 4–5 migrate Tier-1 mission systems after baseline is DHS-accepted. DataBridge's incumbent knowledge of all legacy schemas eliminates the discovery phase; TechForward's existing FedRAMP High ATO eliminates the authorization queue.",
+        "metric": "Zero Tier-1 outages during migration; 95% of 340+ applications migrated by month 18; all Tier-1 systems migrated and DHS-accepted by month 22.",
+        "proof": "TechForward migrated 180 applications to AWS GovCloud FedRAMP High for CBP (2023–2024) — zero critical outages, DHS Exceptional CPARS. DataBridge executed schema mapping for 12 federal agencies; they know the DHS HR Connect and TECS legacy schemas from a prior DHS subcontract."
+      },
+      "evidence": [
+        { "label": "CBP FedRAMP High migration — 180 apps, zero outages (2023–2024)", "cpars": "Exceptional" },
+        { "label": "DataBridge — prior DHS subaward, TECS and HR Connect schema mapping" },
+        { "label": "TechForward FedRAMP High ATO — AWS GovCloud us-east / us-west" }
+      ],
+      "sbsValidation": {
+        "overall": "PASSED",
+        "demonstrable": {
+          "verdict": "Pass",
+          "rationale": "CBP migration (180 apps, zero outages, Exceptional CPARS) directly demonstrates the claimed scale and zero-outage method. DataBridge's prior DHS subaward confirms schema-mapping capability for the specific legacy systems in scope."
+        },
+        "differentiating": {
+          "verdict": "Pass",
+          "rationale": "The FedRAMP High ATO self-service advantage is quantified (4–6 week lead time delta vs. competitors without an ATO). The DataBridge incumbent schema knowledge is exclusive — no other team has it without a prior DHS relationship."
+        },
+        "defensible": {
+          "verdict": "Pass",
+          "rationale": "Claim is anchored to a named contract, CPARS rating, and specific application count. The method (five-wave, criticality-tiered, dual-run for Tier-2) is precise enough to defend under technical evaluation questioning."
+        },
+        "suggestions": [
+          {
+            "id": "sol-1-s1",
+            "text": "Add the CBP contract number (GS-35F-0119Y) to the evidence anchor so evaluators can verify independently.",
+            "status": "proposed"
+          },
+          {
+            "id": "sol-1-s2",
+            "text": "Quantify the 4–6 week ATO advantage with a named competitor example in the proposal narrative (cite public FedRAMP PMO authorization queue data, not competitor-specific intel).",
+            "status": "proposed"
+          }
+        ],
+        "gapResolution": "Resolves CG-01 (Data Migration & ETL at scale) — DataBridge fills the gap at 20% workshare."
+      },
+      "envelope": {
+        "confidence": 82,
+        "aiReasoning": "sol-1 is the anchor element — it carries the most evaluator scrutiny because 340 applications is the headline requirement. The CBP proof point is strong and specific. The DataBridge partnership is the right answer for CG-01, and the FedRAMP ATO advantage is real and measurable. Confidence would reach 90+ if the CBP contract number were in the evidence package and the DataBridge TA were signed.",
+        "sources": [
+          { "label": "CBP — ATO migration CPARS record" },
+          { "label": "DataBridge — prior DHS subaward (USAspending)" },
+          { "label": "FedRAMP PMO — TechForward authorization record" },
+          { "label": "Draft PWS — Section 3.1 migration requirements" }
+        ],
+        "versionHistory": [
+          { "version": 1, "changedAt": "2026-02-10", "changedBy": "SOL-001", "changeSummary": "Generated from strategy cascade; DataBridge linked as CG-01 fill." }
+        ]
+      }
+    },
+    {
+      "id": "sol-2",
+      "title": "DHS ServiceNow Workflow Integration",
+      "category": "Platform Engineering",
+      "status": "validated",
+      "winTheme": "WT-02",
+      "howRatio": 78,
+      "linkage": {
+        "winThemes": ["WT-02"],
+        "discriminators": ["D-02"],
+        "capabilityGaps": ["CG-02"],
+        "partners": ["GovFlow Solutions"]
+      },
+      "customerSaid": "The contractor shall integrate modernized applications with DHS's enterprise ServiceNow instance, including custom DHS workflow modules (HRIT, Asset Management, and the CISA Security Operations workflow), ensuring all integrations meet FedRAMP High controls and DHS-specific configuration standards.",
+      "customerReallyWants": "They want someone who has already touched DHS ServiceNow — not a team that will learn the DHS configuration on their dime. The CISA Security Operations module is not publicly documented; DHS expects the contractor to know it exists and have a plan for it.",
+      "customerDoesntKnow": "The HRIT module was customized three times since its last certified integration, and the current schema diverges from the ServiceNow baseline documentation DHS provided in the RFP. GovFlow holds the certification for those customizations from their DHS ITSM contract (2022–2025). Competitors without a DHS ServiceNow incumbent relationship will discover the schema mismatch at integration testing — a 6–8 week slip risk.",
+      "solution": {
+        "statement": "GovFlow Solutions will deliver all DHS ServiceNow integrations — HRIT, Asset Management, and CISA Security Operations — using certified DHS workflow templates from their active DHS ITSM contract, eliminating schema-discovery risk.",
+        "method": "GovFlow provides an integration-as-a-service layer using their DHS-certified API adapters. Integration design begins in Wave 1 in parallel with migration; each module completes integration testing before its dependent applications enter Wave 3 or later. CISA Security Operations integration is scoped separately with CISA stakeholder alignment in months 2–3.",
+        "metric": "100% of required ServiceNow modules integrated and DHS-accepted before dependent application waves begin; zero integration-caused schedule slips.",
+        "proof": "GovFlow earned a Very Good CPARS on the DHS ITSM modernization contract (2022–2025), directly touching HRIT and Asset Management modules. They hold the only non-DHS certification for the HRIT customized schema."
+      },
+      "evidence": [
+        { "label": "GovFlow — DHS ITSM contract CPARS Very Good (2022–2025)", "cpars": "Very Good" },
+        { "label": "GovFlow — HRIT customized schema certification (non-public)" },
+        { "label": "Draft PWS — Section 3.4 ServiceNow integration requirements" }
+      ],
+      "sbsValidation": {
+        "overall": "PASSED",
+        "demonstrable": {
+          "verdict": "Pass",
+          "rationale": "GovFlow's Very Good CPARS on the exact DHS ServiceNow platform is direct evidence. The HRIT schema certification is exclusive and directly addresses the hidden risk the customer doesn't know about."
+        },
+        "differentiating": {
+          "verdict": "Pass",
+          "rationale": "No other team can claim the HRIT customization knowledge without GovFlow. The 6–8 week competitor slip risk is defensible — it derives from a real schema mismatch that is not in the RFP documentation."
+        },
+        "defensible": {
+          "verdict": "Pass",
+          "rationale": "Proof is a named contract with a CPARS rating. The schema certification claim is based on documented GovFlow deliverables, not inference. The metric (zero integration-caused slips) is measurable and tied to the wave-plan gating logic."
+        },
+        "suggestions": [
+          {
+            "id": "sol-2-s1",
+            "text": "Lock GovFlow teaming agreement before RFP drop — CACI has approached GovFlow. Without a signed TA this element's defensibility degrades to Conditional.",
+            "status": "proposed"
+          },
+          {
+            "id": "sol-2-s2",
+            "text": "Coordinate with GovFlow on CISA Security Operations module scope — confirm they have touched this module or adjust the claim to 'HRIT and Asset Management' until CISA scope is verified.",
+            "status": "proposed"
+          }
+        ],
+        "gapResolution": "Resolves CG-02 (DHS-specific ServiceNow workflows) — GovFlow fills the gap at 15% workshare."
+      },
+      "envelope": {
+        "confidence": 79,
+        "aiReasoning": "sol-2 is strong because the hidden risk (HRIT schema mismatch) is real and exclusive to GovFlow. The CPARS is direct evidence. Confidence is 79 rather than 85+ because GovFlow's TA is not yet signed and CACI is also pursuing them — if GovFlow signs with a competitor, sol-2 degrades to FAILED and CG-02 is open.",
+        "sources": [
+          { "label": "GovFlow — DHS ITSM CPARS (USAspending)" },
+          { "label": "Draft PWS — Section 3.4" },
+          { "label": "Competitive intel — CMP-001 (CACI pursuit of GovFlow)" }
+        ],
+        "versionHistory": [
+          { "version": 1, "changedAt": "2026-02-10", "changedBy": "SOL-001", "changeSummary": "Generated; GovFlow linked as CG-02 fill. CACI risk flagged." }
+        ]
+      }
+    },
+    {
+      "id": "sol-3",
+      "title": "8(a) Prime + Full Small Business Team Structure",
+      "category": "Team & Socioeconomic Strategy",
+      "status": "validated",
+      "winTheme": "WT-03",
+      "howRatio": 75,
+      "linkage": {
+        "winThemes": ["WT-03"],
+        "discriminators": ["D-03"],
+        "capabilityGaps": [],
+        "partners": ["DataBridge Analytics", "GovFlow Solutions", "MainframeNext"]
+      },
+      "customerSaid": "The Government has a strong preference for 8(a) prime contractors and expects the prime to demonstrate commitment to small business utilization consistent with DHS OSDBU subcontracting guidelines, with a minimum 33% small business workshare target.",
+      "customerReallyWants": "An evaluator-friendly socioeconomic story that holds up under scrutiny — dual-credit categories documented, OSDBU floor exceeded with margin, and a team structure that doesn't look like a small business front for large-business work.",
+      "customerDoesntKnow": "The TechForward 8(a) term expires 2027-03 — after the expected base period close. Dual-credit (8(a) + SDVOSB) for TechForward's workshare means the socioeconomic story is stronger than the 35% headline suggests. All three subcontractors are small businesses, making 100% of the team SB-eligible — a clean story with no large-business pass-through exposure.",
+      "solution": {
+        "statement": "TechForward primes as 8(a) + SDVOSB at 55% workshare; DataBridge (SDB, 20%), GovFlow (WOSB, 15%), MainframeNext (HUBZone, 10%) bring the full team to 100% SB and 35% toward DHS OSDBU goals — exceeding the 33% floor.",
+        "method": "Workshare is allocated by capability, not by socioeconomic target. The 35% SB target is a byproduct of the right team structure, not an add-on. Dual-credit categories (TechForward: 8(a) + SDVOSB; MainframeNext: HUBZone + SDB) are documented in the subcontracting plan with OSDBU-formatted breakdowns.",
+        "metric": "35% SB subcontracting target vs. 33% DHS OSDBU floor; dual-credit documentation complete for proposal submission.",
+        "proof": "All four team members hold current SAM.gov registrations with active certifications. TechForward 8(a) program graduation date: 2027-03 — 13 months after projected award, full term covered."
+      },
+      "evidence": [
+        { "label": "TechForward — SAM.gov 8(a) + SDVOSB registration (active)" },
+        { "label": "DataBridge — SAM.gov SDB registration (active)" },
+        { "label": "GovFlow — SAM.gov WOSB registration (active)" },
+        { "label": "MainframeNext — SAM.gov HUBZone + SDB registration (active)" }
+      ],
+      "sbsValidation": {
+        "overall": "PASSED",
+        "demonstrable": {
+          "verdict": "Pass",
+          "rationale": "All certifications are verifiable in SAM.gov. The 8(a) graduation date is past the performance period — eliminates a common evaluator concern. The dual-credit calculation is documented and arithmetic-verifiable."
+        },
+        "differentiating": {
+          "verdict": "Pass",
+          "rationale": "100% SB team with dual-credit categories is unusual for a contract at this value. Most competitors at this ceiling have at least one large-business sub. The story is simple and evaluator-friendly — advantage is structural, not argued."
+        },
+        "defensible": {
+          "verdict": "Pass",
+          "rationale": "All claims are SAM.gov-verifiable. Workshare percentages are supported by capability scope statements, not arbitrary allocation. The 35% vs. 33% floor margin is sufficient but not padded — matches the real capability split."
+        },
+        "suggestions": [
+          {
+            "id": "sol-3-s1",
+            "text": "Include TechForward 8(a) graduation date (2027-03) explicitly in the proposal — evaluators flag this concern; pre-empting it is a scoring advantage.",
+            "status": "proposed"
+          }
+        ],
+        "gapResolution": null
+      },
+      "envelope": {
+        "confidence": 88,
+        "aiReasoning": "sol-3 is the highest-confidence element because it is fully verifiable and entirely within TechForward's control. The only risk is if a subcontractor loses a certification before proposal submission — add a certification-check milestone to the timeline for 2026-06-01.",
+        "sources": [
+          { "label": "SAM.gov — all four entity registrations" },
+          { "label": "DHS OSDBU subcontracting guidance" },
+          { "label": "Workshare allocation engine — teaming-envelope.ts" }
+        ],
+        "versionHistory": [
+          { "version": 1, "changedAt": "2026-02-10", "changedBy": "SOL-001", "changeSummary": "Generated; dual-credit categories computed from SAM.gov certifications." }
+        ]
+      }
+    },
+    {
+      "id": "sol-4",
+      "title": "FedRAMP High Continuous Monitoring & ATO Maintenance",
+      "category": "Security & Compliance",
+      "status": "needs-work",
+      "winTheme": "WT-01",
+      "howRatio": 65,
+      "linkage": {
+        "winThemes": ["WT-01"],
+        "discriminators": ["D-01"],
+        "capabilityGaps": [],
+        "partners": []
+      },
+      "customerSaid": "The contractor shall maintain FedRAMP High authorization throughout the period of performance, provide monthly continuous monitoring reports to the DHS CISO, and respond to all Plan of Action and Milestones (POA&M) items within the timeframes defined in NIST SP 800-137.",
+      "customerReallyWants": "They want proof that the ATO won't lapse mid-contract and that POA&M items won't pile up. DHS has had two contractors lose FedRAMP authorization mid-performance in the last four years — it is a real sore point with the CISO office.",
+      "customerDoesntKnow": "TechForward has maintained its FedRAMP High ATO continuously since 2021 with zero authorization lapses and a POA&M closure rate of 97% within SLA. This record is better than the two failed incumbents combined — but it is not in public CPARS and must be provided as supplemental evidence.",
+      "solution": {
+        "statement": "TechForward will maintain FedRAMP High continuous monitoring using its existing ConMon program, extended to cover the DHS cloud environment, with monthly CISO-formatted reports and 97% POA&M closure rate within SLA.",
+        "method": "TechForward's internal ConMon team operates a 24/7 SIEM with automated POA&M tracking. The program will be scoped to include the DHS workloads at contract start — no ramp-up period. Monthly reports use the DHS CISO standard template (available in the RFP attachments).",
+        "metric": "Zero authorization lapses; 97% POA&M closure within NIST SP 800-137 SLA; monthly reports delivered by the 5th business day of each month.",
+        "proof": "TechForward ConMon program active since 2021; zero lapses; 97% POA&M closure rate (internal record — available as supplemental evidence)."
+      },
+      "evidence": [
+        { "label": "TechForward — FedRAMP PMO authorization record (continuous since 2021)" },
+        { "label": "TechForward — internal ConMon POA&M closure rate (97%, 2021–present)" }
+      ],
+      "sbsValidation": {
+        "overall": "CONDITIONAL",
+        "demonstrable": {
+          "verdict": "Conditional",
+          "rationale": "The 97% POA&M closure rate and zero-lapse record are claimed but not yet in a publicly verifiable evidence package. The FedRAMP PMO record is verifiable; the ConMon performance data must be formatted as supplemental evidence before this element can be confirmed."
+        },
+        "differentiating": {
+          "verdict": "Pass",
+          "rationale": "The contrast with the two failed DHS incumbents is a real differentiator if surfaced carefully. The ConMon-as-day-one capability (no ramp-up) is genuinely better than a team that would need to build the program from scratch."
+        },
+        "defensible": {
+          "verdict": "Conditional",
+          "rationale": "Metric (97% closure rate) is not yet externally defensible — it is an internal figure. Until formatted as a verifiable exhibit, an evaluator could challenge it. Needs a signed statement from TechForward's ISSO or a reference willing to speak to the record."
+        },
+        "suggestions": [
+          {
+            "id": "sol-4-s1",
+            "text": "Package the ConMon performance data as a formal supplemental exhibit — ask the TechForward ISSO to prepare a signed summary by 2026-03-01.",
+            "status": "proposed"
+          },
+          {
+            "id": "sol-4-s2",
+            "text": "Add a HOW statement to the method: explain the specific tool stack (SIEM, automated POA&M tracking) so the claim reads as operational, not marketing.",
+            "status": "proposed"
+          }
+        ],
+        "gapResolution": null
+      },
+      "envelope": {
+        "confidence": 67,
+        "aiReasoning": "sol-4 has a strong real-world track record but insufficient external evidence packaging. The element will pass once the ConMon data is formatted for submission. Priority: assign the ISSO packaging task before the next capture review.",
+        "sources": [
+          { "label": "FedRAMP PMO — TechForward authorization record" },
+          { "label": "TechForward internal ConMon reports (2021–present)" },
+          { "label": "Draft PWS — Section 3.6 security and compliance requirements" }
+        ],
+        "versionHistory": [
+          { "version": 1, "changedAt": "2026-02-10", "changedBy": "STV-001", "changeSummary": "Downgraded from PASSED to CONDITIONAL — ConMon evidence not yet in verifiable package." }
+        ]
+      }
+    },
+    {
+      "id": "sol-5",
+      "title": "z/OS Mainframe Application Migration",
+      "category": "Mainframe Modernization",
+      "status": "needs-work",
+      "winTheme": null,
+      "howRatio": 61,
+      "linkage": {
+        "winThemes": [],
+        "discriminators": [],
+        "capabilityGaps": ["CG-03"],
+        "partners": ["MainframeNext"]
+      },
+      "customerSaid": "The contractor shall migrate 12 z/OS mainframe applications to cloud-native equivalents, maintaining functional parity with existing batch processing schedules and COBOL-to-Java or COBOL-to-Python refactoring as appropriate.",
+      "customerReallyWants": "They want to stop paying for mainframe licensing. The 12 applications are not mission-critical — they are the batch jobs that finance and HR depend on. The risk is silent failure: a refactored batch job that runs but produces wrong output is harder to catch than a crash.",
+      "customerDoesntKnow": "TechForward has zero z/OS past performance. This is a hard gap — MainframeNext must carry this element entirely. MainframeNext has not signed an NDA yet, which means their personnel cannot be named in the proposal and their SOW details cannot be shared. This is the single biggest proposal-readiness risk in the solutioning package.",
+      "solution": {
+        "statement": "MainframeNext will deliver COBOL-to-Java refactoring for all 12 z/OS applications using their automated COBOL Analyzer tool, with functional-parity test suites before and after migration.",
+        "method": "MainframeNext's COBOL Analyzer scans source code, identifies batch dependencies, and generates Java equivalents with test harnesses. Each application passes functional-parity testing (input/output matching against production batch runs) before the legacy system is decommissioned. TechForward provides the cloud landing zone and CI/CD pipeline; MainframeNext owns the COBOL-to-Java translation.",
+        "metric": "All 12 z/OS applications migrated with 100% functional parity validation; zero batch-job output discrepancies post-migration.",
+        "proof": "MainframeNext — 8 federal agency COBOL migrations, including 3 at DHS component agencies (unnamed — NDA unsigned, details pending)."
+      },
+      "evidence": [
+        { "label": "MainframeNext — 8 federal agency COBOL migrations (USAspending, partial)" },
+        { "label": "MainframeNext — COBOL Analyzer tool (commercial, documented)" }
+      ],
+      "sbsValidation": {
+        "overall": "CONDITIONAL",
+        "demonstrable": {
+          "verdict": "Conditional",
+          "rationale": "MainframeNext's federal COBOL migration history is real but partially verifiable — USAspending shows 8 federal awards but DHS-specific work cannot be confirmed until the NDA is signed. The COBOL Analyzer is a commercial product with documented capabilities; this is the strongest demonstrable anchor currently available."
+        },
+        "differentiating": {
+          "verdict": "Conditional",
+          "rationale": "If the DHS component agency work is confirmed, this becomes a strong differentiator — no competitor without MainframeNext has it. Until the NDA is signed and the DHS work is verified, the differentiator is claimed but not confirmed."
+        },
+        "defensible": {
+          "verdict": "Pass",
+          "rationale": "The method (COBOL Analyzer + functional-parity test harnesses) is specific and defensible as stated. The metric (100% functional parity) is measurable. The approach does not depend on the NDA to be technically defensible — only the proof does."
+        },
+        "suggestions": [
+          {
+            "id": "sol-5-s1",
+            "text": "Escalate MainframeNext NDA to signature by 2026-02-17 — without it, the DHS component references cannot be included in the proposal and this element stays CONDITIONAL.",
+            "status": "proposed"
+          },
+          {
+            "id": "sol-5-s2",
+            "text": "Identify Astadia Federal as a named alternate: if MainframeNext declines, Astadia has published COBOL migration capabilities and could fill the gap without NDA risk.",
+            "status": "proposed"
+          }
+        ],
+        "gapResolution": "Partially resolves CG-03 (z/OS Mainframe modernization) — MainframeNext fills the gap at 10% workshare, pending NDA signature."
+      },
+      "envelope": {
+        "confidence": 58,
+        "aiReasoning": "sol-5 is the proposal-readiness bottleneck in the solutioning package. The solution method is technically sound and MainframeNext is the right partner — but the NDA gap means zero DHS-specific references can be named, and the team cannot brief MainframeNext personnel. Confidence improves to ~75 when the NDA is signed.",
+        "sources": [
+          { "label": "USAspending — MainframeNext federal awards" },
+          { "label": "MainframeNext COBOL Analyzer product documentation" },
+          { "label": "Draft PWS — Section 3.3 mainframe modernization requirements" },
+          { "label": "CMP-001 — competitor mainframe capability assessment" }
+        ],
+        "versionHistory": [
+          { "version": 1, "changedAt": "2026-02-10", "changedBy": "SOL-001", "changeSummary": "Generated; marked CONDITIONAL pending MainframeNext NDA." }
+        ]
+      }
+    },
+    {
+      "id": "sol-6",
+      "title": "Cloud FinOps & Cost Governance",
+      "category": "Financial Operations",
+      "status": "shaping",
+      "winTheme": null,
+      "howRatio": 45,
+      "linkage": {
+        "winThemes": [],
+        "discriminators": [],
+        "capabilityGaps": ["CG-04"],
+        "partners": []
+      },
+      "customerSaid": "The contractor shall implement a cloud financial management (FinOps) capability to provide DHS with real-time cost visibility, reservation optimization, and a chargeback model by component agency within 90 days of award.",
+      "customerReallyWants": "DHS OFM is under pressure from Congress to show cloud ROI by FY2027. They need a chargeback model that maps to the component agency budget structure — not a generic cloud-cost dashboard.",
+      "customerDoesntKnow": "DHS OFM's internal cost allocation model (used for FITARA reporting) uses a non-standard cost center hierarchy that doesn't map cleanly to any commercial FinOps tool's default schema. Building a compliant chargeback model requires access to the OFM cost center hierarchy — which is not in the RFP and must be obtained via pre-award engagement.",
+      "solution": {
+        "statement": "TechForward will deliver a cloud FinOps capability using internal tooling, providing real-time cost visibility and a chargeback model within 90 days of award.",
+        "method": "Deploy a cloud cost management dashboard integrated with AWS Cost Explorer. Map costs to component agencies using a standard chargeback model. Provide monthly cost reports to DHS OFM.",
+        "metric": "Real-time cost dashboard live within 90 days; monthly chargeback reports delivered by the 5th business day.",
+        "proof": "TechForward has delivered cloud cost dashboards for two federal customers."
+      },
+      "evidence": [
+        { "label": "TechForward — cloud cost dashboards (2 unnamed federal customers)" }
+      ],
+      "sbsValidation": {
+        "overall": "FAILED",
+        "demonstrable": {
+          "verdict": "Fail",
+          "rationale": "Two unnamed federal customers is insufficient evidence for a specialized FinOps capability at the DHS scale and complexity. No CPARS ratings cited, no contract values, no FinOps-specific deliverables named. The claim is too generic to be demonstrable."
+        },
+        "differentiating": {
+          "verdict": "Fail",
+          "rationale": "The method (AWS Cost Explorer + standard chargeback model) is what every competitor will propose. There is no discriminating factor in this element as currently written — it reads as a checkbox response to the requirement."
+        },
+        "defensible": {
+          "verdict": "Conditional",
+          "rationale": "The metric (90 days, monthly reports) is measurable and the approach is technically viable. The method is defensible as a baseline — but it will score at or below average against a competitor with named FinOps references and a DHS-specific cost model."
+        },
+        "suggestions": [
+          {
+            "id": "sol-6-s1",
+            "text": "Run the ANALYZE workflow: identify whether Nightwing (FinOps) or another FinOps partner should be added to cover this gap. TechForward's internal capability may be insufficient at the required scale.",
+            "status": "proposed"
+          },
+          {
+            "id": "sol-6-s2",
+            "text": "Conduct a pre-award engagement with DHS OFM to obtain the cost center hierarchy before the proposal — this is the only way to write a differentiating chargeback model.",
+            "status": "proposed"
+          },
+          {
+            "id": "sol-6-s3",
+            "text": "Name the two federal FinOps customers and obtain CPARS or reference letters — unnamed customers are not evidence.",
+            "status": "proposed"
+          }
+        ],
+        "gapResolution": "Addresses CG-04 (Cloud FinOps & cost governance) — currently FAILED. Requires either named references, a FinOps-specialist partner, or pre-award OFM engagement before this element can be validated."
+      },
+      "envelope": {
+        "confidence": 48,
+        "aiReasoning": "sol-6 is the weakest element in the package by a significant margin. The method is generic, the evidence is unnamed, and the customer intelligence (OFM cost center hierarchy) is not yet in hand. This element will remain FAILED until at least one of: (a) named FinOps references with CPARS, (b) a FinOps partner is added, or (c) pre-award OFM engagement produces the cost model requirements. The ANALYZE workflow is the correct next action.",
+        "sources": [
+          { "label": "Draft PWS — Section 3.7 FinOps requirements" },
+          { "label": "TechForward capability baseline (CPB-001)" }
+        ],
+        "versionHistory": [
+          { "version": 1, "changedAt": "2026-02-10", "changedBy": "STV-001", "changeSummary": "Generated; immediately flagged FAILED — insufficient evidence and generic method." }
+        ]
+      }
+    }
+  ]
+}

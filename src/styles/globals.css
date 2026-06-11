@@ -1,0 +1,188 @@
+/*
+ * GovHub Design System — CSS Tokens
+ * Edit this file to retheme the entire application.
+ * All values come directly from the GovHub Figma design system.
+ * Typography: Inter only (loaded via fonts.css / Google Fonts).
+ */
+
+:root {
+  /* ─── Color Palette ──────────────────────────────────────── */
+
+  --gh-white: #ffffff;
+  --gh-black: #000000;
+
+  /* Slate */
+  --gh-slate-50:  #f8fafc;
+  --gh-slate-100: #f1f5f9;
+  --gh-slate-200: #e2e8f0;
+  --gh-slate-300: #cbd5e1;
+  --gh-slate-400: #94a3b8;
+  --gh-slate-500: #64748b;
+  --gh-slate-600: #475569;
+  --gh-slate-700: #334155;
+  --gh-slate-800: #1e293b;
+  --gh-slate-900: #0f172a;
+  --gh-slate-950: #020617;
+
+  /* Blue */
+  --gh-blue-50:  #eff6ff;
+  --gh-blue-100: #dbeafe;
+  --gh-blue-200: #bfdbfe;
+  --gh-blue-300: #93c5fd;
+  --gh-blue-400: #60a5fa;
+  --gh-blue-500: #3b82f6;
+  --gh-blue-600: #2563eb;
+  --gh-blue-700: #1d4ed8;
+  --gh-blue-800: #1e40af;
+  --gh-blue-900: #1e3a8a;
+  --gh-blue-950: #172554;
+
+  /* Emerald */
+  --gh-emerald-100: #d1fae5;
+  --gh-emerald-200: #a7f3d0;
+  --gh-emerald-400: #34d399;
+  --gh-emerald-500: #10b981;
+  --gh-emerald-600: #059669;
+  --gh-emerald-700: #047857;
+  --gh-emerald-800: #065f46;
+  --gh-emerald-900: #064e3b;
+
+  /* Amber */
+  --gh-amber-100: #fef3c7;
+  --gh-amber-200: #fde68a;
+  --gh-amber-400: #fbbf24;
+  --gh-amber-500: #f59e0b;
+  --gh-amber-600: #d97706;
+  --gh-amber-700: #b45309;
+  --gh-amber-800: #92400e;
+  --gh-amber-900: #78350f;
+
+  /* Red */
+  --gh-red-100: #fee2e2;
+  --gh-red-200: #fecaca;
+  --gh-red-400: #f87171;
+  --gh-red-500: #ef4444;
+  --gh-red-600: #dc2626;
+  --gh-red-700: #b91c1c;
+  --gh-red-800: #991b1b;
+  --gh-red-900: #7f1d1d;
+  --gh-red-950: #450a0a;
+
+  /* ─── Semantic Background Tokens ────────────────────────── */
+
+  --gh-bg-canvas:       var(--gh-slate-950); /* Page background          #020617 */
+  --gh-bg-elevated:     var(--gh-slate-900); /* Header / Sidebar         #0f172a */
+  --gh-bg-surface:      var(--gh-slate-800); /* Cards / Panels           #1e293b */
+  --gh-bg-surface-muted: var(--gh-slate-700); /* Input bg / Muted area   #334155 */
+  --gh-bg-inverse:      var(--gh-white);
+
+  /* ─── Semantic Foreground / Text Tokens ─────────────────── */
+
+  --gh-text:            var(--gh-slate-100); /* Primary text             #f1f5f9 */
+  --gh-text-secondary:  var(--gh-slate-200); /* Secondary text — bumped from 300 for WCAG 4.5:1 on surface-muted #e2e8f0 */
+  --gh-text-tertiary:   var(--gh-slate-300); /* Tertiary — bumped from 400 for WCAG 4.5:1 #cbd5e1 */
+  --gh-text-muted:      var(--gh-slate-300);
+  --gh-text-disabled:   var(--gh-slate-600); /* Disabled                 #475569 */
+  --gh-text-inverse:    var(--gh-white);
+
+  /* ─── Border Tokens ─────────────────────────────────────── */
+
+  --gh-border:          var(--gh-slate-700); /* Default border           #334155 */
+  --gh-border-strong:   var(--gh-slate-600); /* Prominent border         #475569 */
+  --gh-border-subtle:   var(--gh-slate-800); /* Subtle border            #1e293b */
+  --gh-border-focus:    var(--gh-blue-500);  /* Focus ring               #3b82f6 */
+
+  /* ─── Accent / Action Tokens ────────────────────────────── */
+
+  --gh-accent:          var(--gh-blue-600);  /* Primary action           #2563eb */
+  --gh-accent-hover:    var(--gh-blue-500);  /* Hover state              #3b82f6 */
+  --gh-accent-fg:       var(--gh-white);     /* Text on accent bg        #ffffff */
+  --gh-accent-tint:     var(--gh-blue-400);  /* Soft accent / active tab #60a5fa */
+
+  /* ─── Status Tokens ─────────────────────────────────────── */
+
+  --gh-success:         var(--gh-emerald-500);
+  --gh-success-fg:      var(--gh-emerald-400);
+  --gh-success-bg:      var(--gh-emerald-900);
+  --gh-success-border:  var(--gh-emerald-700);
+
+  --gh-warning:         var(--gh-amber-500);
+  --gh-warning-fg:      var(--gh-amber-400);
+  --gh-warning-bg:      var(--gh-amber-900);
+  --gh-warning-border:  var(--gh-amber-700);
+
+  --gh-danger:          var(--gh-red-600);
+  --gh-danger-fg:       var(--gh-red-400);
+  --gh-danger-bg:       var(--gh-red-900);
+  --gh-danger-border:   var(--gh-red-800);
+
+  --gh-info:            var(--gh-blue-500);
+  --gh-info-fg:         var(--gh-blue-400);
+  --gh-info-bg:         var(--gh-blue-950);
+  --gh-info-border:     var(--gh-blue-700);
+
+  /* ─── Typography ─────────────────────────────────────────── */
+  /* Font family: Inter only. All weights loaded from Google Fonts. */
+
+  --gh-font:            'Inter', system-ui, sans-serif;
+  --gh-font-size-xs:    10px;
+  --gh-font-size-sm:    12px;
+  --gh-font-size-base:  13px;
+  --gh-font-size-md:    14px;
+  --gh-font-size-lg:    16px;
+  --gh-font-size-xl:    18px;
+  --gh-font-weight-normal:   400;
+  --gh-font-weight-medium:   500;
+  --gh-font-weight-semibold: 600;
+  --gh-font-weight-bold:     700;
+
+  /* ─── Spacing ────────────────────────────────────────────── */
+
+  --gh-space-0:   0px;
+  --gh-space-1:   2px;
+  --gh-space-2:   4px;
+  --gh-space-3:   6px;
+  --gh-space-4:   8px;
+  --gh-space-5:   10px;
+  --gh-space-6:   12px;
+  --gh-space-7:   14px;
+  --gh-space-8:   16px;
+  --gh-space-10:  20px;
+  --gh-space-12:  24px;
+  --gh-space-14:  28px;
+  --gh-space-16:  32px;
+  --gh-space-20:  40px;
+  --gh-space-24:  48px;
+  --gh-space-56:  56px;
+
+  /* ─── Border Radius ──────────────────────────────────────── */
+
+  --gh-radius-none:    0px;
+  --gh-radius-sm:      2px;
+  --gh-radius-default: 4px;
+  --gh-radius-md:      6px;
+  --gh-radius-lg:      8px;
+  --gh-radius-xl:      12px;
+  --gh-radius-2xl:     16px;
+  --gh-radius-full:    9999px;
+
+  /* ─── Chart Tokens ───────────────────────────────────────── */
+
+  --gh-chart-1: var(--gh-blue-500);
+  --gh-chart-2: #8b5cf6;   /* violet-500 */
+  --gh-chart-3: var(--gh-emerald-500);
+  --gh-chart-4: var(--gh-amber-500);
+  --gh-chart-5: var(--gh-red-500);
+  --gh-chart-6: #06b6d4;   /* cyan-500 */
+  --gh-chart-7: #ec4899;   /* pink-500 */
+}
+
+/* ─── Base Styles ────────────────────────────────────────────── */
+
+body {
+  font-family: var(--gh-font);
+  background-color: var(--gh-bg-canvas);
+  color: var(--gh-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
