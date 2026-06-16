@@ -1,9 +1,17 @@
 import { useState } from 'react';
+import {
+  LayoutDashboard, TrendingUp, Building2, Target, Filter, Users, Search as SearchIcon,
+  Newspaper, BarChart3, GraduationCap, FileText, Handshake, Settings,
+} from 'lucide-react';
 import svgPaths from '../imports/StrategyPlanAll-2/svg-atqsyrus29';
 import { CaptureProvider } from '../context/CaptureContext';
 import { StrategyPlanSubTab } from './components/capture/StrategyPlanSubTab';
 import { TeamingTab } from './components/capture/TeamingTab';
 import { SolutioningTab } from './components/capture/SolutioningTab';
+import { StaffingTab } from './components/capture/StaffingTab';
+import { PastPerformanceScreen } from './components/capture/pastPerformance/PastPerformanceScreen';
+import { PricingScreen } from './components/capture/pricing/PricingScreen';
+import { DataCallsScreen } from './components/capture/dataCalls/DataCallsScreen';
 import strategyData from '../imports/opp-001-strategy.json';
 import type { StrategyData } from '../types/strategy';
 
@@ -141,90 +149,53 @@ function TopHeader() {
 /* ─────────────────────────────────────────────────────────────
    Sidebar
 ───────────────────────────────────────────────────────────── */
-type NavItem = { label: string; active?: boolean; hasChevron?: boolean };
-
-function NavSection({ title, items, collapsed }: { title: string; items: NavItem[]; collapsed?: boolean }) {
-  return (
-    <div className="flex flex-col items-start w-full shrink-0" style={{ gap: 'var(--gh-space-4)' }}>
-      <div className="flex items-center justify-between w-full h-[16px]" style={{ padding: '0 var(--gh-space-6)' }}>
-        <span style={{ fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-secondary)', letterSpacing: '1.2px', whiteSpace: 'nowrap' }}>
-          {title}
-        </span>
-        <svg width="14" height="14" fill="none" viewBox="0 0 9 5.5">
-          <path
-            d={collapsed ? 'M1 8L4.5 4.5L1 1' : 'M1 1L4.5 4.5L8 1'}
-            stroke="var(--gh-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-      <div className="flex flex-col items-start w-full" style={{ gap: 'var(--gh-space-1)' }}>
-        {items.map(item => (
-          <div
-            key={item.label}
-            className="flex flex-row items-center w-full shrink-0 cursor-pointer"
-            style={{ height: '36px', borderRadius: 'var(--gh-radius-lg)', background: item.active ? 'var(--gh-accent)' : 'transparent' }}
-          >
-            <div className="flex items-center w-full" style={{ gap: 'var(--gh-space-6)', padding: 'var(--gh-space-4) var(--gh-space-6)' }}>
-              {item.active && (
-                <div className="shrink-0" style={{ width: 3, height: 20, borderRadius: 'var(--gh-radius-sm)', background: 'var(--gh-white)' }} />
-              )}
-              <span
-                className="flex-1 min-w-px"
-                style={{
-                  fontSize: 'var(--gh-font-size-md)',
-                  fontWeight: item.active ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)',
-                  color: item.active ? 'var(--gh-white)' : 'var(--gh-text)',
-                }}
-              >
-                {item.label}
-              </span>
-              {item.hasChevron && (
-                <div className="flex h-[7px] items-center justify-center shrink-0 w-[5px]">
-                  <div className="rotate-90">
-                    <svg width="7" height="5" fill="none" viewBox="0 0 6.062 3.75">
-                      <path d={svgPaths.p2bc3a700} fill={item.active ? 'var(--gh-text)' : 'var(--gh-text-disabled)'} />
-                    </svg>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+// Collapsed 56px icon rail (Figma node 2141:100). Icon-only NavItems in 3 sections.
+type RailItem = { Icon: typeof Target; label: string; active?: boolean };
+const RAIL_SECTIONS: RailItem[][] = [
+  [
+    { Icon: LayoutDashboard, label: 'My Dashboard' },
+    { Icon: TrendingUp, label: 'Executive' },
+    { Icon: Building2, label: 'Department' },
+  ],
+  [
+    { Icon: Target, label: 'Opportunities', active: true },
+    { Icon: Filter, label: 'Pipeline' },
+    { Icon: Users, label: 'Relationships' },
+    { Icon: SearchIcon, label: 'Research' },
+    { Icon: Newspaper, label: 'News' },
+    { Icon: BarChart3, label: 'Analytics' },
+    { Icon: GraduationCap, label: 'Learning' },
+  ],
+  [
+    { Icon: Building2, label: 'Company Profile' },
+    { Icon: FileText, label: 'Files' },
+    { Icon: Handshake, label: 'Partners' },
+    { Icon: Settings, label: 'Settings' },
+  ],
+];
 
 function Sidebar() {
   return (
     <aside
-      className="flex flex-col h-full w-[240px] shrink-0"
-      style={{ background: 'var(--gh-bg-elevated)', borderRight: `1px solid var(--gh-border-strong)`, fontFamily: 'var(--gh-font)' }}
+      className="flex flex-col h-full shrink-0 items-center"
+      style={{ width: 56, background: 'var(--gh-bg-elevated)', borderRight: '1px solid rgba(71,85,105,0.3)', fontFamily: 'var(--gh-font)' }}
     >
-      <div className="flex flex-col flex-1 overflow-y-auto min-h-0" style={{ gap: 'var(--gh-space-8)', padding: 'var(--gh-space-8) var(--gh-space-4)' }}>
-        <NavSection title="DASHBOARDS" items={[
-          { label: 'My Dashboard' },
-          { label: 'Executive' },
-          { label: 'Department' },
-        ]} />
-        <NavSection title="PLATFORM" items={[
-          { label: 'Opportunities', active: true, hasChevron: true },
-          { label: 'Pipeline' },
-          { label: 'Relationships' },
-          { label: 'Research', hasChevron: true },
-          { label: 'News' },
-          { label: 'Analytics' },
-          { label: 'Learning' },
-        ]} />
-        <NavSection title="SUPPORT" collapsed items={[
-          { label: 'Company Profile' },
-          { label: 'Files' },
-          { label: 'Partners' },
-          { label: 'Settings' },
-        ]} />
-      </div>
-      <div className="shrink-0" style={{ padding: 'var(--gh-space-6) var(--gh-space-8)', borderTop: `1px solid var(--gh-border-strong)` }}>
-        <span style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-disabled)', fontFamily: 'var(--gh-font)' }}>v2.0 Demo</span>
+      <div className="flex flex-col flex-1 overflow-y-auto min-h-0 items-center w-full" style={{ gap: 16, padding: '16px 8px' }}>
+        {RAIL_SECTIONS.map((section, si) => (
+          <div key={si} className="flex flex-col items-center shrink-0" style={{ gap: 4 }}>
+            {section.map(item => (
+              <button
+                key={item.label}
+                title={item.label}
+                aria-label={item.label}
+                className="flex items-center justify-center shrink-0 cursor-pointer"
+                style={{ width: 40, height: 36, borderRadius: 'var(--gh-radius-lg)', border: 'none', background: item.active ? 'var(--gh-accent)' : 'transparent' }}
+              >
+                <item.Icon size={18} color={item.active ? 'var(--gh-accent-fg)' : 'var(--gh-text-secondary)'} strokeWidth={2} />
+              </button>
+            ))}
+          </div>
+        ))}
       </div>
     </aside>
   );
@@ -235,25 +206,14 @@ function Sidebar() {
 ───────────────────────────────────────────────────────────── */
 function OpportunityHeader() {
   const pos = data.sections.strategicPositioning.positioning;
-  const estValue = pos.estimatedValue >= 1_000_000
-    ? `$${(pos.estimatedValue / 1_000_000).toFixed(1)}M`
-    : `$${pos.estimatedValue.toLocaleString()}`;
-
   return (
     <div
       className="flex flex-col items-start shrink-0 w-full"
-      style={{ background: 'var(--gh-bg-elevated)', padding: '14px var(--gh-space-12)', gap: 'var(--gh-space-4)', fontFamily: 'var(--gh-font)' }}
+      style={{ background: 'var(--gh-bg-elevated)', padding: '18px var(--gh-space-12)', gap: '10px', fontFamily: 'var(--gh-font)' }}
     >
-      {/* Row 1: breadcrumb + title + status */}
+      {/* Row 1: title + status pill */}
       <div className="flex items-center gap-[10px] w-full">
-        <button className="flex gap-[4px] items-center shrink-0">
-          <svg width="14" height="14" fill="none" viewBox="0 0 10.167 10.167">
-            <path d={svgPaths.p214fdcc8} stroke="var(--gh-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-text-tertiary)', whiteSpace: 'nowrap' }}>Opportunities</span>
-        </button>
-        <span style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-bg-surface-muted)', whiteSpace: 'nowrap' }}>/</span>
-        <span className="flex-1 min-w-px truncate" style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-white)' }}>
+        <span className="truncate" style={{ flex: '0 1 auto', minWidth: 0, fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-white)' }}>
           {data.title}
         </span>
         <div className="flex items-center shrink-0" style={{ background: 'var(--gh-emerald-700)', padding: '2px var(--gh-space-5)', borderRadius: 'var(--gh-radius-default)' }}>
@@ -263,21 +223,10 @@ function OpportunityHeader() {
         </div>
       </div>
 
-      {/* Row 2: metadata */}
-      <div className="flex items-center gap-[12px] w-full" style={{ fontSize: 'var(--gh-font-size-sm)' }}>
-        <span className="flex-1 min-w-px" style={{ color: 'var(--gh-text-tertiary)' }}>
-          {data.noticeId} · {pos.vehicle} · {pos.setAsideCategory} · {pos.periodOfPerformance}
-        </span>
-        <span style={{ fontWeight: 'var(--gh-font-weight-medium)', color: 'var(--gh-accent-tint)', whiteSpace: 'nowrap' }}>
-          pWin {pos.pwin}%
-        </span>
-        <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-white)', whiteSpace: 'nowrap' }}>
-          {estValue}
-        </span>
-        <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-amber-400)', whiteSpace: 'nowrap' }}>
-          Award {pos.targetAwardDate}
-        </span>
-      </div>
+      {/* Row 2: metadata line */}
+      <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)' }}>
+        {data.noticeId} · {pos.vehicle} · {pos.setAsideCategory} · {pos.periodOfPerformance}
+      </span>
     </div>
   );
 }
@@ -286,7 +235,7 @@ function OpportunityHeader() {
    Stage Tab Bar
 ───────────────────────────────────────────────────────────── */
 function StageTabBar() {
-  const stages = ['Identify', 'Intel & Analysis', 'Capture', 'Proposal', 'Post-Submission'];
+  const stages = ['Identify', 'Intel & Analysis', 'Capture', 'Proposal'];
   return (
     <div
       className="flex flex-row items-center shrink-0 w-full"
@@ -307,17 +256,6 @@ function StageTabBar() {
           );
         })}
       </div>
-      <div className="flex items-center gap-[4px] shrink-0">
-        {['Traceability', 'Files', 'Admin'].map(label => (
-          <button
-            key={label}
-            className="flex items-center gap-[6px] shrink-0"
-            style={{ padding: 'var(--gh-space-4) var(--gh-space-5)', borderRadius: 'var(--gh-radius-md)' }}
-          >
-            <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-medium)', color: 'var(--gh-text-tertiary)', whiteSpace: 'nowrap' }}>{label}</span>
-          </button>
-        ))}
-      </div>
     </div>
   );
 }
@@ -330,22 +268,28 @@ interface SubNavProps { active: string; onChange: (t: string) => void }
 function CaptureSubnav({ active, onChange }: SubNavProps) {
   const tabs = ['Strategy & Plan', 'Teaming', 'Solutioning', 'Staffing', 'Past Performance', 'Pricing', 'Data Calls'];
   return (
-    <div className="flex items-start w-full shrink-0" style={{ gap: 'var(--gh-space-1)', fontFamily: 'var(--gh-font)' }}>
-      {tabs.map(tab => {
+    <div className="flex items-center w-full shrink-0" style={{ background: 'var(--gh-bg-surface)', fontFamily: 'var(--gh-font)' }}>
+      {tabs.map((tab, i) => {
         const isActive = tab === active;
+        const disabled = i > 0;   // only "Strategy & Plan" (tab 1) is enabled
         return (
           <button
             key={tab}
-            onClick={() => onChange(tab)}
-            className="flex flex-col items-center shrink-0"
-            style={{ padding: 'var(--gh-space-4) var(--gh-space-5)', gap: isActive ? 'var(--gh-space-3)' : 0 }}
+            onClick={() => { if (!disabled) onChange(tab); }}
+            disabled={disabled}
+            className="flex items-center justify-center shrink-0"
+            style={{ width: 180, padding: '16px 0', gap: 10, border: 'none', cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.4 : 1, background: isActive ? 'var(--gh-bg-canvas)' : 'transparent' }}
           >
-            <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: isActive ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)', color: isActive ? 'var(--gh-accent)' : 'var(--gh-text-secondary)', whiteSpace: 'nowrap' }}>
+            <span style={{
+              width: 26, height: 26, flexShrink: 0, borderRadius: 'var(--gh-radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)',
+              background: isActive ? 'var(--gh-blue-500)' : 'transparent',
+              border: isActive ? 'none' : '1.5px solid var(--gh-border-strong)',
+              color: isActive ? 'var(--gh-white)' : 'var(--gh-text-tertiary)',
+            }}>{i + 1}</span>
+            <span style={{ fontSize: 14, fontWeight: isActive ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)', color: isActive ? 'var(--gh-accent-tint)' : 'var(--gh-text-tertiary)', whiteSpace: 'nowrap' }}>
               {tab}
             </span>
-            {isActive && (
-              <div className="h-[2px] w-full" style={{ borderRadius: 'var(--gh-radius-sm)', background: 'var(--gh-accent)' }} />
-            )}
           </button>
         );
       })}
@@ -383,13 +327,9 @@ function MainContent({ data }: { data: StrategyData }) {
 
       {/* CaptureBody */}
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-        {/* Subnav + divider */}
-        <div
-          className="flex flex-col items-start shrink-0"
-          style={{ gap: 'var(--gh-space-8)', padding: 'var(--gh-space-8) var(--gh-space-12) 0', background: 'var(--gh-bg-canvas)' }}
-        >
+        {/* Numbered capture sub-nav — full-width bar */}
+        <div className="shrink-0 w-full">
           <CaptureSubnav active={activeTab} onChange={setActiveTab} />
-          <div className="h-px w-full" style={{ background: 'var(--gh-border-strong)' }} />
         </div>
 
         {/* Content area — flex for master/detail, scroll for others */}
@@ -405,6 +345,22 @@ function MainContent({ data }: { data: StrategyData }) {
           ) : activeTab === 'Solutioning' ? (
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
               <SolutioningTab />
+            </div>
+          ) : activeTab === 'Staffing' ? (
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+              <StaffingTab />
+            </div>
+          ) : activeTab === 'Past Performance' ? (
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+              <PastPerformanceScreen />
+            </div>
+          ) : activeTab === 'Pricing' ? (
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+              <PricingScreen />
+            </div>
+          ) : activeTab === 'Data Calls' ? (
+            <div style={{ height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+              <DataCallsScreen />
             </div>
           ) : (
             <div className="flex items-center justify-center h-full overflow-y-auto">

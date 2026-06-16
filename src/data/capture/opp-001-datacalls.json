@@ -1,0 +1,345 @@
+{
+  "id": "opp-001",
+  "noticeId": "DHS-2026-CLOUD-0042",
+  "title": "Enterprise Cloud Migration and Modernization Services",
+  "lastUpdated": "2026-02-10T13:05:00Z",
+  "collectionStrategy": {
+    "approach": "Phased data collection aligned with capture lifecycle milestones. Pre-TA data calls focus on internal capabilities and public-domain intelligence. Post-TA data calls collect partner-specific information under NDA protection. All data calls tracked through GovHub with automated reminders and quality scoring.",
+    "phases": [
+      {
+        "phase": "Pre-Teaming Agreement",
+        "description": "Internal capability assessment and public-domain intelligence gathering. No partner-proprietary data collected.",
+        "timeline": "Jan 28 – Feb 15, 2026",
+        "status": "ACTIVE"
+      },
+      {
+        "phase": "Post-Teaming Agreement",
+        "description": "Partner capability data collection, workshare refinement, and joint solution development. Requires executed NDA and TA.",
+        "timeline": "Feb 15 – Mar 15, 2026",
+        "status": "ACTIVE"
+      },
+      {
+        "phase": "Proposal Development",
+        "description": "Targeted data collection for proposal volume content, pricing inputs, and past performance narratives.",
+        "timeline": "Mar 1 – Apr 25, 2026",
+        "status": "PENDING"
+      },
+      {
+        "phase": "Final Verification",
+        "description": "Final data validation, accuracy checks, and representation certifications before submission.",
+        "timeline": "Apr 25 – Apr 30, 2026",
+        "status": "PENDING"
+      }
+    ],
+    "qualityStandards": {
+      "completeness": "All required fields populated with source attribution",
+      "accuracy": "Data verified against two independent sources where possible",
+      "currency": "Information no older than 12 months unless historical trend data",
+      "classification": "All data handled at appropriate classification level"
+    }
+  },
+  "dataCalls": [
+    {
+      "id": "DC-001",
+      "title": "Internal Past Performance Data Collection",
+      "phase": "Pre-TA",
+      "status": "COMPLETE",
+      "priority": "CRITICAL",
+      "owner": "Jennifer Davis — Past Performance Lead",
+      "createdDate": "2026-01-30",
+      "dueDate": "2026-02-07",
+      "completedDate": "2026-02-06",
+      "description": "Collect comprehensive past performance data for all TechForward contracts relevant to DHS Cloud Migration opportunity. Include CPARS ratings, COR contact information, contract values, performance highlights, and lessons learned.",
+      "items": [
+        {
+          "id": "DC-001-01",
+          "item": "DHS Cybersecurity Modernization Contract — Full PP Package",
+          "status": "COMPLETE",
+          "assignee": "Jennifer Davis",
+          "dueDate": "2026-02-05",
+          "completedDate": "2026-02-04",
+          "deliverable": "Past performance narrative (3 pages), CPARS extract, COR contact sheet, performance metrics dashboard",
+          "qualityScore": 95,
+          "qualityNotes": "Exceptional CPARS rating. COR Michelle Adams confirmed availability as reference. All performance metrics documented with evidence."
+        },
+        {
+          "id": "DC-001-02",
+          "item": "Army Cloud Migration Program — Full PP Package",
+          "status": "COMPLETE",
+          "assignee": "Jennifer Davis",
+          "dueDate": "2026-02-05",
+          "completedDate": "2026-02-05",
+          "deliverable": "Past performance narrative (3 pages), CPARS extract, COR contact sheet, migration metrics",
+          "qualityScore": 88,
+          "qualityNotes": "Very Good CPARS. COR Lt. Col. Whitaker confirmed. CloudPathfinder metrics documented. Minor gap: FinOps savings data needs independent verification."
+        },
+        {
+          "id": "DC-001-03",
+          "item": "Treasury IT Modernization — Full PP Package",
+          "status": "COMPLETE",
+          "assignee": "Jennifer Davis",
+          "dueDate": "2026-02-07",
+          "completedDate": "2026-02-06",
+          "deliverable": "Past performance narrative (2 pages), CPARS extract, COR contact sheet",
+          "qualityScore": 82,
+          "qualityNotes": "Very Good CPARS. COR Karen Blackwell confirmed. Narrative focuses on FedRAMP compliance achievement. Less directly relevant to cloud migration scope — positioned as supporting reference."
+        },
+        {
+          "id": "DC-001-04",
+          "item": "Corporate Capability Statement — Cloud Migration Focus",
+          "status": "COMPLETE",
+          "assignee": "Marketing",
+          "dueDate": "2026-02-07",
+          "completedDate": "2026-02-07",
+          "deliverable": "2-page capability statement highlighting cloud migration, FedRAMP, ZTA, and DevSecOps",
+          "qualityScore": 90,
+          "qualityNotes": "Strong document. Includes all key discriminators. Could use more specific DHS-focused language."
+        }
+      ]
+    },
+    {
+      "id": "DC-002",
+      "title": "Key Personnel Qualification Packages",
+      "phase": "Pre-TA",
+      "status": "IN_PROGRESS",
+      "priority": "HIGH",
+      "owner": "HR Director",
+      "createdDate": "2026-02-01",
+      "dueDate": "2026-02-20",
+      "completedDate": null,
+      "description": "Collect qualification packages for all Key Personnel and critical staff positions. Includes updated resumes, certification evidence, clearance verification, and LOIs for external hires.",
+      "items": [
+        {
+          "id": "DC-002-01",
+          "item": "Angela Rodriguez (PM) — Resume, Certifications, LOI",
+          "status": "COMPLETE",
+          "assignee": "HR Director",
+          "dueDate": "2026-02-10",
+          "completedDate": "2026-02-08",
+          "deliverable": "Updated resume (proposal format), PMP/ITIL certification copies, internal commitment memo",
+          "qualityScore": 98,
+          "qualityNotes": "Excellent. Resume formatted per proposal template. All certifications current. Internal commitment approved by VP Operations."
+        },
+        {
+          "id": "DC-002-02",
+          "item": "David Kim (Tech Lead) — Resume, Certifications, LOI",
+          "status": "COMPLETE",
+          "assignee": "HR Director",
+          "dueDate": "2026-02-10",
+          "completedDate": "2026-02-09",
+          "deliverable": "Updated resume (proposal format), 5 certification copies, signed LOI, compensation terms",
+          "qualityScore": 94,
+          "qualityNotes": "Strong package. LOI signed with retention bonus terms. Resume sanitized to remove Booz Allen proprietary details. All 5 certifications verified current."
+        },
+        {
+          "id": "DC-002-03",
+          "item": "Rachel Foster (Security Lead) — Resume, Certifications, LOI",
+          "status": "COMPLETE",
+          "assignee": "HR Director",
+          "dueDate": "2026-02-10",
+          "completedDate": "2026-02-09",
+          "deliverable": "Updated resume (sanitized), 4 certification copies, signed LOI, ethical wall documentation",
+          "qualityScore": 91,
+          "qualityNotes": "Good package. Resume carefully sanitized — no reference to Peraton or current contract by name. LOI includes ethical wall acknowledgment. Legal approved."
+        },
+        {
+          "id": "DC-002-04",
+          "item": "Chris Morgan (Migration Architect) — Resume, Certifications",
+          "status": "IN_PROGRESS",
+          "assignee": "HR Director",
+          "dueDate": "2026-02-15",
+          "completedDate": null,
+          "deliverable": "Updated resume, 3 certification copies, internal commitment memo",
+          "qualityScore": null,
+          "qualityNotes": "Resume draft received. Needs reformatting to proposal template. Certifications being verified."
+        },
+        {
+          "id": "DC-002-05",
+          "item": "Backup Candidates — Resume Pipeline",
+          "status": "IN_PROGRESS",
+          "assignee": "Recruiting",
+          "dueDate": "2026-02-20",
+          "completedDate": null,
+          "deliverable": "Resumes for backup candidates: Steven Mitchell, Jason Patel, Derek Washington",
+          "qualityScore": null,
+          "qualityNotes": "Steven Mitchell resume received — interview Feb 14. Jason Patel and Derek Washington resumes pending."
+        }
+      ]
+    },
+    {
+      "id": "DC-003",
+      "title": "Partner Capability & Past Performance Collection",
+      "phase": "Post-TA",
+      "status": "IN_PROGRESS",
+      "priority": "HIGH",
+      "owner": "Capture Manager",
+      "createdDate": "2026-02-08",
+      "dueDate": "2026-02-28",
+      "completedDate": null,
+      "description": "Collect capability statements, past performance data, key personnel qualifications, and workshare confirmation from all teaming partners. Requires executed NDA before data exchange.",
+      "items": [
+        {
+          "id": "DC-003-01",
+          "item": "DataBridge Analytics — Capability Statement & PP Package",
+          "status": "IN_PROGRESS",
+          "assignee": "DataBridge POC (Robert Chang)",
+          "dueDate": "2026-02-18",
+          "completedDate": null,
+          "deliverable": "Capability statement, 2 PP narratives (DHS Cloud Migration sub, USCIS Data Modernization), key personnel resumes (3), workshare confirmation",
+          "qualityScore": null,
+          "qualityNotes": "NDA signed. TA in legal review. DataBridge has provided draft capability statement. PP narratives in progress. Ethical wall protocols established for data exchange."
+        },
+        {
+          "id": "DC-003-02",
+          "item": "GovFlow Technologies — Capability Statement & PP Package",
+          "status": "NOT_STARTED",
+          "assignee": "GovFlow POC (TBD)",
+          "dueDate": "2026-02-25",
+          "completedDate": null,
+          "deliverable": "Capability statement, 2 PP narratives (DHS ServiceNow, CBP ITSM), key personnel resumes (2), workshare confirmation",
+          "qualityScore": null,
+          "qualityNotes": "NDA signed. TA pending. Data call will be issued upon TA execution (estimated Feb 20)."
+        },
+        {
+          "id": "DC-003-03",
+          "item": "MainframeNext Inc. — Capability Statement & PP Package",
+          "status": "NOT_STARTED",
+          "assignee": "MainframeNext POC (TBD)",
+          "dueDate": "2026-02-28",
+          "completedDate": null,
+          "deliverable": "Capability statement, 2 PP narratives (IRS Legacy Modernization, SSA Mainframe), key personnel resumes (2), workshare confirmation",
+          "qualityScore": null,
+          "qualityNotes": "NDA in legal review. Data call will be issued upon NDA and TA execution (estimated Feb 22)."
+        }
+      ]
+    },
+    {
+      "id": "DC-004",
+      "title": "Pricing Inputs & Basis of Estimate",
+      "phase": "Post-TA",
+      "status": "IN_PROGRESS",
+      "priority": "MEDIUM",
+      "owner": "Lisa Wong — Pricing Analyst",
+      "createdDate": "2026-02-05",
+      "dueDate": "2026-03-10",
+      "completedDate": null,
+      "description": "Collect all pricing inputs including labor rates, ODC estimates, partner pricing, travel costs, and basis of estimate documentation. Supports cost volume development.",
+      "items": [
+        {
+          "id": "DC-004-01",
+          "item": "TechForward Labor Rate Build-Ups (All LCATs)",
+          "status": "IN_PROGRESS",
+          "assignee": "Finance Director",
+          "dueDate": "2026-02-20",
+          "completedDate": null,
+          "deliverable": "Fully burdened labor rates for all 6 LCATs with wrap rate documentation, fringe, overhead, G&A, and fee build-up",
+          "qualityScore": null,
+          "qualityNotes": "Draft rates completed for PM, Tech Lead, and Security Engineer. Remaining LCATs in progress. DCAA-compliant rate build-up methodology."
+        },
+        {
+          "id": "DC-004-02",
+          "item": "DataBridge Analytics — Partner Pricing",
+          "status": "NOT_STARTED",
+          "assignee": "DataBridge Finance POC",
+          "dueDate": "2026-02-25",
+          "completedDate": null,
+          "deliverable": "Fully burdened labor rates for 4 LCATs, ODC estimates, and workshare pricing for 20% scope",
+          "qualityScore": null,
+          "qualityNotes": "Pending TA execution. Pricing template sent for DataBridge review."
+        },
+        {
+          "id": "DC-004-03",
+          "item": "GovFlow Technologies — Partner Pricing",
+          "status": "NOT_STARTED",
+          "assignee": "GovFlow Finance POC",
+          "dueDate": "2026-03-01",
+          "completedDate": null,
+          "deliverable": "Fully burdened labor rates for 2 LCATs, T&M rate schedule, and workshare pricing for 15% scope",
+          "qualityScore": null,
+          "qualityNotes": "Pending TA execution."
+        },
+        {
+          "id": "DC-004-04",
+          "item": "MainframeNext Inc. — Partner Pricing",
+          "status": "NOT_STARTED",
+          "assignee": "MainframeNext Finance POC",
+          "dueDate": "2026-03-05",
+          "completedDate": null,
+          "deliverable": "Fully burdened labor rates for 2 LCATs and workshare pricing for 10% scope",
+          "qualityScore": null,
+          "qualityNotes": "Pending TA execution."
+        },
+        {
+          "id": "DC-004-05",
+          "item": "ODC & Travel Cost Estimates",
+          "status": "IN_PROGRESS",
+          "assignee": "Lisa Wong",
+          "dueDate": "2026-02-28",
+          "completedDate": null,
+          "deliverable": "ODC estimates (software licenses, cloud tools, training), travel estimates (Washington DC-based, 10% travel), and facility costs",
+          "qualityScore": null,
+          "qualityNotes": "Software license costs collected. Travel estimate template complete. Cloud tooling costs pending technical approach finalization."
+        }
+      ]
+    }
+  ],
+  "aiRecommendations": [
+    {
+      "id": "AI-REC-001",
+      "type": "gap",
+      "severity": "HIGH",
+      "title": "Missing FinOps Cost Savings Evidence",
+      "description": "The Army Cloud Migration past performance narrative claims $12M in annual cost savings through FinOps optimization, but no independent verification or audit documentation has been collected to substantiate this figure. DHS OIG specifically highlighted cloud cost waste as a hot button — evaluators will scrutinize cost savings claims.",
+      "recommendation": "Request Army COR to provide signed memo confirming $12M savings figure, or collect Army financial system reports showing before/after cloud spend. If independent verification unavailable, adjust claim to 'estimated $10-12M savings based on RI utilization improvement from 28% to 87%' with RI utilization dashboard screenshots as evidence.",
+      "affectedDataCalls": ["DC-001"],
+      "affectedItems": ["DC-001-02"],
+      "impact": "Unsubstantiated cost savings claims could be flagged as a weakness in Past Performance evaluation. DHS evaluators may downgrade if claims appear inflated.",
+      "priority": "HIGH",
+      "status": "OPEN",
+      "createdDate": "2026-02-10",
+      "assignee": "Jennifer Davis"
+    },
+    {
+      "id": "AI-REC-002",
+      "type": "quality",
+      "severity": "MEDIUM",
+      "title": "Rachel Foster Resume Sanitization Review",
+      "description": "Rachel Foster's resume has been sanitized to remove Peraton and current contract references, but three bullet points still reference 'DHS cloud migration support services' which, combined with her clearance level and years of experience, may allow evaluators to identify her current employer. This creates risk if incumbent protests our recruiting practices.",
+      "recommendation": "Revise resume to use more generic descriptions: 'Federal civilian agency cloud infrastructure support' instead of 'DHS cloud migration support services.' Have legal counsel review final sanitized version. Prepare briefing for Contracting Officer if questioned about key personnel sourcing during discussions.",
+      "affectedDataCalls": ["DC-002"],
+      "affectedItems": ["DC-002-03"],
+      "impact": "If incumbent identifies Rachel Foster and files protest alleging improper recruiting, it could delay award or disqualify her as key personnel. Risk is low but consequence is high.",
+      "priority": "MEDIUM",
+      "status": "OPEN",
+      "createdDate": "2026-02-10",
+      "assignee": "Legal Counsel"
+    },
+    {
+      "id": "AI-REC-003",
+      "type": "timing",
+      "severity": "MEDIUM",
+      "title": "Partner Data Collection Timeline Risk",
+      "description": "Three teaming partners need to provide capability statements, past performance packages, and pricing inputs, but only DataBridge Analytics has an executed NDA. GovFlow NDA is signed but TA pending. MainframeNext NDA is still in legal review. At current pace, partner data collection will not complete until March 5 — leaving only 10 days before expected RFP release for integration and quality review.",
+      "recommendation": "Accelerate NDA/TA execution timeline: (1) Escalate MainframeNext NDA to priority legal review — target Feb 12 execution. (2) Issue GovFlow data call upon NDA signature, before TA execution, for non-proprietary items (capability statement, public PP data). (3) Prepare contingency: pre-draft partner sections using publicly available information (SAM.gov, FPDS) that can be refined when partner data arrives. (4) Schedule Feb 15 checkpoint: if MainframeNext NDA not signed, activate alternate partner (Astadia Federal).",
+      "affectedDataCalls": ["DC-003", "DC-004"],
+      "affectedItems": ["DC-003-02", "DC-003-03", "DC-004-03", "DC-004-04"],
+      "impact": "Late partner data creates proposal development bottleneck. Pricing volume cannot be completed without partner rates. Past performance volume requires partner PP narratives for team aggregate scoring.",
+      "priority": "MEDIUM",
+      "status": "OPEN",
+      "createdDate": "2026-02-10",
+      "assignee": "Capture Manager"
+    }
+  ],
+  "collectionMetrics": {
+    "totalItems": 17,
+    "complete": 6,
+    "inProgress": 5,
+    "notStarted": 6,
+    "overdue": 0,
+    "completionRate": 35,
+    "averageQualityScore": 91,
+    "nextDeadline": "2026-02-15",
+    "nextDeadlineItem": "DC-002-04: Chris Morgan resume and certifications",
+    "criticalPath": "Partner data collection (DC-003) drives pricing (DC-004) which drives cost volume development"
+  }
+}

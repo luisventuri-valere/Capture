@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Check, RefreshCw, AlertTriangle, X, ChevronRight, MessageCircle, ArrowRight, Edit2, History, ListChecks, Bot, Paperclip } from 'lucide-react';
-import { SectionFairContent } from './SectionFairContent';
+import { useState, useRef, useEffect } from 'react';
+import { Check, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles } from 'lucide-react';
+import { SectionFairContent, Band } from './SectionFairContent';
 import { AskAIDrawer } from './AskAIDrawer';
 import type { StrategyData, SectionStatus, UiStatus } from '../../../types/strategy';
 import { SECTION_META, toUiStatus } from '../../../types/strategy';
@@ -19,27 +19,6 @@ const DOWNSTREAM: Partial<Record<keyof StrategyData['sections'], string[]>> = {
 
 // Sections flagged in backward-engineering demo
 const BACKWARD_ENG_FLAGS = new Set<keyof StrategyData['sections']>(['teamStrategy', 'staffingStrategy', 'pricingStrategy']);
-
-// ─── Confidence chip ─────────────────────────────────────────────────────────
-
-function ConfidenceChip({ confidence, size = 'sm' }: { confidence: number; size?: 'sm' | 'md' }) {
-  const [bg, color] =
-    confidence >= 75 ? ['var(--gh-success-bg)', 'var(--gh-success-fg)'] :
-    confidence >= 50 ? ['var(--gh-warning-bg)', 'var(--gh-warning-fg)'] :
-    ['var(--gh-danger-bg)', 'var(--gh-danger-fg)'];
-  return (
-    <span style={{
-      display: 'inline-flex', alignItems: 'center',
-      padding: size === 'sm' ? '2px 7px' : '3px 10px',
-      borderRadius: 'var(--gh-radius-full)',
-      fontSize: size === 'sm' ? 11 : 'var(--gh-font-size-sm)',
-      fontWeight: 'var(--gh-font-weight-semibold)',
-      background: bg, color, fontFamily: F,
-    }}>
-      {confidence}%
-    </span>
-  );
-}
 
 // ─── Recommendations & Actions band ─────────────────────────────────────────
 
@@ -61,13 +40,7 @@ function RecommendationsBand({ sectionKey, rejectedIds, onAccept, localStatuses 
   }));
 
   return (
-    <div style={{ marginBottom: 28 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        <ListChecks size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />
-        <span style={{ fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: F }}>
-          Recommendations &amp; Actions
-        </span>
-      </div>
+    <Band label="Recommendations & Actions">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {recs.map(rec => {
           const accepted  = rec.status === 'accepted';
@@ -140,7 +113,7 @@ function RecommendationsBand({ sectionKey, rejectedIds, onAccept, localStatuses 
           );
         })}
       </div>
-    </div>
+    </Band>
   );
 }
 
@@ -159,132 +132,44 @@ interface SidebarItemProps {
   onSelect: () => void;
 }
 
-function SidebarItem({ number, title, feeds, rawStatus, uiOverride, confidence, confirmed, selected, flagged, onSelect }: SidebarItemProps) {
-  const status: UiStatus = uiOverride ?? toUiStatus(rawStatus);
-  const dotColor =
-    status === 'confirmed'    ? 'var(--gh-success-fg)'  :
-    status === 'needs_review' ? 'var(--gh-warning-fg)'  :
-    'var(--gh-text-disabled)';
+function SidebarItem({ number, title, feeds, confidence, selected, flagged, onSelect }: SidebarItemProps) {
+  // Score pill (Figma StrategyRow/Score Pill): ≥80 teal · 50–79 amber · <50 red
+  const [pillBg, pillColor] =
+    confidence >= 80 ? ['rgba(0,255,188,0.05)', '#00ffbc'] :
+    confidence >= 50 ? ['rgba(255,207,75,0.05)', '#ffcf4b'] :
+    ['rgba(255,99,99,0.05)', '#ff6363'];
 
   return (
     <button
       onClick={onSelect}
       style={{
-        display: 'flex', alignItems: 'center', gap: 9, width: '100%', padding: '9px 10px',
-        textAlign: 'left', cursor: 'pointer', borderRadius: 'var(--gh-radius-lg)',
-        background: selected ? 'var(--gh-bg-surface-muted)' : 'transparent',
-        borderTopWidth: 1, borderBottomWidth: 1, borderRightWidth: 1,
-        borderTopStyle: 'solid', borderBottomStyle: 'solid', borderRightStyle: 'solid',
-        borderTopColor: selected ? 'var(--gh-border)' : 'transparent',
-        borderBottomColor: selected ? 'var(--gh-border)' : 'transparent',
-        borderRightColor: selected ? 'var(--gh-border)' : 'transparent',
-        borderLeftWidth: 3, borderLeftStyle: 'solid',
-        borderLeftColor: selected ? 'var(--gh-accent)' : 'transparent',
-        fontFamily: F,
+        display: 'flex', alignItems: 'flex-start', gap: 9, width: '100%', height: 60, boxSizing: 'border-box',
+        padding: '12px 10px', textAlign: 'left', cursor: 'pointer', border: 'none',
+        background: selected ? 'var(--gh-blue-900)' : 'transparent', fontFamily: F,
       }}
     >
-      {/* Number badge */}
-      <div style={{ flexShrink: 0, width: 22, height: 22, borderRadius: 'var(--gh-radius-full)', background: selected ? 'var(--gh-accent)' : 'var(--gh-bg-surface)', color: selected ? 'var(--gh-accent-fg)' : 'var(--gh-text-tertiary)', fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {/* Index badge */}
+      <span style={{ flexShrink: 0, width: 22, height: 22, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface)', color: 'var(--gh-white)', fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {number}
-      </div>
+      </span>
 
-      {/* Title + meta */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 2 }}>
-          {/* Status dot */}
-          <div style={{ flexShrink: 0, width: 6, height: 6, borderRadius: 'var(--gh-radius-full)', background: dotColor }} />
-          <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: selected ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)', color: selected ? 'var(--gh-text)' : 'var(--gh-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {title}
-          </span>
-          {confirmed && <Check size={10} style={{ flexShrink: 0, color: 'var(--gh-success-fg)' }} />}
-          {flagged && !confirmed && (
-            <span style={{ flexShrink: 0, width: 7, height: 7, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-warning-fg)' }} />
-          )}
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--gh-text-disabled)' }}>
-          <ConfidenceChip confidence={confidence} size="sm" />
-          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {feeds.join(', ')}
-          </span>
-        </div>
-      </div>
-
-      {selected && <ChevronRight size={13} style={{ flexShrink: 0, color: 'var(--gh-accent)' }} />}
-    </button>
-  );
-}
-
-// ─── Detail header (sticky) ───────────────────────────────────────────────────
-
-interface DetailHeaderProps {
-  number: number;
-  title: string;
-  feeds: string[];
-  rawStatus: SectionStatus;
-  uiOverride?: UiStatus;
-  confidence: number;
-  confirmed: boolean;
-  lastReviewed: string;
-  reviewedBy: string;
-  onConfirm: () => void;
-  onRequestReview: () => void;
-  onEdit: () => void;
-  onAskAI: () => void;
-}
-
-function DetailHeader({ number, title, feeds, rawStatus, uiOverride, confidence, confirmed, lastReviewed, reviewedBy, onConfirm, onRequestReview, onEdit, onAskAI }: DetailHeaderProps) {
-  const uiStatus = uiOverride ?? toUiStatus(rawStatus);
-  const statusLabel = uiStatus === 'confirmed' ? 'Confirmed' : uiStatus === 'needs_review' ? 'Needs Review' : 'Draft';
-  const [statusBg, statusColor] =
-    uiStatus === 'confirmed'    ? ['var(--gh-success-bg)', 'var(--gh-success-fg)'] :
-    uiStatus === 'needs_review' ? ['var(--gh-warning-bg)', 'var(--gh-warning-fg)'] :
-    ['var(--gh-bg-surface)', 'var(--gh-text-tertiary)'];
-
-  return (
-    <div style={{ position: 'sticky', top: 0, zIndex: 10, padding: '14px 24px 10px', background: 'var(--gh-bg-canvas)', borderBottom: '1px solid var(--gh-border)', fontFamily: F }}>
-      {/* Title row */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
-        <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-accent)', color: 'var(--gh-accent-fg)', fontSize: 'var(--gh-font-size-base)', fontWeight: 'var(--gh-font-weight-bold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {number}
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 3 }}>
-            <h2 style={{ margin: 0, fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{title}</h2>
-            <span style={{ padding: '2px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', background: statusBg, color: statusColor }}>{statusLabel}</span>
-            {/* Confidence chip */}
-            <ConfidenceChip confidence={confidence} size="md" />
-            {confirmed && <span style={{ padding: '2px 8px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, background: 'var(--gh-success-bg)', color: 'var(--gh-success-fg)' }}>Confirmed</span>}
-          </div>
-          <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>Last reviewed {lastReviewed} · {reviewedBy}</div>
-        </div>
-      </div>
-
-      {/* Fix 5: button pyramid — Confirm solid primary → Request Review outline → Edit/Ask AI tertiary */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-        {/* Primary — filled */}
-        <button onClick={onConfirm} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 16px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-accent)', color: 'var(--gh-accent-fg)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', cursor: 'pointer', fontFamily: F }}>
-          <Check size={13} /> {confirmed ? 'Re-confirm' : 'Confirm'}
-        </button>
-        {/* Secondary — outline */}
-        <button onClick={onRequestReview} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'transparent', color: 'var(--gh-accent)', border: '1px solid var(--gh-accent)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer', fontFamily: F }}>
-          <RefreshCw size={13} /> Request Review
-        </button>
-        {/* Tertiary — icon + muted label, no border */}
-        <button onClick={onEdit} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 'var(--gh-radius-lg)', background: 'transparent', color: 'var(--gh-text-tertiary)', border: 'none', fontSize: 'var(--gh-font-size-sm)', cursor: 'pointer', fontFamily: F }}>
-          <Edit2 size={13} /> Edit
-        </button>
-        <button onClick={onAskAI} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 'var(--gh-radius-lg)', background: 'transparent', color: 'var(--gh-text-tertiary)', border: 'none', fontSize: 'var(--gh-font-size-sm)', cursor: 'pointer', fontFamily: F }}>
-          <MessageCircle size={13} /> Ask AI
-        </button>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-          {feeds.map(f => (
-            <span key={f} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, padding: '3px 8px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface)', color: 'var(--gh-text-tertiary)', border: '1px solid var(--gh-border)' }}>
-              <ArrowRight size={9} /> {f}
+      <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, width: '100%' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5, minWidth: 0 }}>
+            {flagged && <span style={{ flexShrink: 0, width: 6, height: 6, borderRadius: '50%', background: 'var(--gh-warning-fg)' }} />}
+            <span style={{ fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.4, color: 'var(--gh-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {title}
             </span>
-          ))}
-        </div>
-      </div>
-    </div>
+          </span>
+          <span style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.4, background: pillBg, color: pillColor }}>
+          {confidence}%
+          </span>
+        </span>
+        <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-normal)', lineHeight: 1.4, color: '#94a3b8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {feeds.join(', ')}
+        </span>
+      </span>
+    </button>
   );
 }
 
@@ -367,6 +252,12 @@ export function StrategyPlanSubTab({ data }: Props) {
   const [vhOverrides, setVhOverrides] = useState<Record<string, typeof ENVELOPE.sections[string]['version_history']>>({});
   const [flaggedKeys, setFlaggedKeys] = useState<Set<keyof StrategyData['sections']>>(new Set());
 
+  // Detail scroll progress drives the top bar; Confirm unlocks at the bottom.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [scrollPct, setScrollPct] = useState(0);
+  const [atEnd, setAtEnd] = useState(false);
+  const [scrolled, setScrolled] = useState(false);   // reveal the floating Ask AI once scrolling starts
+
   // When demo is active, all derived values come from the pre-seeded constants
   const activeConfirmedKeys    = demoActive ? DEMO_CONFIRMED     : confirmedKeys;
   const activeSectionUiOverride = demoActive ? DEMO_UI_OVERRIDE  : sectionUiOverride;
@@ -448,6 +339,25 @@ export function StrategyPlanSubTab({ data }: Props) {
   const effectiveConfirmed = activeConfirmedKeys.has(effectiveKey) || effectiveUiStatus === 'confirmed';
   const effectiveVH = activeVhOverrides[effectiveKey] ?? selectedEnv?.version_history;
 
+  // Reset scroll/confirm gate whenever the selected section changes.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) { setScrollPct(0); setAtEnd(false); setScrolled(false); return; }
+    el.scrollTop = 0;
+    const max = el.scrollHeight - el.clientHeight;
+    if (max <= 1) { setScrollPct(100); setAtEnd(true); setScrolled(true); }   // nothing to scroll → fully read
+    else { setScrollPct(0); setAtEnd(false); setScrolled(false); }
+  }, [effectiveKey]);
+
+  const onDetailScroll = (e: { currentTarget: HTMLDivElement }) => {
+    const el = e.currentTarget;
+    const max = el.scrollHeight - el.clientHeight;
+    const pct = max > 1 ? Math.min(100, (el.scrollTop / max) * 100) : 100;
+    setScrollPct(pct);
+    if (el.scrollTop > 8) setScrolled(true);   // reveal the floating Ask AI
+    if (pct >= 99) setAtEnd(true);             // latches once the end is reached
+  };
+
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', fontFamily: F }}>
       {/* Confirm toast */}
@@ -483,66 +393,52 @@ export function StrategyPlanSubTab({ data }: Props) {
       {/* Plan header bar */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', paddingBottom: 12, flexShrink: 0 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 3 }}>
-            {/* Overall confidence chip */}
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', fontFamily: F }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
+            {/* Confirmed headline */}
+            <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>
+              {confirmedCount} of {SECTION_META.length} confirmed
+            </span>
+            {/* Overall confidence chip + info */}
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', fontFamily: F }}>
               {ENVELOPE.overall_confidence}% confidence
-            </span>
-            <span style={{ padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', background: confirmedCount === 10 ? 'var(--gh-success-bg)' : 'var(--gh-bg-surface)', color: confirmedCount === 10 ? 'var(--gh-success-fg)' : 'var(--gh-text-secondary)', fontFamily: F }}>
-              {confirmedCount} / {SECTION_META.length} confirmed
-            </span>
-            <span style={{ padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, background: 'var(--gh-info-bg)', color: 'var(--gh-info-fg)', fontFamily: F }}>
-              {data.capturePhase}
+              <Info size={13} />
             </span>
           </div>
+          {/* Ratified subtitle */}
+          <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginBottom: 2, fontFamily: F }}>Sections ratified by a human</div>
           {/* Generated-by line */}
           <p style={{ fontSize: 11, color: 'var(--gh-text-disabled)', margin: 0, fontFamily: F }}>
             Drafted by {ENVELOPE.generated_by} · Capture Manager: {data.captureManager}
           </p>
         </div>
 
-        {/* Triage filter (hidden in demo mode) */}
-        {!demoActive && (
-          <div style={{ display: 'flex', borderRadius: 'var(--gh-radius-lg)', overflow: 'hidden', border: '1px solid var(--gh-border)', flexShrink: 0 }}>
-            {(['all', 'needs_attention', 'confirmed'] as TriageFilter[]).map(f => (
-              <button key={f} onClick={() => setTriageFilter(f)} style={{ padding: '5px 12px', fontSize: 11, fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer', background: triageFilter === f ? 'var(--gh-accent)' : 'var(--gh-bg-elevated)', color: triageFilter === f ? 'var(--gh-accent-fg)' : 'var(--gh-text-tertiary)', fontFamily: F }}>
-                {f === 'all' ? 'All' : f === 'needs_attention' ? 'Needs Attention' : 'Confirmed'}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Screen toggle: normal ↔ "3 · Team Strategy — Change detected" */}
-        {demoActive ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-warning-fg)', padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)', fontFamily: F }}>
-              3 · Team Strategy — Change detected
-            </span>
-            <button
-              onClick={exitDemo}
-              style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface)', color: 'var(--gh-text-tertiary)', border: '1px solid var(--gh-border)', fontSize: 11, cursor: 'pointer', fontFamily: F }}
-            >
-              <X size={11} /> Exit demo
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={activateDemo}
-            style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', border: '1px solid var(--gh-warning-border)', fontSize: 11, cursor: 'pointer', fontFamily: F, flexShrink: 0 }}
-          >
-            <AlertTriangle size={11} /> Preview cascade
-          </button>
-        )}
       </div>
 
       {/* Master / detail */}
-      <div style={{ display: 'flex', flex: 1, minHeight: 0, border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-xl)', overflow: 'hidden' }}>
-        {/* Fix 4: section index — inset card bg + SECTIONS header to distinguish from app nav */}
-        <div style={{ width: 252, flexShrink: 0, overflowY: 'auto', background: 'var(--gh-bg-canvas)', borderRight: '1px solid var(--gh-border)' }}>
-          <div style={{ margin: '10px 8px 4px', padding: '6px 8px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-elevated)', border: '1px solid var(--gh-border)' }}>
-            <span style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-tertiary)', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: F }}>Sections</span>
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        {/* Section Index (Figma 2141:158) — canvas bg, no border (bg contrast vs the surface detail) */}
+        <div style={{ width: 252, flexShrink: 0, overflowY: 'auto', background: 'var(--gh-bg-canvas)' }}>
+          {/* Filter header (Figma 2141:159) — 8px padding all round */}
+          <div style={{ padding: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: 4, borderRadius: 'var(--gh-radius-lg)', background: 'rgba(255,255,255,0.06)' }}>
+              {(['all', 'needs_attention', 'confirmed'] as TriageFilter[]).map(f => {
+                const on = triageFilter === f;
+                return (
+                  <button key={f} onClick={() => setTriageFilter(f)} style={{
+                    display: 'inline-flex', alignItems: 'center', padding: '5px 10px', borderRadius: 'var(--gh-radius-md)',
+                    border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 11, whiteSpace: 'nowrap',
+                    background: on ? 'rgba(255,255,255,0.14)' : 'transparent',
+                    color: on ? '#edf2f7' : '#94a3b8',
+                    fontWeight: on ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)',
+                  }}>
+                    {f === 'all' ? 'All' : f === 'needs_attention' ? 'Needs Attention' : 'Confirmed'}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          <div style={{ padding: '4px 8px 8px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {/* Items — full-width, fixed 60px, no gap (Figma 2141:167…) */}
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             {filteredMeta.map(meta => (
               <SidebarItem
                 key={meta.key}
@@ -562,77 +458,65 @@ export function StrategyPlanSubTab({ data }: Props) {
         </div>
 
         {/* Detail */}
-        <div key={effectiveKey} style={{ flex: 1, minWidth: 0, background: 'var(--gh-bg-canvas)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <DetailHeader
-            number={selectedMeta.number}
-            title={selectedMeta.title}
-            feeds={selectedMeta.key === 'pastPerformance' ? ['Past Performance'] : selectedMeta.feeds}
-            rawStatus={selectedSection?.status}
-            uiOverride={activeSectionUiOverride[effectiveKey]}
-            confidence={selectedEnv?.confidence ?? 0}
-            confirmed={effectiveConfirmed}
-            lastReviewed={(selectedSection as {lastReviewed?: string})?.lastReviewed ?? '—'}
-            reviewedBy={(selectedSection as {reviewedBy?: string})?.reviewedBy ?? '—'}
-            onConfirm={() => !demoActive && handleConfirm(effectiveKey)}
-            onRequestReview={() => !demoActive && handleRequestReview(effectiveKey)}
-            onEdit={() => !demoActive && handleRequestReview(effectiveKey)}
-            onAskAI={() => setAiDrawerTitle(selectedMeta.title)}
-          />
+        <div key={effectiveKey} style={{ flex: 1, minWidth: 0, background: 'var(--gh-bg-surface)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {/* Progress accent bar — tracks read progress (Figma 2141:178) */}
+          <div style={{ height: 4, background: 'var(--gh-bg-surface-muted)', flexShrink: 0 }}>
+            <div style={{ height: 4, width: `${scrollPct}%`, background: 'var(--gh-accent)', borderRadius: '0 2px 2px 0', transition: 'width 0.08s linear' }} />
+          </div>
 
-          <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
-            {/* Change-detected banner (detail panel, backward-engineering) */}
-            {effectiveUiStatus === 'needs_review' && flaggedKeys.size > 0 && effectiveKey === 'teamStrategy' && (
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 16, background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
-                <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
-                <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
-                  Change detected — downstream tabs flagged for regeneration: Teaming, Staffing, Pricing.
-                </p>
+          {/* Scrollable body — bands stack edge-to-edge */}
+          <div ref={scrollRef} onScroll={onDetailScroll} style={{ flex: 1, overflowY: 'auto' }}>
+            {/* Contextual banners (padded) */}
+            {((effectiveUiStatus === 'needs_review' && flaggedKeys.size > 0 && effectiveKey === 'teamStrategy') ||
+              (selectedEnv?.confidence ?? 100) < 50 ||
+              (selectedEnv?.conflicts ?? []).length > 0) && (
+              <div style={{ padding: '16px 24px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {effectiveUiStatus === 'needs_review' && flaggedKeys.size > 0 && effectiveKey === 'teamStrategy' && (
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
+                    <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
+                    <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
+                      Change detected — downstream tabs flagged for regeneration: Teaming, Staffing, Pricing.
+                    </p>
+                  </div>
+                )}
+                {(selectedEnv?.confidence ?? 100) < 50 && (
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
+                    <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
+                    <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
+                      This recommendation is based on limited data. Run ANALYZE workflow for better intelligence.
+                    </p>
+                  </div>
+                )}
+                {(selectedEnv?.conflicts ?? []).map((c, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
+                    <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
+                    <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
+                      <strong>Conflict:</strong> {c.message}
+                    </p>
+                  </div>
+                ))}
               </div>
             )}
 
-            {/* AI Reasoning band */}
+            {/* AIReasoning card (Figma 2141:184) */}
             {selectedEnv?.ai_reasoning && (
-              <div style={{ display: 'flex', gap: 12, padding: '12px 16px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 24, background: 'var(--gh-info-bg)', border: '1px solid var(--gh-info-border)' }}>
-                <Bot size={16} style={{ flexShrink: 0, color: 'var(--gh-info-fg)' }} />
-                <div>
-                  <p style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', marginBottom: 4, color: 'var(--gh-info-fg)', fontFamily: F }}>
-                    AI Reasoning — Capture Strategy Agent v3
-                  </p>
-                  <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-text-secondary)', margin: 0, fontFamily: F }}>
-                    {selectedEnv.ai_reasoning}
-                  </p>
+              <div style={{ margin: 24, display: 'flex', gap: 12, alignItems: 'flex-start', padding: 24, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-elevated)' }}>
+                <Sparkles size={14} style={{ flexShrink: 0, marginTop: 2, color: 'var(--gh-accent-tint)' }} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                  <span style={{ fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-accent-tint)', fontFamily: F }}>AI Reasoning</span>
+                  <p style={{ fontSize: 14, lineHeight: 1.5, color: 'var(--gh-text-secondary)', margin: 0, fontFamily: F }}>{selectedEnv.ai_reasoning}</p>
                 </div>
               </div>
             )}
 
-            {/* Low-confidence banner (§4 Customer Engagement, confidence 46) */}
-            {(selectedEnv?.confidence ?? 100) < 50 && (
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 16, background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
-                <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
-                <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
-                  This recommendation is based on limited data. Run ANALYZE workflow for better intelligence.
-                </p>
-              </div>
-            )}
-
-            {/* Conflict callout (§3 Team Strategy) */}
-            {(selectedEnv?.conflicts ?? []).map((c, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 16, background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
-                <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
-                <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
-                  <strong>Conflict:</strong> {c.message}
-                </p>
-              </div>
-            ))}
-
-            {/* FAIR: Facts + Analysis + Intelligence (with source chips injected into Facts) */}
+            {/* FAIR bands — Facts / Analysis / Intelligence */}
             <SectionFairContent
               sectionKey={effectiveKey}
               sections={data.sections}
               sources={selectedEnv?.sources}
             />
 
-            {/* Recommendations & Actions (4th FAIR band) */}
+            {/* Recommendations & Actions band */}
             <RecommendationsBand
               sectionKey={effectiveKey}
               rejectedIds={new Set(Object.entries(activeRecStatuses[effectiveKey] ?? {}).filter(([, v]) => v === 'rejected').map(([k]) => k))}
@@ -641,12 +525,39 @@ export function StrategyPlanSubTab({ data }: Props) {
               localStatuses={activeRecStatuses[effectiveKey] ?? {}}
             />
 
-            {/* Footer: last reviewed + version history */}
-            <div style={{ paddingTop: 12, borderTop: '1px solid var(--gh-border)' }}>
+            {/* Version history (Figma 2141:339) */}
+            <div style={{ padding: '20px 24px' }}>
               <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginBottom: 4, fontFamily: F }}>
                 Last reviewed {(selectedSection as {lastReviewed?: string})?.lastReviewed ?? '—'} · {(selectedSection as {reviewedBy?: string})?.reviewedBy ?? '—'}
               </div>
               <VersionHistoryFooter sectionKey={effectiveKey} vhOverride={effectiveVH} />
+            </div>
+          </div>
+
+          {/* Bottom action bar (Figma 2141:346) */}
+          <div style={{ flexShrink: 0, position: 'relative', background: 'var(--gh-bg-elevated)', padding: '16px 24px' }}>
+            <button
+              onClick={() => setAiDrawerTitle(selectedMeta.title)}
+              aria-hidden={!scrolled}
+              style={{ position: 'absolute', right: 24, top: -62, display: 'inline-flex', alignItems: 'center', gap: 8, minHeight: 44, padding: '12px 20px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-border-strong)', color: 'var(--gh-text-tertiary)', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', fontFamily: F, boxShadow: '0 12px 28px rgba(0,0,0,0.4)', opacity: scrolled ? 1 : 0, transform: scrolled ? 'translateY(0)' : 'translateY(8px)', pointerEvents: scrolled ? 'auto' : 'none', transition: 'opacity 0.2s ease, transform 0.2s ease' }}
+            >
+              <MessageCircle size={16} /> Ask AI
+            </button>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+              <button onClick={() => !demoActive && handleRequestReview(effectiveKey)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, minHeight: 44, padding: '12px 20px', borderRadius: 'var(--gh-radius-lg)', background: 'transparent', color: 'var(--gh-text-tertiary)', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', fontFamily: F }}>
+                <Edit2 size={15} /> Edit
+              </button>
+              <button onClick={() => !demoActive && handleRequestReview(effectiveKey)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, minHeight: 44, padding: '12px 20px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface)', color: 'var(--gh-text-secondary)', border: '1px solid var(--gh-border-strong)', cursor: 'pointer', fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', fontFamily: F }}>
+                <RefreshCw size={15} /> Request Review
+              </button>
+              <button
+                onClick={() => atEnd && !demoActive && handleConfirm(effectiveKey)}
+                disabled={!atEnd}
+                title={atEnd ? undefined : 'Scroll to the end of the section to confirm'}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 6, minHeight: 44, padding: '12px 20px', borderRadius: 'var(--gh-radius-lg)', cursor: atEnd ? 'pointer' : 'not-allowed', fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', fontFamily: F, border: 'none', background: atEnd ? 'var(--gh-accent)' : 'var(--gh-bg-surface-muted)', color: atEnd ? 'var(--gh-accent-fg)' : 'var(--gh-text-disabled)' }}
+              >
+                <Check size={15} /> {effectiveConfirmed ? 'Re-confirm' : 'Confirm'}
+              </button>
             </div>
           </div>
         </div>

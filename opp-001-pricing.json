@@ -1,0 +1,171 @@
+{
+  "id": "opp-001",
+  "noticeId": "DHS-2026-CLOUD-0042",
+  "title": "Enterprise Cloud Migration and Modernization Services",
+  "lastUpdated": "2026-02-10T11:40:00Z",
+  "_provenance": "DERIVED MOCK — no PRC-001 pricing capture exists for opp-001. Synthesized 2026-06-11 from opp-001-strategy.json (pricingStrategy: PTW $42.0M, LPTA floor $38M, blended/competitive rates, 22% margin), opp-001-teaming.json (workshareAllocation: $45.0M ceiling, prime 55% / subs 20/15/10), and opp-001-staffing.json (LCAT labor basis — the ROM live-link). Pending Greg ratification. Never present as live agent output.",
+  "generatedBy": "Pricing Agent (PRC-001) · v3 · 2026-02-10",
+  "overallConfidence": 73,
+  "overview": {
+    "contractType": "FFP (Base Year) / T&M (Option Years)",
+    "totalCeiling": 45000000,
+    "proposedPrice": 42800000,
+    "priceToWin": 42000000,
+    "buildUp": 44200000,
+    "ptwGap": 2200000,
+    "marginTarget": 0.22,
+    "lptaFloor": 38000000,
+    "periodOfPerformance": "1 Base Year + 4 Option Years",
+    "counts": { "sections": 5, "confirmed": 0 },
+    "note": "Two estimates frame the price: a top-down Price-to-Win ($42.0M, competitive analysis) and a bottom-up Build-Up ($44.2M, cost+fee). The $2.2M gap is closed via the fee, overhead, and subcontractor-negotiation levers to a proposed $42.8M — above PTW for margin protection, below build-up via the identified levers."
+  },
+  "hourglass": {
+    "topDown": {
+      "label": "Price-to-Win (competitive)",
+      "value": 42000000,
+      "basis": "Derived from 8 comparable DHS OCIO cloud awards (FY23–25), GSA CALC+ rate benchmarks, and the incumbent's public billing rate. Positions the bid to win on best-value while undercutting incumbent labor rates.",
+      "sources": ["USAspending — 8 comparable DHS OCIO awards FY23–25", "GSA CALC+ rate data", "Competitive intel — CMP-001 (incumbent rate)"]
+    },
+    "bottomUp": {
+      "label": "Cost Build-Up (engineering estimate)",
+      "value": 44200000,
+      "basis": "Built from the staffing labor basis (15 prime FTE across 6 LCATs, 5-year escalated), fully-burdened with fringe/overhead/G&A/fee, plus subcontractor costs ($20.25M) and ODCs. Represents the cost to deliver the proposed solution."
+    },
+    "neck": {
+      "gap": 2200000,
+      "proposedPrice": 42800000,
+      "recommendation": "Close the $2.2M build-up-to-PTW gap with: (1) fee reduction from 8% to 7% on the prime portion (~$0.25M), (2) overhead efficiency from the existing FedRAMP environment reuse (~$0.6M), (3) subcontractor cost negotiation on the two unsigned TAs (~$1.0M target), and (4) ODC tightening (~$0.35M). Hold proposed at $42.8M to protect the 22% margin while remaining competitive."
+    }
+  },
+  "sections": [
+    {
+      "id": "PR-1",
+      "title": "Price-to-Win Analysis",
+      "status": "validated",
+      "linkage": { "winThemes": ["WT-02"], "discriminators": ["D-01"], "source": "strategy.pricingStrategy" },
+      "fair": {
+        "facts": "Target Price-to-Win: $42.0M against a $45.0M ceiling. Contract type: FFP base year, T&M option years. Competitive position: undercut the incumbent on labor rate while leading on best-value (FedRAMP High, same-agency past performance). Senior-labor blended rate $185/hr vs. the incumbent's public $195/hr; full-program blended rate ~$131/hr.",
+        "analysis": "PTW is anchored on 8 comparable DHS OCIO cloud awards (FY23–25) and GSA CALC+ benchmarks. The $42.0M target sits ~6.7% under the ceiling, signaling price discipline without bidding into LPTA territory. Best-value evaluation (M.1–M.3) means TechForward does not need to be the lowest price — it needs to be the lowest credible price among technically-superior offerors, which the FedRAMP High and same-agency discriminators support.",
+        "intelligence": "🔒 Incumbent Peraton's expiring agency ATO forces a re-authorization cost that TechForward does not carry — a structural price advantage of roughly 4–6 weeks of program ramp that competitors without an active ATO must price in. The $185/hr senior rate vs. $195/hr incumbent rate is a defensible, public-data-grounded undercut.",
+        "recommendations": "PR-1-R1: Set Price-to-Win target at $42.0M. · PR-1-R2: Hold senior-labor rate at $185/hr to undercut the incumbent on the visible band. · PR-1-R3: Do not bid below the $38M LPTA floor unless the solicitation converts to LPTA (see PR-5)."
+      },
+      "howRatio": null,
+      "envelope": {
+        "confidence": 79,
+        "aiReasoning": "PTW rests on 8 comparable awards plus public rate data, which is a solid competitive basis; confidence is held below the 80s only because the LPTA-vs-best-value evaluation methodology is not yet confirmed in the draft solicitation, and that choice materially shifts the target.",
+        "sources": [
+          { "label": "USAspending — 8 comparable DHS OCIO awards FY23–25" },
+          { "label": "GSA CALC+ rate data" },
+          { "label": "Competitive intel — CMP-001 (incumbent ATO & rate)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Generated from strategy pricingStrategy PTW analysis" }],
+        "conflicts": []
+      }
+    },
+    {
+      "id": "PR-2",
+      "title": "Cost Build-Up",
+      "status": "validated",
+      "linkage": { "source": "staffing + teaming + ODC model" },
+      "fair": {
+        "facts": "Bottom-up build-up: $44.2M total (5-year). Cost elements: Direct labor (prime) $12.8M · Fringe & overhead $7.9M · Subcontractor costs $20.25M · Other direct costs (travel, cloud, tools) $1.5M · G&A $1.1M · Fee/profit $0.65M.",
+        "analysis": "Direct labor is built from the staffing LCAT basis (15 prime FTE, 6 categories, midpoint salaries, 3% annual escalation across 5 years — see PR-3). Subcontractor costs flow from the teaming workshare allocation ($9.0M / $6.75M / $4.5M). The build-up exceeds PTW by $2.2M; the hourglass neck documents the levers to close it. Fee is set at 8% on the prime portion, trimmable to 7% as the first lever.",
+        "intelligence": "🔒 The single largest cost line is subcontractor cost ($20.25M, 46% of build-up), which is also the least locked — two of three subcontractor TAs are unsigned (see PR-4). Cost certainty improves materially once those TAs are executed; until then the build-up carries a ±$1.0M band on the subcontractor portion.",
+        "recommendations": "PR-2-R1: Confirm the $44.2M build-up as the cost baseline. · PR-2-R2: Reduce prime fee from 8% to 7% as the first gap-closing lever. · PR-2-R3: Apply FedRAMP-environment-reuse overhead efficiency (~$0.6M) before pricing the option years."
+      },
+      "howRatio": null,
+      "envelope": {
+        "confidence": 74,
+        "aiReasoning": "The build-up structure is sound and the labor basis is real (linked to staffing), but two assumptions cap confidence: the 3% escalation across the option years, and the ±$1.0M band on subcontractor costs from the unsigned TAs. Both resolve as the team locks.",
+        "sources": [
+          { "label": "SFI-001 Staffing — LCAT labor basis" },
+          { "label": "TMI-001 Teaming — subcontractor workshare" },
+          { "label": "ODC model — travel / cloud / tooling" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Computed from labor basis + workshare + ODC model" }],
+        "conflicts": []
+      }
+    },
+    {
+      "id": "PR-3",
+      "title": "Labor Basis — ROM (live-linked to Staffing)",
+      "status": "validated",
+      "linkage": { "source": "staffing.lcats", "liveLink": "Staffing" },
+      "fair": {
+        "facts": "Prime direct labor basis — 15 FTE across 6 LCATs (escalated 5-year extended cost contributes $12.8M to the build-up): LCAT-01 Program Manager (1 FTE, base $197.5K) · LCAT-02 Technical Lead / Cloud Architect (1 FTE, $222.5K) · LCAT-03 Cloud Architect — Migration (2 FTE, $175K) · LCAT-04 Security Engineer (3 FTE, $185K) · LCAT-05 DevOps Engineer (4 FTE, $147.5K) · LCAT-06 Systems Administrator (4 FTE, $105K). Rates are midpoints of the Staffing compensation ranges.",
+        "analysis": "This section is live-linked to the Staffing tab: FTE counts and compensation ranges flow from the staffing LCAT data, so a staffing change (added position, candidate at a different rate band, or a position lost) re-flows the labor cost here automatically. Fully-burdened, the 15 prime FTE carry ~$170K/FTE/year direct, wrapped with fringe and overhead in PR-2.",
+        "intelligence": "🔒 The Program Manager (Angela Rodriguez, committed, Exceptional CPARS) and Technical Lead are priced at the top of band intentionally — their qualifications are proposal discriminators, and underpricing Key Personnel signals weakness to evaluators. Commodity positions (DevOps, SysAdmin) are priced at midpoint for competitiveness.",
+        "recommendations": "PR-3-R1: Confirm the LCAT rate card at compensation midpoints. · PR-3-R2: Keep the Staffing live-link active — do not hardcode labor cost; it must re-flow if staffing changes. · PR-3-R3: Validate the 3% escalation assumption against current federal labor market data before submission."
+      },
+      "howRatio": null,
+      "envelope": {
+        "confidence": 82,
+        "aiReasoning": "Labor is the most defensible cost line because it traces directly to named candidates and real compensation ranges in Staffing. Confidence is high; the only open variable is escalation across the option years.",
+        "sources": [
+          { "label": "SFI-001 Staffing — LCAT compensation ranges & FTE" },
+          { "label": "Federal labor market escalation data" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Derived from staffing LCAT basis (live-link)" }],
+        "conflicts": []
+      }
+    },
+    {
+      "id": "PR-4",
+      "title": "Subcontractor Costs",
+      "status": "needs-work",
+      "linkage": { "capabilityGaps": ["CG-01", "CG-02", "CG-03"], "source": "teaming.workshareAllocation", "cascadeAnchor": true },
+      "fair": {
+        "facts": "Subcontractor costs total $20.25M (46% of build-up): DataBridge Analytics — Data Migration & ETL — $9.0M (20% workshare) · GovFlow Technologies — ServiceNow & ITSM — $6.75M (15%) · MainframeNext Inc. — Mainframe Modernization — $4.5M (10%).",
+        "analysis": "Subcontractor pricing is carried at the teaming workshare allocation. Two of the three TAs are unsigned (GovFlow at term sheet, MainframeNext NDA in legal review), so $11.25M of the $20.25M is not yet locked. The DataBridge figure ($9.0M) is the most firm (verbal commitment, TA in legal review) but is the single largest subcontractor line and the primary target of the cost-negotiation lever.",
+        "intelligence": "🔒 Competitor pressure (CACI/Vertex contacted DataBridge and GovFlow) limits negotiating leverage on those two — pushing too hard on price risks losing them to a competing team. MainframeNext, a smaller firm, has more pricing flexibility but unconfirmed capacity.",
+        "recommendations": "PR-4-R1: Negotiate ~$1.0M aggregate reduction across subcontractor costs as the largest gap-closing lever — but protect DataBridge and GovFlow relationships against competitor poaching. · PR-4-R2: Lock subcontractor pricing only on TA execution. · PR-4-R3: Hold an alternate-partner pricing scenario (MigrationPro/Attain for CG-01) in case DataBridge does not sign."
+      },
+      "howRatio": null,
+      "envelope": {
+        "confidence": 64,
+        "aiReasoning": "This is the weakest-locked and largest cost line: $11.25M of $20.25M sits behind unsigned TAs, and competitor interest caps negotiating room. Confidence reflects real, unresolved cost risk — appropriately the lowest section on the tab.",
+        "sources": [
+          { "label": "TMI-001 Teaming — subcontractor workshare & TA status" },
+          { "label": "Competitive intel — CMP-001 (competitor interest)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Derived from teaming workshare; flagged on unsigned TAs" }],
+        "conflicts": [
+          { "type": "cost_lock_risk", "message": "$11.25M of $20.25M in subcontractor cost is behind unsigned teaming agreements (GovFlow term sheet; MainframeNext NDA in legal review). The build-up carries a ±$1.0M band on this portion until the TAs execute." }
+        ]
+      },
+      "cascade": {
+        "onDataBridgeWithdrawal": {
+          "lineStruck": "DataBridge Analytics — $9.0M",
+          "reason": "Withdrawn — confirmed no longer bidding (2026-02-12)",
+          "buildUpChange": "Subcontractor costs drop from $20.25M to $11.25M; build-up total falls to $35.2M pending CG-01 re-source. The wave-plan migration scope (sol-1) loses its execution partner, so the saving is illusory — an alternate (MigrationPro Federal / Attain Federal) must be priced in.",
+          "newRecommendation": "Re-source CG-01 with MigrationPro Federal or Attain Federal and re-price the Data Migration & ETL line; alternate pricing is unconfirmed and may exceed $9.0M.",
+          "confidenceChange": "64 → 46 (now shows the limited-data banner)",
+          "downstreamFlag": "Build-up, hourglass, and PTW gap recalculate; flagged for regeneration."
+        }
+      }
+    },
+    {
+      "id": "PR-5",
+      "title": "Margin Strategy & LPTA Contingency",
+      "status": "needs-work",
+      "linkage": { "source": "strategy.pricingStrategy" },
+      "fair": {
+        "facts": "Margin target: 22% overall. Proposed price $42.8M (above the $42.0M PTW for margin protection). LPTA contingency floor: $38.0M. Dual pricing model maintained: best-value primary, LPTA fallback.",
+        "analysis": "The proposed $42.8M protects the 22% margin while closing most of the build-up gap via the documented levers. If the solicitation converts to LPTA (a live risk flagged in the risk register), the fallback model strips to the $38.0M floor — achieved by reducing fee, descoping option-year ODCs, and applying the maximum subcontractor-cost negotiation. Below $38.0M the bid is not viable without margin erosion past acceptable thresholds.",
+        "intelligence": "🔒 The LPTA-vs-best-value methodology is the single largest pricing unknown. Industry-day signals lean best-value, but DHS OCIO has used LPTA for commodity-heavy scopes. Pricing both models now avoids a fire-drill re-price if the final RFP confirms LPTA.",
+        "recommendations": "PR-5-R1: Set proposed price at $42.8M with the 22% margin. · PR-5-R2: Maintain the dual best-value / LPTA model; do not collapse to a single number until the evaluation methodology is confirmed. · PR-5-R3: Treat $38.0M as the absolute floor — escalate any pressure to bid lower."
+      },
+      "howRatio": null,
+      "envelope": {
+        "confidence": 71,
+        "aiReasoning": "Margin strategy is sound and the dual model is the right hedge, but confidence is capped by the unconfirmed evaluation methodology — the LPTA-vs-best-value choice swings the entire pricing posture and is not yet knowable from the draft solicitation.",
+        "sources": [
+          { "label": "CSA-001 Strategy — pricingStrategy (margin, LPTA floor)" },
+          { "label": "Risk register — R-02 (LPTA conversion)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "Derived from strategy margin + LPTA contingency" }],
+        "conflicts": []
+      }
+    }
+  ]
+}

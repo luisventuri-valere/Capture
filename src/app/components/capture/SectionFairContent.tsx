@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import { ClipboardList, Search, Lightbulb, ListChecks, Bot, Paperclip, Lock, BarChart2, ChevronUp, ChevronDown, AlertTriangle } from 'lucide-react';
-
-const BAND_ICONS: Record<string, React.ReactNode> = {
-  facts:           <ClipboardList size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
-  analysis:        <Search       size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
-  intelligence:    <Lightbulb   size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
-  recommendations: <ListChecks  size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
-};
+import { Lock, ChevronDown, AlertTriangle } from 'lucide-react';
 import type {
   StrategicPositioningSection,
   WinStrategySection,
@@ -25,17 +18,26 @@ const F = 'var(--gh-font)';
 
 // ─── Primitives ───────────────────────────────────────────────────────────────
 
-function Band({ icon, label, children }: { icon: string; label: string; children: React.ReactNode }) {
-  const iconNode = BAND_ICONS[icon] ?? null;
+// Collapsible band (Figma 2141:185): elevated header bar (uppercase title + chevron)
+// over a surface body. Full-width — bands stack edge-to-edge.
+export function Band({ label, children, defaultOpen = true }: { icon?: string; label: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <div style={{ marginBottom: 28 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        {iconNode}
-        <span style={{ fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: F }}>
+    <div style={{ width: '100%', fontFamily: F }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '16px 24px', background: 'var(--gh-bg-elevated)', border: 'none', cursor: 'pointer', fontFamily: F }}
+      >
+        <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.55px' }}>
           {label}
         </span>
-      </div>
-      <div style={{ color: 'var(--gh-text)', fontFamily: F }}>{children}</div>
+        <ChevronDown size={16} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, transform: open ? 'none' : 'rotate(-90deg)', transition: 'transform .15s' }} />
+      </button>
+      {open && (
+        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-surface)', color: 'var(--gh-text)' }}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -43,15 +45,16 @@ function Band({ icon, label, children }: { icon: string; label: string; children
 // Fix 3: two variants — primary (decision-critical) and normal
 function KV({ label, value, primary }: { label: string; value: React.ReactNode; primary?: boolean }) {
   return (
-    <div style={{ display: 'flex', gap: 8, marginBottom: 6, fontSize: 'var(--gh-font-size-base)' }}>
+    <div style={{ display: 'flex', gap: 8, marginBottom: 7, fontSize: 13, lineHeight: 1.5 }}>
       <span style={{
         fontWeight: primary ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-normal)',
         color: primary ? 'var(--gh-text-secondary)' : 'var(--gh-text-tertiary)',
-        minWidth: 180, flexShrink: 0,
+        width: 176, flexShrink: 0,
       }}>
         {label}
       </span>
       <span style={{
+        flex: 1, minWidth: 0,
         color: 'var(--gh-text)',
         fontWeight: primary ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-normal)',
       }}>
@@ -201,15 +204,18 @@ function CollapseList({ items, maxItems = 3, renderItem }: {
 export function SourceChipsRow({ sources }: { sources?: Array<{ label: string }> }) {
   if (!sources?.length) return null;
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14, paddingTop: 10, borderTop: '1px solid var(--gh-border)' }}>
-      {sources.map((s, i) => (
-        <span
-          key={i}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-secondary)', border: '1px solid var(--gh-border)', fontFamily: F }}
-        >
-          <Paperclip size={11} /> {s.label}
-        </span>
-      ))}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 14, width: '100%' }}>
+      <div style={{ height: 1, width: '100%', background: 'var(--gh-border-strong)' }} />
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        {sources.map((s, i) => (
+          <span
+            key={i}
+            style={{ padding: '2px 8px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-secondary)', border: '1px solid var(--gh-border-strong)', fontFamily: F }}
+          >
+            {s.label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
