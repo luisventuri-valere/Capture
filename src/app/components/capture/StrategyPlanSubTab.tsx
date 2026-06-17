@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Check, CheckCircle2, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { Check, CheckCircle2, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles, ArrowDownWideNarrow } from 'lucide-react';
 import { SectionFairContent, Band } from './SectionFairContent';
 import { AskAIDrawer } from './AskAIDrawer';
 import type { StrategyData, SectionStatus, UiStatus } from '../../../types/strategy';
@@ -219,7 +219,7 @@ const CHAT_SEED = [
   { q: 'What should I do next?', a: 'Review the recommendations, confirm items that look correct, and flag any that need revision before the next milestone.' },
 ];
 
-interface Props { data: StrategyData; onChromeHide?: (hidden: boolean) => void }
+interface Props { data: StrategyData; onChromeHide?: (hidden: boolean) => void; chromeHidden?: boolean }
 
 // ─── Pre-seeded state for "3 · Team Strategy — Change detected" screen ───────
 
@@ -250,7 +250,7 @@ const DEMO_FLAGGED = new Set<keyof StrategyData['sections']>([
 
 // ─── Main component ─────────────────────────────────────────────────────────
 
-export function StrategyPlanSubTab({ data, onChromeHide }: Props) {
+export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) {
   // "demo" = the pre-seeded "3 · Team Strategy — Change detected" screen
   const [demoActive, setDemoActive] = useState(false);
 
@@ -438,7 +438,7 @@ export function StrategyPlanSubTab({ data, onChromeHide }: Props) {
       )}
 
       {/* Plan header bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '0 var(--gh-space-12) 12px', flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '0 var(--gh-space-12) 12px', flexShrink: 0, overflow: 'hidden', maxHeight: chromeHidden ? 0 : 120, opacity: chromeHidden ? 0 : 1, transition: 'max-height 0.3s ease, opacity 0.18s ease' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
             {/* Confirmed headline */}
@@ -451,10 +451,8 @@ export function StrategyPlanSubTab({ data, onChromeHide }: Props) {
               <Info size={13} />
             </span>
           </div>
-          {/* Ratified subtitle */}
-          <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginBottom: 2, fontFamily: F }}>Sections ratified by a human</div>
           {/* Generated-by line */}
-          <p style={{ fontSize: 11, color: 'var(--gh-text-disabled)', margin: 0, fontFamily: F }}>
+          <p style={{ fontSize: 11, color: '#fff', margin: 0, fontFamily: F }}>
             Drafted by {ENVELOPE.generated_by} · Capture Manager: {data.captureManager}
           </p>
         </div>
@@ -465,11 +463,11 @@ export function StrategyPlanSubTab({ data, onChromeHide }: Props) {
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         {/* Section Index — expanded (2185:17111) · narrow rail (2185:17230) · collapsed (2197:17848) */}
         <div style={{ width: indexCollapsed ? INDEX_W_RAIL : indexWidth, flexShrink: 0, overflowX: 'hidden', overflowY: 'auto', background: 'var(--gh-bg-canvas)' }}>
-          {/* Header: "Plans" + collapse toggle (Figma 2185:17112) */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: indexCollapsed || narrow ? 'flex-end' : 'space-between', padding: '8px 12px' }}>
+          {/* Header: "Plans" + collapse toggle — frozen/sticky (Figma 2185:17088) */}
+          <div style={{ position: 'sticky', top: 0, zIndex: 2, background: 'var(--gh-bg-canvas)', display: 'flex', alignItems: 'center', justifyContent: indexCollapsed || narrow ? 'flex-end' : 'space-between', padding: '8px 12px' }}>
             {!indexCollapsed && !narrow && <span style={{ fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', color: '#f8fafc', fontFamily: F }}>Plans</span>}
             <button onClick={() => setIndexCollapsed(c => !c)} title={indexCollapsed ? 'Expandir panel' : 'Colapsar panel'} style={{ display: 'grid', placeItems: 'center', width: 20, height: 20, borderRadius: 'var(--gh-radius-md)', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)' }}>
-              {indexCollapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
+              <ArrowDownWideNarrow size={15} style={{ transform: indexCollapsed ? 'rotate(270deg)' : 'rotate(90deg)' }} />
             </button>
           </div>
           {/* Filter — only when expanded (hidden in the narrow rail / collapsed) */}

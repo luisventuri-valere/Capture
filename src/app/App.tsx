@@ -315,24 +315,20 @@ function MainContent({ data }: { data: StrategyData }) {
 
   return (
     <div className="flex flex-col flex-1 min-w-0 overflow-hidden" style={{ background: 'var(--gh-bg-canvas)' }}>
-      {/* Collapsing chrome (Figma 2183:17083) — opportunity header + stage tabs hide on scroll-down */}
-      <div style={{ flexShrink: 0, overflow: 'hidden', maxHeight: chromeHidden ? 0 : 160, opacity: chromeHidden ? 0 : 1, transition: 'max-height 0.28s ease, opacity 0.18s ease' }}>
+      {/* Collapsing chrome (Figma 2183:17083 / 2210:17758) — opp header + stage tabs + sub-nav hide on scroll-down */}
+      <div style={{ flexShrink: 0, overflow: 'hidden', maxHeight: chromeHidden ? 0 : 240, opacity: chromeHidden ? 0 : 1, transition: 'max-height 0.3s ease, opacity 0.18s ease' }}>
         <OpportunityHeader />
         <StageTabBar />
+        <CaptureSubnav active={activeTab} onChange={setActiveTab} />
       </div>
 
       {/* CaptureBody */}
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-        {/* Numbered capture sub-nav — full-width bar */}
-        <div className="shrink-0 w-full">
-          <CaptureSubnav active={activeTab} onChange={setActiveTab} />
-        </div>
-
         {/* Content area — flex for master/detail, scroll for others */}
         <div className="flex-1 min-h-0 overflow-hidden" style={{ background: 'var(--gh-bg-canvas)' }}>
           {activeTab === 'Strategy & Plan' ? (
             <div style={{ height: '100%', padding: 'var(--gh-space-8) 0', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-              <StrategyPlanSubTab data={data} onChromeHide={setChromeHidden} />
+              <StrategyPlanSubTab data={data} onChromeHide={setChromeHidden} chromeHidden={chromeHidden} />
             </div>
           ) : activeTab === 'Teaming' ? (
             <div style={{ height: '100%', padding: 'var(--gh-space-8) var(--gh-space-12)', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
