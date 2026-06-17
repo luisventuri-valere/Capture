@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Check, CheckCircle2, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles, ArrowDownWideNarrow } from 'lucide-react';
+import { Check, CheckCircle2, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles } from 'lucide-react';
 import { SectionFairContent, Band } from './SectionFairContent';
 import { AskAIDrawer } from './AskAIDrawer';
 import type { StrategyData, SectionStatus, UiStatus } from '../../../types/strategy';
@@ -14,6 +14,15 @@ const INDEX_W_DEFAULT = 252;
 const INDEX_W_MIN = 117;     // narrow rail width
 const INDEX_W_BREAK = 180;   // below this → break down to title-only rail
 const INDEX_W_RAIL = 44;     // fully collapsed (icon only)
+
+// Section-index collapse glyph (Figma 2320:17804 — grid_layout_side / side panel)
+function PanelToggleIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3.125 13.125C2.78125 13.125 2.48698 13.0026 2.24219 12.7578C1.9974 12.513 1.875 12.2188 1.875 11.875V3.125C1.875 2.78125 1.9974 2.48698 2.24219 2.24219C2.48698 1.9974 2.78125 1.875 3.125 1.875H11.875C12.2188 1.875 12.513 1.9974 12.7578 2.24219C13.0026 2.48698 13.125 2.78125 13.125 3.125V11.875C13.125 12.2188 13.0026 12.513 12.7578 12.7578C12.513 13.0026 12.2188 13.125 11.875 13.125H3.125ZM3.125 11.875H8.125V3.125H3.125V11.875ZM11.875 11.875V3.125H9.375V11.875H11.875Z" fill="currentColor" />
+    </svg>
+  );
+}
 
 type TriageFilter = 'all' | 'needs_attention' | 'confirmed';
 
@@ -467,7 +476,7 @@ export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) 
           <div style={{ position: 'sticky', top: 0, zIndex: 2, background: 'var(--gh-bg-canvas)', display: 'flex', alignItems: 'center', justifyContent: indexCollapsed || narrow ? 'flex-end' : 'space-between', padding: '8px 12px' }}>
             {!indexCollapsed && !narrow && <span style={{ fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', color: '#f8fafc', fontFamily: F }}>Plans</span>}
             <button onClick={() => setIndexCollapsed(c => !c)} title={indexCollapsed ? 'Expandir panel' : 'Colapsar panel'} style={{ display: 'grid', placeItems: 'center', width: 20, height: 20, borderRadius: 'var(--gh-radius-md)', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)' }}>
-              <ArrowDownWideNarrow size={15} style={{ transform: indexCollapsed ? 'rotate(270deg)' : 'rotate(90deg)' }} />
+              <PanelToggleIcon size={15} />
             </button>
           </div>
           {/* Filter — only when expanded (hidden in the narrow rail / collapsed) */}
