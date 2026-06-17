@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Check, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles } from 'lucide-react';
+import { Check, CheckCircle2, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import { SectionFairContent, Band } from './SectionFairContent';
 import { AskAIDrawer } from './AskAIDrawer';
 import type { StrategyData, SectionStatus, UiStatus } from '../../../types/strategy';
@@ -7,6 +7,13 @@ import { SECTION_META, toUiStatus } from '../../../types/strategy';
 import { ENVELOPE, type EnvelopeRec } from '../../../data/capture/envelope';
 
 const F = 'var(--gh-font)';
+
+// Section Index sizing: drag 117–252px; below the break it renders the narrow rail
+// (title-only, Figma 2185:17230); the collapse button → 44px icon-only (2197:17848).
+const INDEX_W_DEFAULT = 252;
+const INDEX_W_MIN = 117;     // narrow rail width
+const INDEX_W_BREAK = 180;   // below this → break down to title-only rail
+const INDEX_W_RAIL = 44;     // fully collapsed (icon only)
 
 type TriageFilter = 'all' | 'needs_attention' | 'confirmed';
 
@@ -129,10 +136,20 @@ interface SidebarItemProps {
   confirmed: boolean;
   selected: boolean;
   flagged?: boolean;   // amber "update" dot for backward-engineering demo
+  collapsed?: boolean; // narrow-rail rendering (title only)
   onSelect: () => void;
 }
 
-function SidebarItem({ number, title, feeds, confidence, selected, flagged, onSelect }: SidebarItemProps) {
+function SidebarItem({ title, feeds, confidence, confirmed, selected, flagged, collapsed, onSelect }: SidebarItemProps) {
+  // Collapsed rail: title only (wrapped), selected highlighted (Figma 2185:17230)
+  if (collapsed) {
+    return (
+      <button onClick={onSelect} style={{ display: 'flex', alignItems: 'flex-start', width: '100%', minHeight: 58, boxSizing: 'border-box', padding: '12px 10px', textAlign: 'left', cursor: 'pointer', border: 'none', background: selected ? 'var(--gh-blue-900)' : 'transparent', fontFamily: F }}>
+        <span style={{ fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.4, color: selected ? 'var(--gh-text)' : '#94a3b8' }}>{title}</span>
+      </button>
+    );
+  }
+
   // Score pill (Figma StrategyRow/Score Pill): ≥80 teal · 50–79 amber · <50 red
   const [pillBg, pillColor] =
     confidence >= 80 ? ['rgba(0,255,188,0.05)', '#00ffbc'] :
@@ -148,11 +165,6 @@ function SidebarItem({ number, title, feeds, confidence, selected, flagged, onSe
         background: selected ? 'var(--gh-blue-900)' : 'transparent', fontFamily: F,
       }}
     >
-      {/* Index badge */}
-      <span style={{ flexShrink: 0, width: 22, height: 22, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface)', color: 'var(--gh-white)', fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {number}
-      </span>
-
       <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, width: '100%' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5, minWidth: 0 }}>
@@ -169,6 +181,7 @@ function SidebarItem({ number, title, feeds, confidence, selected, flagged, onSe
           {feeds.join(', ')}
         </span>
       </span>
+      {confirmed && <CheckCircle2 size={16} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-success-fg)' }} />}
     </button>
   );
 }
@@ -206,7 +219,7 @@ const CHAT_SEED = [
   { q: 'What should I do next?', a: 'Review the recommendations, confirm items that look correct, and flag any that need revision before the next milestone.' },
 ];
 
-interface Props { data: StrategyData }
+interface Props { data: StrategyData; onChromeHide?: (hidden: boolean) => void }
 
 // ─── Pre-seeded state for "3 · Team Strategy — Change detected" screen ───────
 
@@ -237,7 +250,7 @@ const DEMO_FLAGGED = new Set<keyof StrategyData['sections']>([
 
 // ─── Main component ─────────────────────────────────────────────────────────
 
-export function StrategyPlanSubTab({ data }: Props) {
+export function StrategyPlanSubTab({ data, onChromeHide }: Props) {
   // "demo" = the pre-seeded "3 · Team Strategy — Change detected" screen
   const [demoActive, setDemoActive] = useState(false);
 
@@ -257,6 +270,10 @@ export function StrategyPlanSubTab({ data }: Props) {
   const [scrollPct, setScrollPct] = useState(0);
   const [atEnd, setAtEnd] = useState(false);
   const [scrolled, setScrolled] = useState(false);   // reveal the floating Ask AI once scrolling starts
+  const [indexWidth, setIndexWidth] = useState(INDEX_W_DEFAULT);   // resizable section index
+  const [resizingIdx, setResizingIdx] = useState(false);
+  const [idxHover, setIdxHover] = useState(false);
+  const [indexCollapsed, setIndexCollapsed] = useState(false);   // collapse the section index to a narrow rail
 
   // When demo is active, all derived values come from the pre-seeded constants
   const activeConfirmedKeys    = demoActive ? DEMO_CONFIRMED     : confirmedKeys;
@@ -341,6 +358,7 @@ export function StrategyPlanSubTab({ data }: Props) {
 
   // Reset scroll/confirm gate whenever the selected section changes.
   useEffect(() => {
+    onChromeHide?.(false);   // section changed → reveal the chrome again
     const el = scrollRef.current;
     if (!el) { setScrollPct(0); setAtEnd(false); setScrolled(false); return; }
     el.scrollTop = 0;
@@ -356,7 +374,36 @@ export function StrategyPlanSubTab({ data }: Props) {
     setScrollPct(pct);
     if (el.scrollTop > 8) setScrolled(true);   // reveal the floating Ask AI
     if (pct >= 99) setAtEnd(true);             // latches once the end is reached
+    // Collapse the opportunity header + stage tabs on scroll-down; reveal near the
+    // top. Hysteresis band (40–96px) prevents flicker when the chrome resizes.
+    if (el.scrollTop > 96) onChromeHide?.(true);
+    else if (el.scrollTop < 40) onChromeHide?.(false);
   };
+
+  // Drag the divider to resize the section index (clamped 252px → ~151px, 40% less).
+  const onIndexResizeStart = (e: { clientX: number; preventDefault: () => void }) => {
+    e.preventDefault();
+    const startX = e.clientX;
+    const startW = indexWidth;
+    setResizingIdx(true);
+    document.body.style.userSelect = 'none';
+    document.body.style.cursor = 'col-resize';
+    const onMove = (ev: PointerEvent) => {
+      setIndexWidth(Math.max(INDEX_W_MIN, Math.min(INDEX_W_DEFAULT, startW + (ev.clientX - startX))));
+    };
+    const onUp = () => {
+      setResizingIdx(false);
+      document.body.style.userSelect = '';
+      document.body.style.cursor = '';
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
+  };
+
+  // Narrow rail (title-only) once dragged below the breakdown width.
+  const narrow = !indexCollapsed && indexWidth < INDEX_W_BREAK;
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', fontFamily: F }}>
@@ -391,7 +438,7 @@ export function StrategyPlanSubTab({ data }: Props) {
       )}
 
       {/* Plan header bar */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', paddingBottom: 12, flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '0 var(--gh-space-12) 12px', flexShrink: 0 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
             {/* Confirmed headline */}
@@ -416,9 +463,17 @@ export function StrategyPlanSubTab({ data }: Props) {
 
       {/* Master / detail */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-        {/* Section Index (Figma 2141:158) — canvas bg, no border (bg contrast vs the surface detail) */}
-        <div style={{ width: 252, flexShrink: 0, overflowY: 'auto', background: 'var(--gh-bg-canvas)' }}>
-          {/* Filter header (Figma 2141:159) — 8px padding all round */}
+        {/* Section Index — expanded (2185:17111) · narrow rail (2185:17230) · collapsed (2197:17848) */}
+        <div style={{ width: indexCollapsed ? INDEX_W_RAIL : indexWidth, flexShrink: 0, overflowX: 'hidden', overflowY: 'auto', background: 'var(--gh-bg-canvas)' }}>
+          {/* Header: "Plans" + collapse toggle (Figma 2185:17112) */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: indexCollapsed || narrow ? 'flex-end' : 'space-between', padding: '8px 12px' }}>
+            {!indexCollapsed && !narrow && <span style={{ fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', color: '#f8fafc', fontFamily: F }}>Plans</span>}
+            <button onClick={() => setIndexCollapsed(c => !c)} title={indexCollapsed ? 'Expandir panel' : 'Colapsar panel'} style={{ display: 'grid', placeItems: 'center', width: 20, height: 20, borderRadius: 'var(--gh-radius-md)', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)' }}>
+              {indexCollapsed ? <PanelLeftOpen size={15} /> : <PanelLeftClose size={15} />}
+            </button>
+          </div>
+          {/* Filter — only when expanded (hidden in the narrow rail / collapsed) */}
+          {!indexCollapsed && !narrow && (
           <div style={{ padding: 8 }}>
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: 4, borderRadius: 'var(--gh-radius-lg)', background: 'rgba(255,255,255,0.06)' }}>
               {(['all', 'needs_attention', 'confirmed'] as TriageFilter[]).map(f => {
@@ -437,7 +492,9 @@ export function StrategyPlanSubTab({ data }: Props) {
               })}
             </div>
           </div>
-          {/* Items — full-width, fixed 60px, no gap (Figma 2141:167…) */}
+          )}
+          {/* Items — hidden when collapsed; title-only in the narrow rail */}
+          {!indexCollapsed && (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {filteredMeta.map(meta => (
               <SidebarItem
@@ -451,11 +508,26 @@ export function StrategyPlanSubTab({ data }: Props) {
                 confirmed={activeConfirmedKeys.has(meta.key)}
                 selected={effectiveKey === meta.key}
                 flagged={activeFlaggedKeys.has(meta.key)}
+                collapsed={narrow}
                 onSelect={() => !demoActive && setSelectedKey(meta.key)}
               />
             ))}
           </div>
+          )}
         </div>
+
+        {/* Resize handle — drag to shrink (hidden when collapsed) */}
+        {!indexCollapsed && (
+          <div
+            onPointerDown={onIndexResizeStart}
+            onMouseEnter={() => setIdxHover(true)}
+            onMouseLeave={() => setIdxHover(false)}
+            title="Arrastra para ajustar el ancho de la lista"
+            style={{ width: 6, flexShrink: 0, cursor: 'col-resize', display: 'flex', justifyContent: 'center', alignItems: 'stretch', background: 'transparent' }}
+          >
+            <div style={{ width: resizingIdx || idxHover ? 2 : 1, background: resizingIdx || idxHover ? 'var(--gh-accent)' : 'var(--gh-border)', transition: 'background 0.15s, width 0.15s' }} />
+          </div>
+        )}
 
         {/* Detail */}
         <div key={effectiveKey} style={{ flex: 1, minWidth: 0, background: 'var(--gh-bg-surface)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>

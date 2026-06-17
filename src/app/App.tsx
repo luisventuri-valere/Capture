@@ -70,50 +70,27 @@ function GovHubWordmark() {
 /* ─────────────────────────────────────────────────────────────
    Top Header
 ───────────────────────────────────────────────────────────── */
-function TopHeader() {
+function TopHeader({ onToggleMenu }: { onToggleMenu: () => void }) {
   return (
     <header
-      className="flex shrink-0 w-full items-center justify-between px-[16px]"
+      className="flex shrink-0 w-full items-center justify-between pl-[8px] pr-[16px]"
       style={{
         height: 'var(--gh-space-56)',
         background: `linear-gradient(to right, var(--gh-bg-elevated), var(--gh-bg-surface))`,
-        borderBottom: `1px solid var(--gh-border-strong)`,
+        borderBottom: `1px solid rgba(71,85,105,0.3)`,
         fontFamily: 'var(--gh-font)',
       }}
     >
-      {/* Left: Logo + Toggle */}
+      {/* Left: Toggle + Logo */}
       <div className="flex gap-[12px] items-center shrink-0 w-[187px]">
-        <div className="flex gap-[8px] items-center">
-          <GovHubLogoMark />
-          <GovHubWordmark />
-        </div>
-        <button className="flex items-center justify-center size-[40px]" style={{ borderRadius: 'var(--gh-radius-lg)' }}>
+        <button onClick={onToggleMenu} aria-label="Abrir menú" className="flex items-center justify-center size-[40px]" style={{ borderRadius: 'var(--gh-radius-lg)', background: 'transparent', border: 'none', cursor: 'pointer' }}>
           <svg width="18" height="18" fill="none" viewBox="0 0 18 18">
             <path d="M2 4h14M2 9h14M2 14h14" stroke="var(--gh-text-secondary)" strokeWidth="2" strokeLinecap="round" />
           </svg>
         </button>
-      </div>
-
-      {/* Center: Department + Search */}
-      <div className="flex gap-[16px] items-center shrink-0">
-        <button className="flex gap-[8px] items-center px-[12px] py-[6px]" style={{ borderRadius: 'var(--gh-radius-lg)' }}>
-          <span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-medium)', color: 'var(--gh-text-secondary)', whiteSpace: 'nowrap' }}>
-            BD / Growth
-          </span>
-          <svg width="14" height="14" fill="none" viewBox="0 0 9 5.5">
-            <path d="M1 1L4.5 4.5L8 1" stroke="var(--gh-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </button>
-        <div
-          className="flex gap-[8px] items-center h-[36px] px-[12px] py-[8px]"
-          style={{ background: 'var(--gh-bg-surface-muted)', border: `1px solid var(--gh-border)`, borderRadius: 'var(--gh-radius-lg)' }}
-        >
-          <svg width="14" height="14" fill="none" viewBox="0 0 11.3333 11.3333">
-            <path d={svgPaths.p2c4e4080} stroke="var(--gh-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span style={{ fontSize: 'var(--gh-font-size-md)', color: 'var(--gh-text-secondary)', whiteSpace: 'nowrap' }}>
-            Search opportunities, agencies...
-          </span>
+        <div className="flex gap-[8px] items-center">
+          <GovHubLogoMark />
+          <GovHubWordmark />
         </div>
       </div>
 
@@ -137,7 +114,7 @@ function TopHeader() {
           className="flex items-center justify-center shrink-0 size-[32px]"
           style={{ borderRadius: 'var(--gh-radius-full)', background: `linear-gradient(135deg, var(--gh-blue-600) 0%, var(--gh-blue-800) 71%)` }}
         >
-          <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-white)', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-white)', whiteSpace: 'nowrap' }}>
             JD
           </span>
         </div>
@@ -147,17 +124,16 @@ function TopHeader() {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Sidebar
+   Nav drawer (Figma 2195:18676 / 2198:18134) — opened by the burger
 ───────────────────────────────────────────────────────────── */
-// Collapsed 56px icon rail (Figma node 2141:100). Icon-only NavItems in 3 sections.
-type RailItem = { Icon: typeof Target; label: string; active?: boolean };
-const RAIL_SECTIONS: RailItem[][] = [
-  [
+type NavLink = { Icon: typeof Target; label: string; active?: boolean };
+const NAV_SECTIONS: { title: string; items: NavLink[] }[] = [
+  { title: 'DASHBOARDS', items: [
     { Icon: LayoutDashboard, label: 'My Dashboard' },
     { Icon: TrendingUp, label: 'Executive' },
     { Icon: Building2, label: 'Department' },
-  ],
-  [
+  ] },
+  { title: 'PLATFORM', items: [
     { Icon: Target, label: 'Opportunities', active: true },
     { Icon: Filter, label: 'Pipeline' },
     { Icon: Users, label: 'Relationships' },
@@ -165,39 +141,54 @@ const RAIL_SECTIONS: RailItem[][] = [
     { Icon: Newspaper, label: 'News' },
     { Icon: BarChart3, label: 'Analytics' },
     { Icon: GraduationCap, label: 'Learning' },
-  ],
-  [
+  ] },
+  { title: 'SUPPORT', items: [
     { Icon: Building2, label: 'Company Profile' },
     { Icon: FileText, label: 'Files' },
     { Icon: Handshake, label: 'Partners' },
     { Icon: Settings, label: 'Settings' },
-  ],
+  ] },
 ];
 
-function Sidebar() {
+function NavDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
-    <aside
-      className="flex flex-col h-full shrink-0 items-center"
-      style={{ width: 56, background: 'var(--gh-bg-elevated)', borderRight: '1px solid rgba(71,85,105,0.3)', fontFamily: 'var(--gh-font)' }}
-    >
-      <div className="flex flex-col flex-1 overflow-y-auto min-h-0 items-center w-full" style={{ gap: 16, padding: '16px 8px' }}>
-        {RAIL_SECTIONS.map((section, si) => (
-          <div key={si} className="flex flex-col items-center shrink-0" style={{ gap: 4 }}>
-            {section.map(item => (
-              <button
-                key={item.label}
-                title={item.label}
-                aria-label={item.label}
-                className="flex items-center justify-center shrink-0 cursor-pointer"
-                style={{ width: 40, height: 36, borderRadius: 'var(--gh-radius-lg)', border: 'none', background: item.active ? 'var(--gh-accent)' : 'transparent' }}
-              >
-                <item.Icon size={18} color={item.active ? 'var(--gh-accent-fg)' : 'var(--gh-text-secondary)'} strokeWidth={2} />
-              </button>
-            ))}
-          </div>
-        ))}
-      </div>
-    </aside>
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        style={{ position: 'fixed', inset: 0, zIndex: 60, background: 'rgba(2,6,23,0.55)', opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none', transition: 'opacity 0.2s ease' }}
+      />
+      {/* Drawer */}
+      <aside
+        style={{ position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 61, width: 224, display: 'flex', flexDirection: 'column', background: 'var(--gh-bg-elevated)', borderRight: '1px solid rgba(71,85,105,0.3)', transform: open ? 'translateX(0)' : 'translateX(-100%)', transition: 'transform 0.25s ease', fontFamily: 'var(--gh-font)' }}
+      >
+        {/* Header: toggle + logo */}
+        <div className="flex items-center shrink-0" style={{ gap: 12, height: 56, padding: '0 8px' }}>
+          <button onClick={onClose} className="flex items-center justify-center size-[40px]" style={{ borderRadius: 'var(--gh-radius-lg)', background: 'transparent', border: 'none', cursor: 'pointer' }}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 18 18"><path d="M2 4h14M2 9h14M2 14h14" stroke="var(--gh-text-secondary)" strokeWidth="2" strokeLinecap="round" /></svg>
+          </button>
+          <div className="flex gap-[8px] items-center"><GovHubLogoMark /><GovHubWordmark /></div>
+        </div>
+        {/* Navigation */}
+        <div className="flex flex-col flex-1 overflow-y-auto min-h-0" style={{ gap: 16, padding: '16px 8px' }}>
+          {NAV_SECTIONS.map(sec => (
+            <div key={sec.title} className="flex flex-col" style={{ gap: 4 }}>
+              <div style={{ padding: '0 8px', marginBottom: 2, fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-secondary)', letterSpacing: '1.2px' }}>{sec.title}</div>
+              {sec.items.map(item => (
+                <button key={item.label} className="flex items-center w-full shrink-0 cursor-pointer" style={{ gap: 8, height: 36, padding: '0 8px', borderRadius: 'var(--gh-radius-lg)', border: 'none', textAlign: 'left', background: item.active ? 'var(--gh-accent)' : 'transparent' }}>
+                  <item.Icon size={18} color={item.active ? 'var(--gh-accent-fg)' : 'var(--gh-text-secondary)'} strokeWidth={2} />
+                  <span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: item.active ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)', color: item.active ? 'var(--gh-white)' : 'var(--gh-text)' }}>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+        {/* Version footer */}
+        <div className="shrink-0" style={{ padding: '12px 16px', borderTop: '1px solid rgba(71,85,105,0.3)' }}>
+          <span style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-disabled)' }}>v2.0 Demo</span>
+        </div>
+      </aside>
+    </>
   );
 }
 
@@ -301,17 +292,18 @@ function CaptureSubnav({ active, onChange }: SubNavProps) {
    Root App
 ───────────────────────────────────────────────────────────── */
 export default function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <CaptureProvider>
       <div
         className="flex flex-col h-screen w-screen overflow-hidden"
         style={{ background: 'var(--gh-bg-canvas)', fontFamily: 'var(--gh-font)' }}
       >
-        <TopHeader />
+        <TopHeader onToggleMenu={() => setMenuOpen(o => !o)} />
         <div className="flex flex-1 min-h-0 overflow-hidden">
-          <Sidebar />
           <MainContent data={data} />
         </div>
+        <NavDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
       </div>
     </CaptureProvider>
   );
@@ -319,11 +311,15 @@ export default function App() {
 
 function MainContent({ data }: { data: StrategyData }) {
   const [activeTab, setActiveTab] = useState('Strategy & Plan');
+  const [chromeHidden, setChromeHidden] = useState(false);
 
   return (
     <div className="flex flex-col flex-1 min-w-0 overflow-hidden" style={{ background: 'var(--gh-bg-canvas)' }}>
-      <OpportunityHeader />
-      <StageTabBar />
+      {/* Collapsing chrome (Figma 2183:17083) — opportunity header + stage tabs hide on scroll-down */}
+      <div style={{ flexShrink: 0, overflow: 'hidden', maxHeight: chromeHidden ? 0 : 160, opacity: chromeHidden ? 0 : 1, transition: 'max-height 0.28s ease, opacity 0.18s ease' }}>
+        <OpportunityHeader />
+        <StageTabBar />
+      </div>
 
       {/* CaptureBody */}
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
@@ -335,8 +331,8 @@ function MainContent({ data }: { data: StrategyData }) {
         {/* Content area — flex for master/detail, scroll for others */}
         <div className="flex-1 min-h-0 overflow-hidden" style={{ background: 'var(--gh-bg-canvas)' }}>
           {activeTab === 'Strategy & Plan' ? (
-            <div style={{ height: '100%', padding: 'var(--gh-space-8) var(--gh-space-12)', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-              <StrategyPlanSubTab data={data} />
+            <div style={{ height: '100%', padding: 'var(--gh-space-8) 0', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+              <StrategyPlanSubTab data={data} onChromeHide={setChromeHidden} />
             </div>
           ) : activeTab === 'Teaming' ? (
             <div style={{ height: '100%', padding: 'var(--gh-space-8) var(--gh-space-12)', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
