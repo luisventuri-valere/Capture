@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Check, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles } from 'lucide-react';
+import { Check, RefreshCw, AlertTriangle, X, MessageCircle, Edit2, History, ChevronRight, Info, Sparkles, Undo2 } from 'lucide-react';
 import { SectionFairContent, Band } from './SectionFairContent';
 import { SectionIndex, SectionIndexItem } from './SectionIndex';
 import { AskAIDrawer } from './AskAIDrawer';
@@ -28,17 +28,21 @@ interface RecBandProps {
   rejectedIds: Set<string>;
   onReject: (id: string) => void;
   onAccept: (id: string) => void;
+  onReset: (id: string) => void;
   localStatuses: Record<string, 'accepted' | 'proposed' | 'rejected'>;
 }
 
-function RecommendationsBand({ sectionKey, rejectedIds, onAccept, localStatuses }: RecBandProps) {
+function RecommendationsBand({ sectionKey, onAccept, onReject, onReset, localStatuses }: RecBandProps) {
   const env = ENVELOPE.sections[sectionKey];
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText]   = useState('');
+  const [localTexts, setLocalTexts] = useState<Record<string, string>>({});
   if (!env?.recommendations?.length) return null;
 
-  const recs = env.recommendations.map(r => ({
-    ...r,
-    status: localStatuses[r.id] ?? r.status,
-  }));
+  const recs = env.recommendations.map(r => ({ ...r, status: localStatuses[r.id] ?? r.status }));
+
+  const startEdit = (id: string, text: string) => { setEditingId(id); setEditText(localTexts[id] ?? text); };
+  const saveEdit  = (id: string) => { if (editText.trim()) setLocalTexts(p => ({ ...p, [id]: editText.trim() })); setEditingId(null); };
 
   return (
     <Band label="Recommendations & Actions">
@@ -46,67 +50,59 @@ function RecommendationsBand({ sectionKey, rejectedIds, onAccept, localStatuses 
         {recs.map(rec => {
           const accepted  = rec.status === 'accepted';
           const rejected  = rec.status === 'rejected';
-          const rowBg     = accepted ? 'var(--gh-success-bg)' : rejected ? 'var(--gh-danger-bg)' : 'var(--gh-bg-surface)';
-          const rowBorder = accepted ? 'var(--gh-success-border)' : rejected ? 'var(--gh-danger-border)' : 'var(--gh-border)';
-          const leftBar   = accepted ? 'var(--gh-success-fg)' : rejected ? 'var(--gh-danger-fg)' : 'transparent';
+          const isEditing = editingId === rec.id;
+          const rowBg = accepted ? 'var(--gh-success-bg)' : rejected ? 'var(--gh-danger-bg)' : 'var(--gh-bg-surface)';
           return (
-            <div
-              key={rec.id}
-              style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 12px', borderRadius: 'var(--gh-radius-lg)', background: rowBg, borderTopWidth: 1, borderBottomWidth: 1, borderRightWidth: 1, borderLeftWidth: 3, borderTopStyle: 'solid', borderBottomStyle: 'solid', borderRightStyle: 'solid', borderLeftStyle: 'solid', borderTopColor: rowBorder, borderBottomColor: rowBorder, borderRightColor: rowBorder, borderLeftColor: leftBar, fontFamily: F }}
-            >
-              {/* Status icon */}
-              <div style={{ flexShrink: 0, marginTop: 2 }}>
-                {accepted ? (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Check size={10} color="var(--gh-success-bg)" />
-                  </div>
-                ) : rejected ? (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-danger-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <X size={10} color="var(--gh-danger-bg)" />
-                  </div>
+            <div key={rec.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, background: rowBg, fontFamily: F }}>
+              {/* Status dot */}
+              <div style={{ width: 16, height: 16, borderRadius: 9999, flexShrink: 0, background: accepted ? 'var(--gh-success-fg)' : rejected ? 'var(--gh-danger-fg)' : 'transparent', border: (!accepted && !rejected) ? '1px solid var(--gh-border)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {accepted && <Check size={10} color="var(--gh-success-bg)" />}
+                {rejected && <X size={10} color="var(--gh-danger-bg)" />}
+              </div>
+
+              {/* Text or edit input */}
+              <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                {isEditing ? (
+                  <input
+                    autoFocus
+                    value={editText}
+                    onChange={e => setEditText(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') saveEdit(rec.id); if (e.key === 'Escape') setEditingId(null); }}
+                    style={{ width: '100%', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-accent)', borderRadius: 'var(--gh-radius-sm)', padding: '4px 8px', color: 'var(--gh-text)', fontSize: 13, fontFamily: F, outline: 'none', boxSizing: 'border-box' }}
+                  />
                 ) : (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', border: '1.5px solid var(--gh-border)' }} />
+                  <>
+                    <span style={{ fontSize: 13, color: 'var(--gh-text)', display: 'block', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                      {localTexts[rec.id] ?? rec.text}
+                    </span>
+                    {rec.id === 'TS-R1' && rejected && (
+                      <div style={{ marginTop: 4, fontSize: 11, color: 'var(--gh-danger-fg)' }}>
+                        Rejected by S. Chen — partner no longer bidding (2026-02-12)
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
 
-              {/* Text */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 'var(--gh-font-size-base)', color: rejected ? 'var(--gh-text-disabled)' : 'var(--gh-text)', textDecoration: rejected ? 'line-through' : 'none' }}>
-                  {rec.text}
-                </span>
-                {/* Backward-engineering demo: show rejection reason for TS-R1 */}
-                {rec.id === 'TS-R1' && rejected && (
-                  <div style={{ marginTop: 4, fontSize: 11, color: 'var(--gh-danger-fg)' }}>
-                    Rejected by S. Chen — partner no longer bidding (2026-02-12)
-                  </div>
-                )}
-              </div>
-
-              {/* Fix 1: enlarged hit areas ≥32×32, 8px gap, Accept dominant */}
-              {rec.status === 'proposed' && (
-                <div style={{ display: 'flex', gap: 8, flexShrink: 0, alignItems: 'center' }}>
-                  {/* Accept — dominant green */}
-                  <button
-                    title="Accept"
-                    onClick={() => onAccept(rec.id)}
-                    style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-success-bg)', border: '1px solid var(--gh-success-border)', cursor: 'pointer', color: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
-                  >
-                    <Check size={15} />
+              {/* Actions — ghost icon buttons, no borders */}
+              {accepted || rejected ? (
+                <button title="Undo" onClick={() => onReset(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Undo2 size={14} />
+                </button>
+              ) : isEditing ? (
+                <button title="Save" onClick={() => saveEdit(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Check size={16} />
+                </button>
+              ) : (
+                <div style={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>
+                  <button title="Accept" onClick={() => onAccept(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Check size={16} />
                   </button>
-                  {/* Reject — quiet red */}
-                  <button
-                    title="Reject"
-                    onClick={() => {/* handled via parent */}}
-                    style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'transparent', border: '1px solid var(--gh-border)', cursor: 'pointer', color: 'var(--gh-danger-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
-                  >
-                    <X size={15} />
+                  <button title="Reject" onClick={() => onReject(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <X size={16} />
                   </button>
-                  {/* Edit — quietest */}
-                  <button
-                    title="Edit"
-                    style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'transparent', border: '1px solid var(--gh-border)', cursor: 'pointer', color: 'var(--gh-text-disabled)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}
-                  >
-                    <Edit2 size={14} />
+                  <button title="Edit" onClick={() => startEdit(rec.id, localTexts[rec.id] ?? rec.text)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Edit2 size={16} />
                   </button>
                 </div>
               )}
@@ -245,6 +241,10 @@ export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) 
         setFlaggedKeys(prev => { const n = new Set(prev); downstreamKeys.forEach(k => n.add(k)); return n; });
       }
     }
+  };
+
+  const handleResetRec = (sectionKey: string, recId: string) => {
+    setRecStatuses(prev => ({ ...prev, [sectionKey]: { ...prev[sectionKey], [recId]: 'proposed' } }));
   };
 
   const handleConfirm = (key: keyof StrategyData['sections']) => {
@@ -467,6 +467,7 @@ export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) 
               rejectedIds={new Set(Object.entries(activeRecStatuses[effectiveKey] ?? {}).filter(([, v]) => v === 'rejected').map(([k]) => k))}
               onAccept={id => !demoActive && handleAcceptRec(effectiveKey, id)}
               onReject={id => !demoActive && handleRejectRec(effectiveKey as keyof StrategyData['sections'], id)}
+              onReset={id => !demoActive && handleResetRec(effectiveKey, id)}
               localStatuses={activeRecStatuses[effectiveKey] ?? {}}
             />
 

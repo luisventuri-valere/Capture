@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, RefreshCw, Edit2, AlertTriangle, X, ChevronRight, History, ClipboardList, Search, Lightbulb, ListChecks, Sparkles, Paperclip, Lock, ChevronUp, ChevronDown, CheckCircle, Circle, Info } from 'lucide-react';
+import { Check, RefreshCw, Edit2, AlertTriangle, X, ChevronRight, History, ClipboardList, Search, Lightbulb, ListChecks, Sparkles, Paperclip, Lock, ChevronUp, ChevronDown, CheckCircle, Circle, Info, Undo2 } from 'lucide-react';
 
 const BAND_ICONS: Record<string, React.ReactNode> = {
   facts:           <ClipboardList size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
@@ -63,7 +63,7 @@ function Band({ icon, label, children, defaultOpen = true }: { icon?: string; la
         <ChevronDown size={16} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, transform: open ? 'none' : 'rotate(-90deg)', transition: 'transform .15s' }} />
       </button>
       {open && (
-        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-surface)', color: 'var(--gh-text)' }}>
+        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-elevated)', color: 'var(--gh-text)' }}>
           {children}
         </div>
       )}
@@ -94,57 +94,80 @@ function SourceChips({ sources }: { sources: Array<{ label: string }> }) {
 
 // ─── Recommendations band ─────────────────────────────────────────────────────
 
-function RecsBand({ env, localStatuses, onAccept, demo, demoAddedRec }: {
+function RecsBand({ env, localStatuses, onAccept, onReject, onReset, demo, demoAddedRec }: {
   env: SectionEnv;
   localStatuses: Record<string, 'accepted' | 'proposed' | 'rejected'>;
   onAccept: (id: string) => void;
+  onReject: (id: string) => void;
+  onReset: (id: string) => void;
   demo?: boolean;
   demoAddedRec?: EnvRec;
 }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText]   = useState('');
+  const [localTexts, setLocalTexts] = useState<Record<string, string>>({});
+
   const recs = [
     ...env.recommendations.map(r => ({ ...r, status: localStatuses[r.id] ?? r.status })),
     ...(demo && demoAddedRec ? [demoAddedRec] : []),
   ];
   if (!recs.length) return null;
+
+  const startEdit = (id: string, text: string) => { setEditingId(id); setEditText(localTexts[id] ?? text); };
+  const saveEdit  = (id: string) => { if (editText.trim()) setLocalTexts(p => ({ ...p, [id]: editText.trim() })); setEditingId(null); };
+
   return (
     <Band icon="recommendations" label="Recommendations & Actions">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {recs.map(rec => {
-          const accepted = rec.status === 'accepted';
-          const rejected = rec.status === 'rejected';
+          const accepted  = rec.status === 'accepted';
+          const rejected  = rec.status === 'rejected';
+          const isEditing = editingId === rec.id;
           const rowBg = accepted ? 'var(--gh-success-bg)' : rejected ? 'var(--gh-danger-bg)' : 'var(--gh-bg-surface)';
-          const leftBar = accepted ? 'var(--gh-success-fg)' : rejected ? 'var(--gh-danger-fg)' : 'transparent';
-          const rowBorder = accepted ? 'var(--gh-success-border)' : rejected ? 'var(--gh-danger-border)' : 'var(--gh-border)';
           return (
-            <div key={rec.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 12px', borderRadius: 'var(--gh-radius-lg)', background: rowBg, borderTopWidth: 1, borderBottomWidth: 1, borderRightWidth: 1, borderLeftWidth: 3, borderTopStyle: 'solid', borderBottomStyle: 'solid', borderRightStyle: 'solid', borderLeftStyle: 'solid', borderTopColor: rowBorder, borderBottomColor: rowBorder, borderRightColor: rowBorder, borderLeftColor: leftBar }}>
-              <div style={{ flexShrink: 0, marginTop: 2 }}>
-                {accepted ? (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Check size={10} color="var(--gh-success-bg)" />
-                  </div>
-                ) : rejected ? (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-danger-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <X size={10} color="var(--gh-danger-bg)" />
-                  </div>
+            <div key={rec.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, background: rowBg, fontFamily: F }}>
+              {/* Status dot */}
+              <div style={{ width: 16, height: 16, borderRadius: 9999, flexShrink: 0, background: accepted ? 'var(--gh-success-fg)' : rejected ? 'var(--gh-danger-fg)' : 'transparent', border: (!accepted && !rejected) ? '1px solid var(--gh-border)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {accepted && <Check size={10} color="var(--gh-success-bg)" />}
+                {rejected && <X size={10} color="var(--gh-danger-bg)" />}
+              </div>
+
+              {/* Text or edit input */}
+              <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                {isEditing ? (
+                  <input
+                    autoFocus
+                    value={editText}
+                    onChange={e => setEditText(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') saveEdit(rec.id); if (e.key === 'Escape') setEditingId(null); }}
+                    style={{ width: '100%', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-accent)', borderRadius: 'var(--gh-radius-sm)', padding: '4px 8px', color: 'var(--gh-text)', fontSize: 13, fontFamily: F, outline: 'none', boxSizing: 'border-box' }}
+                  />
                 ) : (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', border: '1.5px solid var(--gh-border)' }} />
+                  <span style={{ fontSize: 13, color: 'var(--gh-text)', fontFamily: F, display: 'block', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                    {localTexts[rec.id] ?? rec.text}
+                  </span>
                 )}
               </div>
-              <div style={{ flex: 1 }}>
-                <span style={{ fontSize: 'var(--gh-font-size-base)', color: rejected ? 'var(--gh-text-disabled)' : 'var(--gh-text)', textDecoration: rejected ? 'line-through' : 'none', fontFamily: F }}>
-                  {rec.text}
-                </span>
-              </div>
-              {rec.status === 'proposed' && (
-                <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                  <button title="Accept" onClick={() => onAccept(rec.id)} style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-success-bg)', border: '1px solid var(--gh-success-border)', cursor: 'pointer', color: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Check size={15} />
+
+              {/* Actions — ghost icon buttons, no borders */}
+              {accepted || rejected ? (
+                <button title="Undo" onClick={() => onReset(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Undo2 size={14} />
+                </button>
+              ) : isEditing ? (
+                <button title="Save" onClick={() => saveEdit(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Check size={16} />
+                </button>
+              ) : (
+                <div style={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>
+                  <button title="Accept" onClick={() => onAccept(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Check size={16} />
                   </button>
-                  <button title="Reject" style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'transparent', border: '1px solid var(--gh-border)', cursor: 'pointer', color: 'var(--gh-danger-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <X size={15} />
+                  <button title="Reject" onClick={() => onReject(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <X size={16} />
                   </button>
-                  <button title="Edit" style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'transparent', border: '1px solid var(--gh-border)', cursor: 'pointer', color: 'var(--gh-text-disabled)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Edit2 size={14} />
+                  <button title="Edit" onClick={() => startEdit(rec.id, localTexts[rec.id] ?? rec.text)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Edit2 size={16} />
                   </button>
                 </div>
               )}
@@ -509,6 +532,8 @@ interface SectionDetailProps {
   demoActive: boolean;
   localStatuses: Record<string, 'accepted' | 'proposed' | 'rejected'>;
   onAccept: (id: string) => void;
+  onReject: (id: string) => void;
+  onReset: (id: string) => void;
   onConfirm: () => void;
   onRequestReview: () => void;
   onEdit: () => void;
@@ -520,7 +545,7 @@ interface SectionDetailProps {
 }
 
 function SectionDetail(props: SectionDetailProps) {
-  const { sectionKey, env, demoActive, localStatuses, onAccept, onConfirm, onRequestReview, onEdit, onAskAI, confirmed, vhExtra } = props;
+  const { sectionKey, env, demoActive, localStatuses, onAccept, onReject, onReset, onConfirm, onRequestReview, onEdit, onAskAI, confirmed, vhExtra } = props;
   const isLowConf = env.confidence < 50 || (demoActive && sectionKey === 'partnerPipeline');
 
   // Demo auto-added rec for CG-01
@@ -591,6 +616,8 @@ function SectionDetail(props: SectionDetailProps) {
         env={env}
         localStatuses={localStatuses}
         onAccept={onAccept}
+        onReject={onReject}
+        onReset={onReset}
         demo={demoActive && sectionKey === 'capabilityGaps'}
         demoAddedRec={demoCGRec}
       />
@@ -669,6 +696,16 @@ export function TeamingTab({ chromeHidden = false }: { chromeHidden?: boolean })
     setRecStatuses(prev => ({ ...prev, [sectionKey]: { ...(prev[sectionKey] ?? {}), [recId]: 'accepted' } }));
   };
 
+  const handleReject = (sectionKey: TeamingSectionKey, recId: string) => {
+    if (demoActive) return;
+    setRecStatuses(prev => ({ ...prev, [sectionKey]: { ...(prev[sectionKey] ?? {}), [recId]: 'rejected' } }));
+  };
+
+  const handleReset = (sectionKey: TeamingSectionKey, recId: string) => {
+    if (demoActive) return;
+    setRecStatuses(prev => ({ ...prev, [sectionKey]: { ...(prev[sectionKey] ?? {}), [recId]: 'proposed' } }));
+  };
+
   const selectedMeta = TEAMING_SECTION_META.find(m => m.key === selectedKey)!;
   const selectedEnv  = getEnv(selectedKey);
 
@@ -742,6 +779,8 @@ export function TeamingTab({ chromeHidden = false }: { chromeHidden?: boolean })
             demoActive={demoActive}
             localStatuses={recStatuses[selectedKey] ?? {}}
             onAccept={id => handleAccept(selectedKey, id)}
+            onReject={id => handleReject(selectedKey, id)}
+            onReset={id => handleReset(selectedKey, id)}
             onConfirm={() => handleConfirm(selectedKey)}
             onRequestReview={() => handleReview(selectedKey)}
             onEdit={() => handleReview(selectedKey)}

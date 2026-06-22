@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import {
-  ClipboardList, Search, Lightbulb, ListChecks, Bot, Sparkles, Paperclip,
+  ClipboardList, Search, Lightbulb, ListChecks, Bot, Sparkles, Paperclip, Undo2,
   Lock, CheckCircle, AlertTriangle, XCircle, ChevronDown, ChevronRight,
   Check, X, Edit2, ArrowRight, Target, Info,
   BarChart2, TrendingUp,
@@ -203,7 +203,7 @@ function Band({ icon, title, verdict, children, defaultOpen = true }: {
         </span>
       </button>
       {open && (
-        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-surface)', color: 'var(--gh-text)' }}>
+        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-elevated)', color: 'var(--gh-text)' }}>
           {children}
         </div>
       )}
@@ -458,68 +458,66 @@ interface SugState { [key: string]: 'proposed' | 'accepted' | 'rejected' }
 
 function SuggestionItem({ text, stateKey, states, onAction }: {
   text: string; stateKey: string;
-  states: SugState; onAction: (k: string, a: 'accepted' | 'rejected') => void;
+  states: SugState; onAction: (k: string, a: 'accepted' | 'rejected' | 'proposed') => void;
 }) {
-  const current = states[stateKey] ?? 'proposed';
+  const [editing, setEditing] = useState(false);
+  const [localText, setLocalText] = useState(text);
+  const [savedText, setSavedText] = useState(text);
+
+  const current  = states[stateKey] ?? 'proposed';
+  const accepted = current === 'accepted';
+  const rejected = current === 'rejected';
+  const rowBg = accepted ? 'var(--gh-success-bg)' : rejected ? 'var(--gh-danger-bg)' : 'var(--gh-bg-surface)';
+
+  const saveEdit = () => { if (localText.trim()) setSavedText(localText.trim()); setEditing(false); };
+
   return (
-    <div style={{
-      display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-5)',
-      padding: 'var(--gh-space-4) var(--gh-space-5)',
-      background: current === 'accepted' ? 'var(--gh-success-bg)' : 'var(--gh-bg-surface)',
-      border: `1px solid ${current === 'accepted' ? 'var(--gh-success-border)' : current === 'rejected' ? 'var(--gh-border)' : 'var(--gh-border)'}`,
-      borderRadius: 'var(--gh-radius-default)',
-      opacity: current === 'rejected' ? 0.45 : 1,
-    }}>
-      <BodyText style={{
-        flex: 1, fontSize: 'var(--gh-font-size-xs)',
-        textDecoration: current === 'rejected' ? 'line-through' : 'none',
-        color: current === 'accepted' ? 'var(--gh-success-fg)' : 'var(--gh-text-secondary)',
-      }}>
-        {text}
-      </BodyText>
-      <div style={{ display: 'flex', gap: 'var(--gh-space-2)', flexShrink: 0 }}>
-        {(['accepted', 'rejected'] as const).map(action => {
-          const Icon = action === 'accepted' ? Check : X;
-          const isActive = current === action;
-          return (
-            <button
-              key={action}
-              onClick={() => onAction(stateKey, action)}
-              title={action === 'accepted' ? 'Accept' : 'Reject'}
-              style={{
-                width: 32, height: 32,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isActive
-                  ? (action === 'accepted' ? 'var(--gh-success-bg)' : 'var(--gh-danger-bg)')
-                  : 'var(--gh-bg-surface-muted)',
-                border: `1px solid ${isActive
-                  ? (action === 'accepted' ? 'var(--gh-success-border)' : 'var(--gh-danger-border)')
-                  : 'var(--gh-border)'}`,
-                borderRadius: 'var(--gh-radius-sm)',
-                cursor: 'pointer',
-                color: isActive
-                  ? (action === 'accepted' ? 'var(--gh-success-fg)' : 'var(--gh-danger-fg)')
-                  : 'var(--gh-text-disabled)',
-              }}
-            >
-              <Icon size={13} />
-            </button>
-          );
-        })}
-        <button
-          title="Edit"
-          style={{
-            width: 32, height: 32,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'var(--gh-bg-surface-muted)',
-            border: '1px solid var(--gh-border)',
-            borderRadius: 'var(--gh-radius-sm)', cursor: 'pointer',
-            color: 'var(--gh-text-disabled)',
-          }}
-        >
-          <Edit2 size={12} />
-        </button>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, background: rowBg, fontFamily: 'var(--gh-font)' }}>
+      {/* Status dot */}
+      <div style={{ width: 16, height: 16, borderRadius: 9999, flexShrink: 0, background: accepted ? 'var(--gh-success-fg)' : rejected ? 'var(--gh-danger-fg)' : 'transparent', border: (!accepted && !rejected) ? '1px solid var(--gh-border)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {accepted && <Check size={10} color="var(--gh-success-bg)" />}
+        {rejected && <X size={10} color="var(--gh-danger-bg)" />}
       </div>
+
+      {/* Text or input */}
+      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+        {editing ? (
+          <input
+            autoFocus
+            value={localText}
+            onChange={e => setLocalText(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') { setLocalText(savedText); setEditing(false); } }}
+            style={{ width: '100%', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-accent)', borderRadius: 'var(--gh-radius-sm)', padding: '4px 8px', color: 'var(--gh-text)', fontSize: 13, fontFamily: 'var(--gh-font)', outline: 'none', boxSizing: 'border-box' }}
+          />
+        ) : (
+          <span style={{ fontSize: 13, color: 'var(--gh-text)', display: 'block', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+            {savedText}
+          </span>
+        )}
+      </div>
+
+      {/* Actions — ghost icon buttons, no borders */}
+      {accepted || rejected ? (
+        <button title="Undo" onClick={() => onAction(stateKey, 'proposed')} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Undo2 size={14} />
+        </button>
+      ) : editing ? (
+        <button title="Save" onClick={saveEdit} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Check size={16} />
+        </button>
+      ) : (
+        <div style={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>
+          <button title="Accept" onClick={() => onAction(stateKey, 'accepted')} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Check size={16} />
+          </button>
+          <button title="Reject" onClick={() => onAction(stateKey, 'rejected')} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <X size={16} />
+          </button>
+          <button title="Edit" onClick={() => { setLocalText(savedText); setEditing(true); }} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Edit2 size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -920,7 +918,7 @@ export function SolutioningTab({ chromeHidden = false }: { chromeHidden?: boolea
     Failed: triageFailed,
   };
 
-  const handleSugAction = useCallback((k: string, a: 'accepted' | 'rejected') => {
+  const handleSugAction = useCallback((k: string, a: 'accepted' | 'rejected' | 'proposed') => {
     setSugStates(prev => ({ ...prev, [k]: a }));
   }, []);
 
