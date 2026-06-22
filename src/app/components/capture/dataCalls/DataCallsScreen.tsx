@@ -9,7 +9,8 @@ import type {
 } from '../../../../types/dataCalls';
 import { F, ORANGE, orangeTone, TODAY, fmtDate, isOverdue, awaitingReview, itemAccepted, partnerAgg, callProgress } from './helpers';
 import { Stat } from '../staffing/ui';
-import { SectionShell, Pill, Btn, PhaseBadge, StatusPill, QualityBadge } from './ui';
+import { SectionIndex, SectionIndexItem } from '../SectionIndex';
+import { Pill, Btn, PhaseBadge, StatusPill, QualityBadge } from './ui';
 import { CollectionStrategy } from './CollectionStrategy';
 import { Templates } from './Templates';
 import { CreateDataCall, type NewCallPayload } from './CreateDataCall';
@@ -17,6 +18,17 @@ import { ActiveDataCalls } from './ActiveDataCalls';
 import { Recommendations } from './Recommendations';
 import { ActionsLog } from './ActionsLog';
 import { AskAiPanel, type AskAiData } from './AskAiPanel';
+import { DetailPanel } from '../DetailPanel';
+
+type DCSectionKey = 'strategy' | 'templates' | 'create' | 'active' | 'recs' | 'actions';
+const DC_SECTIONS: { key: DCSectionKey; n: number; title: string; subtitle: string; icon: React.ReactNode }[] = [
+  { key: 'strategy',  n: 1, title: 'Collection Strategy',                subtitle: 'Set-and-forget — phased, priority-ordered',           icon: <Compass size={15} /> },
+  { key: 'templates', n: 2, title: 'Phase-Aware Templates',             subtitle: 'Pre-TA evaluation · Post-TA proposal collection',     icon: <LayoutTemplate size={15} /> },
+  { key: 'create',    n: 3, title: 'Create New Data Call',              subtitle: 'Template → recipient → trust-tier check → send',      icon: <FilePlus2 size={15} /> },
+  { key: 'active',    n: 4, title: 'Active Data Calls',                 subtitle: 'By teammate or by data call — review, remind',        icon: <Inbox size={15} /> },
+  { key: 'recs',      n: 5, title: 'AI Recommendations',                subtitle: 'Gaps, clarifications, comparisons, risks, quality',  icon: <Sparkles size={15} /> },
+  { key: 'actions',   n: 6, title: 'Actions & Escalation + Log',        subtitle: 'Queued actions · auto-logged events',                 icon: <ListTodo size={15} /> },
+];
 
 const PRI_NEXT: Record<Priority, Priority> = { LOW: 'MEDIUM', MEDIUM: 'HIGH', HIGH: 'CRITICAL', CRITICAL: 'CRITICAL' };
 const recomputeStatus = (items: DataCallItem[]): DataCallStatus => {
@@ -39,6 +51,7 @@ export function DataCallsScreen() {
   const [expC, setExpC] = useState<Set<string>>(new Set());
   const [expI] = useState<Set<string>>(new Set());
   const [createOpen, setCreateOpen] = useState(false);
+  const [selectedSection, setSelectedSection] = useState<DCSectionKey>('strategy');
   const [preset, setPreset] = useState<{ tpl: string | null; partner: string | null }>({ tpl: null, partner: null });
   const [analyzing, setAnalyzing] = useState(false);
   const [askAi, setAskAi] = useState<AskAiData | null>(null);
@@ -88,8 +101,8 @@ export function DataCallsScreen() {
   };
 
   // ── create ──
-  const onUseTemplate = (tplId: string) => { setPreset({ tpl: tplId, partner: null }); setCreateOpen(true); setToast('Template loaded into the create form'); };
-  const onNewDataCall = (partnerId: string) => { setPreset({ tpl: null, partner: partnerId }); setCreateOpen(true); setToast(`New data call for ${partnerName(partnerId)}`); };
+  const onUseTemplate = (tplId: string) => { setPreset({ tpl: tplId, partner: null }); setCreateOpen(true); setSelectedSection('create'); setToast('Template loaded into the create form'); };
+  const onNewDataCall = (partnerId: string) => { setPreset({ tpl: null, partner: partnerId }); setCreateOpen(true); setSelectedSection('create'); setToast(`New data call for ${partnerName(partnerId)}`); };
   const onSend = (p: NewCallPayload) => {
     const n = dataCalls.length + 1;
     const id = `DC-${String(n).padStart(3, '0')}`;
@@ -147,11 +160,11 @@ export function DataCallsScreen() {
   };
 
   return (
-    <div style={{ height: '100%', overflowY: 'auto', background: 'var(--gh-bg-canvas)', fontFamily: F, padding: 'var(--gh-space-8) var(--gh-space-12)', boxSizing: 'border-box' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--gh-bg-canvas)', fontFamily: F, padding: 'var(--gh-space-8) 0', boxSizing: 'border-box' }}>
       <style>{`@keyframes gh-spin{to{transform:rotate(360deg)}}.gh-spin{animation:gh-spin .8s linear infinite}`}</style>
 
       {/* ── Context header ── */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
         <div style={{ flex: 1, minWidth: 280 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
             <span style={{ width: 30, height: 30, borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, color: ORANGE, display: 'grid', placeItems: 'center', border: `1px solid ${orangeTone.bd}` }}><Inbox size={16} /></span>
@@ -165,7 +178,7 @@ export function DataCallsScreen() {
       </div>
 
       {/* ── Dashboard stats ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 16, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
         <Stat label="Active Data Calls" value={stats.active} icon={<Layers size={15} />} />
         <Stat label="Items Awaiting Review" value={stats.awaiting} tone={stats.awaiting ? 'warning' : 'neutral'} icon={<Eye size={15} />} />
         <Stat label="Overdue Items" value={stats.overdue} tone={stats.overdue ? 'danger' : 'success'} icon={<AlertTriangle size={15} />} />
@@ -174,34 +187,44 @@ export function DataCallsScreen() {
       </div>
 
       {mode === 'sub' ? (
-        <SubMode dataCalls={dataCalls} partnerName={partnerName} onToast={setToast} />
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '0 var(--gh-space-12)' }}>
+          <SubMode dataCalls={dataCalls} partnerName={partnerName} onToast={setToast} />
+        </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <SectionShell n={1} title="Collection Strategy" subtitle="Set-and-forget — phased, priority-ordered" icon={<Compass size={16} />} collapsible defaultOpen={false}
-            right={<Pill tone={provenance === 'User Confirmed' ? 'success' : 'accent'} soft><Sparkles size={11} /> {provenance}</Pill>}>
-            <CollectionStrategy strategy={{ ...strategy, provenance }} onConfirm={() => { setProvenance('User Confirmed'); setToast('Strategy confirmed'); }} />
-          </SectionShell>
+        <div style={{ flex: 1, minHeight: 0, display: 'flex', overflow: 'hidden' }}>
+          {/* Shared collapsible/resizable section index */}
+          <SectionIndex
+            title="Data Calls"
+            renderItems={(narrow) => DC_SECTIONS.map(s => (
+              <SectionIndexItem
+                key={s.key}
+                title={s.title}
+                subtitle={s.subtitle}
+                selected={selectedSection === s.key}
+                narrow={narrow}
+                onSelect={() => setSelectedSection(s.key)}
+              />
+            ))}
+          />
 
-          <SectionShell n={2} title="Phase-Aware Templates" subtitle="Pre-TA evaluation · Post-TA proposal collection" icon={<LayoutTemplate size={16} />}>
-            <Templates templates={templates} onUseTemplate={t => onUseTemplate(t.id)} />
-          </SectionShell>
-
-          <SectionShell n={3} title="Create New Data Call" subtitle="Template → recipient → trust-tier check → send" icon={<FilePlus2 size={16} />}
-            collapsible open={createOpen} onToggle={() => setCreateOpen(o => !o)}>
-            <CreateDataCall templates={templates} partners={partners} presetTemplateId={preset.tpl} presetPartnerId={preset.partner} onSend={onSend} onLogOverride={onLogOverride} onToast={setToast} />
-          </SectionShell>
-
-          <SectionShell n={4} title="Active Data Calls" subtitle="By teammate or by data call — review, remind, escalate" icon={<Inbox size={16} />}>
-            <ActiveDataCalls dataCalls={dataCalls} partners={partners} h={activeHandlers} v={viewState} />
-          </SectionShell>
-
-          <SectionShell n={5} title="AI Recommendations" subtitle="Gaps, clarifications, comparisons, risks, quality, timing" icon={<Sparkles size={16} />}>
-            <Recommendations recommendations={recs} analyzing={analyzing} onReAnalyze={onReAnalyze} onAction={onRecAction} onDismiss={onDismissRec} partnerName={partnerName} />
-          </SectionShell>
-
-          <SectionShell n={6} title="Actions & Escalation + Activity Log" subtitle="Queued actions with AI traceability · auto-logged events" icon={<ListTodo size={16} />}>
-            <ActionsLog queuedActions={actions} recommendations={recs} onToggleDone={onToggleDone} activityLog={log} />
-          </SectionShell>
+          {/* Detail — the selected section */}
+          <div key={selectedSection} style={{ flex: 1, minWidth: 0, background: 'var(--gh-bg-canvas)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+            <DetailPanel
+              scrollKey={selectedSection}
+              background="var(--gh-bg-canvas)"
+              progressBar={false}
+              leftActions={selectedSection === 'strategy' ? (<Pill tone={provenance === 'User Confirmed' ? 'success' : 'accent'} soft><Sparkles size={11} /> {provenance}</Pill>) : undefined}
+            >
+              <div style={{ padding: '16px 20px' }}>
+                {selectedSection === 'strategy' && <CollectionStrategy strategy={{ ...strategy, provenance }} onConfirm={() => { setProvenance('User Confirmed'); setToast('Strategy confirmed'); }} />}
+                {selectedSection === 'templates' && <Templates templates={templates} onUseTemplate={t => onUseTemplate(t.id)} />}
+                {selectedSection === 'create' && <CreateDataCall templates={templates} partners={partners} presetTemplateId={preset.tpl} presetPartnerId={preset.partner} onSend={onSend} onLogOverride={onLogOverride} onToast={setToast} />}
+                {selectedSection === 'active' && <ActiveDataCalls dataCalls={dataCalls} partners={partners} h={activeHandlers} v={viewState} />}
+                {selectedSection === 'recs' && <Recommendations recommendations={recs} analyzing={analyzing} onReAnalyze={onReAnalyze} onAction={onRecAction} onDismiss={onDismissRec} partnerName={partnerName} />}
+                {selectedSection === 'actions' && <ActionsLog queuedActions={actions} recommendations={recs} onToggleDone={onToggleDone} activityLog={log} />}
+              </div>
+            </DetailPanel>
+          </div>
         </div>
       )}
 

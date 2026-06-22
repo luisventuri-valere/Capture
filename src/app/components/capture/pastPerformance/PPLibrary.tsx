@@ -5,7 +5,7 @@ import { F, tone, money, type Tone } from '../staffing/helpers';
 import { Pill, Btn, Modal, ModalHeader, ModalFooter } from '../staffing/ui';
 import { cparsTone, recencyContext, yr } from './ppHelpers';
 
-const TH: React.CSSProperties = { textAlign: 'left', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface-muted)' };
+const TH: React.CSSProperties = { textAlign: 'left', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)' };
 const TD: React.CSSProperties = { padding: '10px', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-secondary)', verticalAlign: 'middle', borderBottom: '1px solid var(--gh-border)' };
 
 const selStyle: React.CSSProperties = { background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '6px 9px', color: 'var(--gh-text-secondary)', fontSize: 'var(--gh-font-size-xs)', fontFamily: F };

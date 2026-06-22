@@ -26,8 +26,8 @@ function EditCell({ value, onChange, width, type = 'text' }: { value: string | n
 
 const TH: React.CSSProperties = {
   textAlign: 'left', padding: '8px 10px', fontSize: 10, letterSpacing: '0.06em', textTransform: 'uppercase',
-  color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap',
-  borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface-muted)',
+  color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap',
+  borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)',
 };
 const TD: React.CSSProperties = { padding: '9px 10px', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-secondary)', verticalAlign: 'middle', borderBottom: '1px solid var(--gh-border)' };
 
@@ -142,7 +142,7 @@ export function LcatMatrix({ lcats, editMode, expanded, onToggle, cb, rowRefs }:
   );
 }
 
-const CTH: React.CSSProperties = { textAlign: 'left', padding: '6px 10px', fontSize: 9, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap' };
+const CTH: React.CSSProperties = { textAlign: 'left', padding: '6px 10px', fontSize: 9, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', background: 'var(--gh-bg-surface)' };
 const CTD: React.CSSProperties = { padding: '8px 10px', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-secondary)', verticalAlign: 'middle', borderTop: '1px solid var(--gh-border)' };
 
 function CandidateTable({ lcat, cb }: { lcat: LCAT; cb: MatrixCallbacks }) {

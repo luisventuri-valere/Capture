@@ -9,6 +9,8 @@ import {
   F, calculateLcatStatus, committedCount, marketPosition, priorityActions, tone, type Tone,
 } from './helpers';
 import { Stat, Btn } from './ui';
+import { SectionIndex, SectionIndexItem } from '../SectionIndex';
+import { DetailPanel } from '../DetailPanel';
 import { LcatMatrix, type MatrixCallbacks } from './LcatMatrix';
 import { AiAnalysisModal, NotesModal, DocumentsModal, LoiModal } from './modals';
 import { SalaryIntelligence, IncumbentIntelligence, TimelinePriority } from './sections';
@@ -116,14 +118,13 @@ export function StaffingScreen() {
   const closeModal = () => setModal({ kind: null });
   const activeLcat = modal.lcatId ? lcats.find(l => l.id === modal.lcatId) : undefined;
   const activeCand = activeLcat && modal.candId ? activeLcat.candidates.find(c => c.id === modal.candId) : undefined;
-  const meta = SECTIONS.find(s => s.key === selected)!;
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--gh-bg-canvas)', fontFamily: F, padding: 'var(--gh-space-8) var(--gh-space-12)', boxSizing: 'border-box' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--gh-bg-canvas)', fontFamily: F, padding: 'var(--gh-space-8) 0', boxSizing: 'border-box' }}>
       <style>{`@keyframes gh-spin{to{transform:rotate(360deg)}}.gh-spin{animation:gh-spin .8s linear infinite}@keyframes gh-pulse{0%,100%{opacity:1}50%{opacity:.25}}.gh-pulse{animation:gh-pulse 1.4s ease-in-out infinite}`}</style>
 
       {/* ── Context header (compact) ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12, flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
         <Stat label="Total LCATs" value={stats.total} icon={<Users size={15} />} />
         <Stat label="Positions Filled" value={stats.filled} tone="success" icon={<Check size={15} />} />
         <Stat label="Open Gaps" value={stats.gaps} tone={stats.gaps > 0 ? 'danger' : 'success'} icon={<AlertTriangle size={15} />} />
@@ -144,40 +145,45 @@ export function StaffingScreen() {
         </div>
       </div>
 
-      {/* ── Master / detail ── */}
-      <div style={{ flex: 1, minHeight: 0, display: 'flex', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-xl)', overflow: 'hidden' }}>
-        {/* nav */}
-        <div style={{ width: 256, flexShrink: 0, overflowY: 'auto', background: 'var(--gh-bg-canvas)', borderRight: '1px solid var(--gh-border)' }}>
-          <div style={{ margin: '10px 8px 4px', padding: '6px 8px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-elevated)', border: '1px solid var(--gh-border)' }}>
-            <span style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-tertiary)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Sections</span>
-          </div>
-          <div style={{ padding: '4px 8px 8px', display: 'flex', flexDirection: 'column', gap: 2 }}>
-            {SECTIONS.map(s => (
-              <NavItem key={s.key} n={s.n} title={s.title} icon={s.icon} hint={nav[s.key].hint} dot={nav[s.key].dot} selected={selected === s.key} onSelect={() => setSelected(s.key)} />
-            ))}
-          </div>
-        </div>
+      {/* ── Master / detail — shared shell ── */}
+      <div style={{ flex: 1, minHeight: 0, display: 'flex', overflow: 'hidden' }}>
+        {/* Shared collapsible/resizable section index */}
+        <SectionIndex
+          title="Sections"
+          renderItems={(narrow) => SECTIONS.map(s => (
+            <SectionIndexItem
+              key={s.key}
+              title={s.title}
+              subtitle={nav[s.key].hint}
+              subtitleDot={tone(nav[s.key].dot).fg}
+              selected={selected === s.key}
+              narrow={narrow}
+              onSelect={() => setSelected(s.key)}
+            />
+          ))}
+        />
 
         {/* detail */}
         <div key={selected} style={{ flex: 1, minWidth: 0, background: 'var(--gh-bg-canvas)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', borderBottom: '1px solid var(--gh-border)', flexShrink: 0 }}>
-            <span style={{ width: 28, height: 28, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-accent)', color: 'var(--gh-accent-fg)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-bold)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>{meta.n}</span>
-            <h2 style={{ margin: 0, fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)', flex: 1 }}>{meta.title}</h2>
-            {selected === 'docs' && (
-              <Btn kind="secondary" size="sm" icon={genAll ? <Loader2 size={13} className="gh-spin" /> : <FileText size={13} />} onClick={generateAllDocs} disabled={genAll}>{genAll ? 'Generating…' : 'Generate All Docs'}</Btn>
-            )}
-            {selected === 'incumbent' && (
+          <DetailPanel
+            scrollKey={selected}
+            background="var(--gh-bg-canvas)"
+            progressBar={false}
+            leftActions={selected === 'incumbent' ? (
               <span style={{ padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-tertiary)', fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)' }}>{incumbent.contractor}</span>
-            )}
-          </div>
-
-          <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
-            {selected === 'matrix' && <LcatMatrix lcats={lcats} editMode={editMode} expanded={expanded} onToggle={toggleExpand} cb={cb} rowRefs={rowRefs} />}
-            {selected === 'docs' && <DocumentGeneration lcats={lcats} onGenerate={generateDoc} onOpenDocs={(id) => setModal({ kind: 'docs', lcatId: id })} />}
-            {selected === 'salary' && <SalaryIntelligence lcats={lcats} benchmarks={salaryBenchmarks} />}
-            {selected === 'incumbent' && <IncumbentIntelligence incumbent={incumbent} people={people} onAddToPipeline={addToPipeline} />}
-            {selected === 'timeline' && <TimelinePriority timeline={timeline} lcats={lcats} onScrollToLcat={scrollToLcat} />}
-          </div>
+            ) : undefined}
+            actions={selected === 'docs' ? () => (
+              <Btn kind="secondary" size="sm" icon={genAll ? <Loader2 size={13} className="gh-spin" /> : <FileText size={13} />} onClick={generateAllDocs} disabled={genAll}>{genAll ? 'Generating…' : 'Generate All Docs'}</Btn>
+            ) : undefined}
+          >
+            <div style={{ padding: '16px 20px' }}>
+              {selected === 'matrix' && <LcatMatrix lcats={lcats} editMode={editMode} expanded={expanded} onToggle={toggleExpand} cb={cb} rowRefs={rowRefs} />}
+              {selected === 'docs' && <DocumentGeneration lcats={lcats} onGenerate={generateDoc} onOpenDocs={(id) => setModal({ kind: 'docs', lcatId: id })} />}
+              {selected === 'salary' && <SalaryIntelligence lcats={lcats} benchmarks={salaryBenchmarks} />}
+              {selected === 'incumbent' && <IncumbentIntelligence incumbent={incumbent} people={people} onAddToPipeline={addToPipeline} />}
+              {selected === 'timeline' && <TimelinePriority timeline={timeline} lcats={lcats} onScrollToLcat={scrollToLcat} />}
+            </div>
+          </DetailPanel>
         </div>
       </div>
 
@@ -197,30 +203,3 @@ export function StaffingScreen() {
   );
 }
 
-// ─── Sidebar nav item (Strategy & Plan pattern) ──────────────────────────────
-function NavItem({ n, title, icon, hint, dot, selected, onSelect }: {
-  n: number; title: string; icon: React.ReactNode; hint: string; dot: Tone; selected: boolean; onSelect: () => void;
-}) {
-  return (
-    <button onClick={onSelect} style={{
-      display: 'flex', alignItems: 'center', gap: 9, width: '100%', padding: '9px 10px', textAlign: 'left', cursor: 'pointer',
-      borderRadius: 'var(--gh-radius-lg)', background: selected ? 'var(--gh-bg-surface-muted)' : 'transparent',
-      borderTop: '1px solid', borderBottom: '1px solid', borderRight: '1px solid',
-      borderTopColor: selected ? 'var(--gh-border)' : 'transparent', borderBottomColor: selected ? 'var(--gh-border)' : 'transparent', borderRightColor: selected ? 'var(--gh-border)' : 'transparent',
-      borderLeft: `3px solid ${selected ? 'var(--gh-accent)' : 'transparent'}`, fontFamily: F,
-    }}>
-      <span style={{ flexShrink: 0, width: 24, height: 24, borderRadius: 'var(--gh-radius-full)', background: selected ? 'var(--gh-accent)' : 'var(--gh-bg-surface)', color: selected ? 'var(--gh-accent-fg)' : 'var(--gh-text-tertiary)', fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', display: 'grid', placeItems: 'center' }}>{n}</span>
-      <span style={{ flex: 1, minWidth: 0 }}>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
-          <span style={{ color: selected ? 'var(--gh-accent-tint)' : 'var(--gh-text-tertiary)', display: 'flex', flexShrink: 0 }}>{icon}</span>
-          <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: selected ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)', color: selected ? 'var(--gh-text)' : 'var(--gh-text-secondary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{title}</span>
-        </span>
-        <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--gh-text-disabled)' }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: tone(dot).fg, flexShrink: 0 }} />
-          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{hint}</span>
-        </span>
-      </span>
-      {selected && <ChevronRight size={13} style={{ flexShrink: 0, color: 'var(--gh-accent)' }} />}
-    </button>
-  );
-}

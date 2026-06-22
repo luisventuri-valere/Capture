@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, TrendingUp, Building2, Target, Filter, Users, Search as SearchIcon,
   Newspaper, BarChart3, GraduationCap, FileText, Handshake, Settings,
@@ -262,14 +262,12 @@ function CaptureSubnav({ active, onChange }: SubNavProps) {
     <div className="flex items-center w-full shrink-0" style={{ background: 'var(--gh-bg-surface)', fontFamily: 'var(--gh-font)' }}>
       {tabs.map((tab, i) => {
         const isActive = tab === active;
-        const disabled = i > 0;   // only "Strategy & Plan" (tab 1) is enabled
         return (
           <button
             key={tab}
-            onClick={() => { if (!disabled) onChange(tab); }}
-            disabled={disabled}
+            onClick={() => onChange(tab)}
             className="flex items-center justify-center shrink-0"
-            style={{ width: 180, padding: '16px 0', gap: 10, border: 'none', cursor: disabled ? 'not-allowed' : 'pointer', opacity: disabled ? 0.4 : 1, background: isActive ? 'var(--gh-bg-canvas)' : 'transparent' }}
+            style={{ width: 180, padding: '16px 0', gap: 10, border: 'none', cursor: 'pointer', background: isActive ? 'var(--gh-bg-canvas)' : 'transparent' }}
           >
             <span style={{
               width: 26, height: 26, flexShrink: 0, borderRadius: 'var(--gh-radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -313,6 +311,19 @@ function MainContent({ data }: { data: StrategyData }) {
   const [activeTab, setActiveTab] = useState('Strategy & Plan');
   const [chromeHidden, setChromeHidden] = useState(false);
 
+  // Reset the collapsing chrome whenever the user switches tabs.
+  useEffect(() => { setChromeHidden(false); }, [activeTab]);
+
+  // Universal chrome-collapse: any tab's inner scroll hides the chrome. Scroll events
+  // don't bubble, but they DO travel the capture phase, so a single capture-phase
+  // listener here catches scroll from every tab's content without per-tab wiring.
+  const onContentScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.target as HTMLElement;
+    if (!el || typeof el.scrollTop !== 'number') return;
+    if (el.scrollTop > 96) setChromeHidden(true);
+    else if (el.scrollTop < 40) setChromeHidden(false);
+  };
+
   return (
     <div className="flex flex-col flex-1 min-w-0 overflow-hidden" style={{ background: 'var(--gh-bg-canvas)' }}>
       {/* Collapsing chrome (Figma 2183:17083 / 2210:17758) — opp header + stage tabs + sub-nav hide on scroll-down */}
@@ -325,18 +336,18 @@ function MainContent({ data }: { data: StrategyData }) {
       {/* CaptureBody */}
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Content area — flex for master/detail, scroll for others */}
-        <div className="flex-1 min-h-0 overflow-hidden" style={{ background: 'var(--gh-bg-canvas)' }}>
+        <div className="flex-1 min-h-0 overflow-hidden" onScrollCapture={onContentScroll} style={{ background: 'var(--gh-bg-canvas)' }}>
           {activeTab === 'Strategy & Plan' ? (
             <div style={{ height: '100%', padding: 'var(--gh-space-8) 0', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
               <StrategyPlanSubTab data={data} onChromeHide={setChromeHidden} chromeHidden={chromeHidden} />
             </div>
           ) : activeTab === 'Teaming' ? (
-            <div style={{ height: '100%', padding: 'var(--gh-space-8) var(--gh-space-12)', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-              <TeamingTab />
+            <div style={{ height: '100%', padding: 'var(--gh-space-8) 0', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
+              <TeamingTab chromeHidden={chromeHidden} />
             </div>
           ) : activeTab === 'Solutioning' ? (
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
-              <SolutioningTab />
+              <SolutioningTab chromeHidden={chromeHidden} />
             </div>
           ) : activeTab === 'Staffing' ? (
             <div style={{ height: '100%', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>

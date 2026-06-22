@@ -197,7 +197,7 @@ export function OpportunityMatch({
   );
 }
 
-const MTH: React.CSSProperties = { textAlign: 'center', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface-muted)' };
+const MTH: React.CSSProperties = { textAlign: 'center', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)' };
 const MTD: React.CSSProperties = { textAlign: 'center', padding: '9px 10px', fontSize: 'var(--gh-font-size-xs)', verticalAlign: 'middle', borderBottom: '1px solid var(--gh-border)' };
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
