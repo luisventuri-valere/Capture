@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
-  DollarSign, CalendarClock, Pencil, Check,
+  DollarSign, CalendarClock, Check,
   FileText, Loader2, ListChecks,
 } from 'lucide-react';
 import { staffingData } from '../../../../data/capture/staffing-data';
@@ -13,7 +13,7 @@ import { Btn, SectionHeader } from './ui';
 import { SectionIndex, SectionIndexItem } from '../SectionIndex';
 import { DetailPanel } from '../DetailPanel';
 import { LcatMatrix, type MatrixCallbacks } from './LcatMatrix';
-import { AiAnalysisModal, NotesModal, DocumentsModal, LoiModal } from './modals';
+import { AiAnalysisModal, NotesModal, DocumentsModal, LoiModal, AddLcatModal, type NewLcatFields } from './modals';
 import { SalaryIntelligence, TimelinePriority, IncumbentContextCard } from './sections';
 import { DocumentGeneration } from './DocumentGeneration';
 
@@ -50,9 +50,9 @@ export function StaffingScreen() {
   const { opportunity, incumbent, salaryBenchmarks, timeline } = staffingData;
   const [lcats, setLcats] = useState<LCAT[]>(staffingData.lcats);
   const [people, setPeople] = useState<IncumbentPerson[]>(incumbent.people);
-  const [editMode, setEditMode] = useState(false);
   const [selected, setSelected] = useState<SectionKey>('matrix');
   const [modal, setModal] = useState<ModalState>({ kind: null });
+  const [addLcatOpen, setAddLcatOpen] = useState(false);
   const [toast, setToastState] = useState<string | null>(null);
   const [genAll, setGenAll] = useState(false);
   const [expanded, setExpanded] = useState<Set<string>>(() => {
@@ -65,9 +65,13 @@ export function StaffingScreen() {
   const setToast = (m: string) => { setToastState(m); window.clearTimeout(toastTimer.current); toastTimer.current = window.setTimeout(() => setToastState(null), 2600); };
 
   const stats = useMemo(() => {
-    let filled = 0, gaps = 0;
-    lcats.forEach(l => { filled += committedCount(l.candidates); if (calculateLcatStatus(l.candidates, l.quantity) === 'gap') gaps++; });
-    return { total: lcats.length, filled, gaps };
+    let covered = 0, gaps = 0;
+    lcats.forEach(l => {
+      const st = calculateLcatStatus(l.candidates, l.quantity);
+      if (st === 'ready') covered++;
+      if (st === 'gap') gaps++;
+    });
+    return { total: lcats.length, covered, gaps };
   }, [lcats]);
 
   const nav = useMemo(() => {
@@ -129,17 +133,7 @@ export function StaffingScreen() {
     openLoi: (lcatId, candId) => setModal({ kind: 'loi', lcatId, candId }),
     onEditLcat: patchLcat,
     onDeleteLcat: (lcatId) => { setLcats(prev => prev.filter(l => l.id !== lcatId)); setToast('LCAT removed'); },
-    onAddLcat: () => {
-      const id = `LCAT-${Math.floor(Math.random() * 9000 + 1000)}`;
-      setLcats(prev => [...prev, {
-        id, title: 'New Labor Category', isKeyPersonnel: false, classification: 'commodity', quantity: 1,
-        requirements: { education: "Bachelor's", yearsExp: 3, certifications: [], clearance: 'TS/SCI', location: 'Washington, DC' },
-        salaryRange: { min: 100000, max: 130000 }, status: 'gap', filledCount: 0,
-        documents: { jobReq: 'not_started', interviewQs: 'not_started', evalCriteria: 'not_started', handoffPackage: 'not_started' },
-        candidates: [],
-      }]);
-      setExpanded(p => new Set(p).add(id));
-    },
+    onAddLcat: () => setAddLcatOpen(true),
     onToast: setToast,
     onSetCandidateStatus: setCandidateStatus,
     onAdvanceCourtship: advanceCourtship,
@@ -169,6 +163,17 @@ export function StaffingScreen() {
   };
 
   const closeModal = () => setModal({ kind: null });
+
+  const handleAddLcat = (fields: NewLcatFields) => {
+    const id = `LCAT-${Math.floor(Math.random() * 9000 + 1000)}`;
+    setLcats(prev => [...prev, {
+      id, ...fields, status: 'gap', filledCount: 0,
+      documents: { jobReq: 'not_started', interviewQs: 'not_started', evalCriteria: 'not_started', handoffPackage: 'not_started' },
+      candidates: [],
+    }]);
+    setExpanded(p => new Set(p).add(id));
+    setToast(`${fields.title} added`);
+  };
   const activeLcat = modal.lcatId ? lcats.find(l => l.id === modal.lcatId) : undefined;
   const activeCand = activeLcat && modal.candId ? activeLcat.candidates.find(c => c.id === modal.candId) : undefined;
 
@@ -179,25 +184,13 @@ export function StaffingScreen() {
       <style>{`@keyframes gh-spin{to{transform:rotate(360deg)}}.gh-spin{animation:gh-spin .8s linear infinite}@keyframes gh-pulse{0%,100%{opacity:1}50%{opacity:.25}}.gh-pulse{animation:gh-pulse 1.4s ease-in-out infinite}`}</style>
 
       {/* ── Context header (Strategy-style compact bar) ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '0 var(--gh-space-12) 12px', flexShrink: 0 }}>
-        <button onClick={() => setEditMode(e => !e)} style={{
-          display: 'inline-flex', alignItems: 'center', gap: 7, padding: '6px 14px', borderRadius: 'var(--gh-radius-lg)',
-          background: editMode ? 'var(--gh-accent)' : 'transparent', color: editMode ? 'var(--gh-accent-fg)' : 'var(--gh-text-secondary)',
-          border: `1px solid ${editMode ? 'var(--gh-accent)' : 'var(--gh-border)'}`, fontSize: 'var(--gh-font-size-sm)',
-          fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer', fontFamily: F, flexShrink: 0,
-        }}>
-          {editMode ? <span className="gh-pulse" style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--gh-accent-fg)' }} /> : <Pencil size={13} />}
-          {editMode ? 'Done Editing' : 'Edit'}
-        </button>
-        <span style={{ width: 1, height: 20, background: 'var(--gh-border)', flexShrink: 0 }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>
-            {stats.filled} of {stats.total} covered · {stats.gaps} {stats.gaps === 1 ? 'gap' : 'gaps'}
-          </span>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', whiteSpace: 'nowrap' }}>
-            <CalendarClock size={13} /> Days to Proposal: {opportunity.daysToProposal}
-          </span>
-        </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '0 var(--gh-space-12) 12px', flexShrink: 0 }}>
+        <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>
+          {stats.covered} of {stats.total} covered · {stats.gaps} {stats.gaps === 1 ? 'gap' : 'gaps'}
+        </span>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', whiteSpace: 'nowrap' }}>
+          <CalendarClock size={13} /> Days to Proposal: {opportunity.daysToProposal}
+        </span>
       </div>
 
       {/* ── Master / detail — shared shell ── */}
@@ -251,7 +244,7 @@ export function StaffingScreen() {
               <SectionHeader title={meta.title} subtitle={meta.subtitle} />
               {selected === 'matrix' && <>
                 <IncumbentContextCard incumbent={incumbent} people={people} />
-                <LcatMatrix lcats={lcats} people={people} editMode={editMode} expanded={expanded} onToggle={toggleExpand} cb={cb} rowRefs={rowRefs} />
+                <LcatMatrix lcats={lcats} people={people} expanded={expanded} onToggle={toggleExpand} cb={cb} rowRefs={rowRefs} />
               </>}
               {selected === 'docs' && <DocumentGeneration lcats={lcats} onGenerate={generateDoc} onOpenDocs={(id) => setModal({ kind: 'docs', lcatId: id })} />}
               {selected === 'salary' && <SalaryIntelligence lcats={lcats} benchmarks={salaryBenchmarks} />}
@@ -262,6 +255,7 @@ export function StaffingScreen() {
       </div>
 
       {/* ── Modals ── */}
+      {addLcatOpen && <AddLcatModal onClose={() => setAddLcatOpen(false)} onConfirm={handleAddLcat} />}
       {modal.kind === 'ai' && activeCand && activeLcat && <AiAnalysisModal candidate={activeCand} totalInLcat={activeLcat.candidates.length} onClose={closeModal} onToast={setToast} />}
       {modal.kind === 'notes' && activeCand && <NotesModal candidate={activeCand} onClose={closeModal} onPost={(text) => postNote(modal.lcatId!, modal.candId!, text)} />}
       {modal.kind === 'docs' && activeLcat && <DocumentsModal lcat={activeLcat} onClose={closeModal} onGenerate={(key) => generateDoc(modal.lcatId!, key)} />}

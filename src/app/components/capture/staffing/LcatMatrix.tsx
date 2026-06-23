@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   ChevronRight, ChevronDown, Brain, MessageCircle, Eye, Trash2, Plus, Lock,
-  FileSignature, Users, Building2, UserPlus, Undo2, Ban, Phone, Check, CheckCircle2, ArrowRight, RotateCcw,
+  FileSignature, Users, Building2, UserPlus, Undo2, Ban, Phone, Check, CheckCircle2, ArrowRight, RotateCcw, Pencil,
 } from 'lucide-react';
 import type { LCAT, Candidate, IncumbentPerson, IncumbentStatus, CandidateStatus } from '../../../../types/staffing';
 import {
@@ -50,11 +50,13 @@ export interface MatrixCallbacks {
   onReturnCandidate: (lcatId: string, candId: string) => void;
 }
 
-export function LcatMatrix({ lcats, people, editMode, expanded, onToggle, cb, rowRefs }: {
-  lcats: LCAT[]; people: IncumbentPerson[]; editMode: boolean; expanded: Set<string>; onToggle: (id: string) => void;
+export function LcatMatrix({ lcats, people, expanded, onToggle, cb, rowRefs }: {
+  lcats: LCAT[]; people: IncumbentPerson[]; expanded: Set<string>; onToggle: (id: string) => void;
   cb: MatrixCallbacks; rowRefs: React.MutableRefObject<Record<string, HTMLTableRowElement | null>>;
 }) {
-  const COLSPAN = editMode ? 11 : 10;
+  const [editingRows, setEditingRows] = useState<Set<string>>(new Set());
+  const toggleRowEdit = (id: string) => setEditingRows(p => { const n = new Set(p); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const COLSPAN = 11;
   return (
     <div style={{ overflowX: 'auto' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: F, minWidth: 940 }}>
@@ -70,13 +72,14 @@ export function LcatMatrix({ lcats, people, editMode, expanded, onToggle, cb, ro
             <th style={TH}>Salary Range</th>
             <th style={TH}>Docs</th>
             <th style={TH}>Status</th>
-            {editMode && <th style={TH} />}
+            <th style={TH} />
           </tr>
         </thead>
         <tbody>
           {lcats.map(lcat => {
             const st = calculateLcatStatus(lcat.candidates, lcat.quantity);
             const isOpen = expanded.has(lcat.id);
+            const isEditing = editingRows.has(lcat.id);
             const filled = committedCount(lcat.candidates);
             const docVals = Object.values(lcat.documents);
             const docComplete = docVals.filter(d => d === 'complete').length;
@@ -95,22 +98,22 @@ export function LcatMatrix({ lcats, people, editMode, expanded, onToggle, cb, ro
                       <span style={{ padding: '1px 7px', borderRadius: 'var(--gh-radius-full)', fontSize: 9, fontWeight: 'var(--gh-font-weight-semibold)', textTransform: 'capitalize', background: cls.bg, color: cls.fg }}>{lcat.classification}</span>
                     </div>
                   </td>
-                  <td style={TD}>{editMode
+                  <td style={TD}>{isEditing
                     ? <EditCell width={42} type="number" value={lcat.quantity} onChange={v => cb.onEditLcat(lcat.id, { quantity: Math.max(0, parseInt(v) || 0) })} />
                     : <span style={{ color: 'var(--gh-text)' }}>{lcat.quantity}</span>}</td>
-                  <td style={{ ...TD, maxWidth: 150 }}>{editMode
+                  <td style={{ ...TD, maxWidth: 150 }}>{isEditing
                     ? <EditCell value={lcat.requirements.education} onChange={v => cb.onEditLcat(lcat.id, { requirements: { ...lcat.requirements, education: v } })} />
                     : lcat.requirements.education}</td>
-                  <td style={TD}>{editMode
+                  <td style={TD}>{isEditing
                     ? <EditCell width={42} type="number" value={lcat.requirements.yearsExp} onChange={v => cb.onEditLcat(lcat.id, { requirements: { ...lcat.requirements, yearsExp: parseInt(v) || 0 } })} />
                     : `${lcat.requirements.yearsExp}+`}</td>
-                  <td style={{ ...TD, maxWidth: 130 }} title={lcat.requirements.certifications.join(', ')}>{editMode
+                  <td style={{ ...TD, maxWidth: 130 }} title={lcat.requirements.certifications.join(', ')}>{isEditing
                     ? <EditCell value={lcat.requirements.certifications.join(', ')} onChange={v => cb.onEditLcat(lcat.id, { requirements: { ...lcat.requirements, certifications: v.split(',').map(s => s.trim()).filter(Boolean) } })} />
                     : certsShort(lcat.requirements.certifications)}</td>
-                  <td style={TD}>{editMode
+                  <td style={TD}>{isEditing
                     ? <EditCell width={90} value={lcat.requirements.clearance} onChange={v => cb.onEditLcat(lcat.id, { requirements: { ...lcat.requirements, clearance: v } })} />
                     : lcat.requirements.clearance}</td>
-                  <td style={{ ...TD, whiteSpace: 'nowrap' }}>{editMode
+                  <td style={{ ...TD, whiteSpace: 'nowrap' }}>{isEditing
                     ? <span style={{ display: 'inline-flex', gap: 4, alignItems: 'center' }}>
                         <EditCell width={56} type="number" value={lcat.salaryRange.min} onChange={v => cb.onEditLcat(lcat.id, { salaryRange: { ...lcat.salaryRange, min: parseInt(v) || 0 } })} />–
                         <EditCell width={56} type="number" value={lcat.salaryRange.max} onChange={v => cb.onEditLcat(lcat.id, { salaryRange: { ...lcat.salaryRange, max: parseInt(v) || 0 } })} />
@@ -125,7 +128,16 @@ export function LcatMatrix({ lcats, people, editMode, expanded, onToggle, cb, ro
                     </button>
                   </td>
                   <td style={TD}><span style={{ padding: '2px 9px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', background: stt.bg, color: stt.fg }}>{cap(st)}</span></td>
-                  {editMode && <td style={TD}><IconBtn icon={<Trash2 size={14} />} tone="danger" title="Delete LCAT" onClick={() => cb.onDeleteLcat(lcat.id)} /></td>}
+                  <td style={{ ...TD, textAlign: 'center' }}>
+                    {isEditing ? (
+                      <span style={{ display: 'inline-flex', gap: 4 }}>
+                        <IconBtn icon={<Check size={14} />} tone="success" title="Done editing" onClick={() => toggleRowEdit(lcat.id)} />
+                        <IconBtn icon={<Trash2 size={14} />} tone="danger" title="Delete LCAT" onClick={() => cb.onDeleteLcat(lcat.id)} />
+                      </span>
+                    ) : (
+                      <IconBtn icon={<Pencil size={14} />} title="Edit LCAT" onClick={() => toggleRowEdit(lcat.id)} />
+                    )}
+                  </td>
                 </tr>
 
                 {isOpen && (
@@ -146,11 +158,9 @@ export function LcatMatrix({ lcats, people, editMode, expanded, onToggle, cb, ro
         </tbody>
       </table>
 
-      {editMode && (
-        <div style={{ padding: '12px 4px 0' }}>
-          <Btn kind="secondary" icon={<Plus size={14} />} onClick={cb.onAddLcat}>Add LCAT</Btn>
-        </div>
-      )}
+      <div style={{ padding: '12px 4px 0' }}>
+        <Btn kind="secondary" icon={<Plus size={14} />} onClick={cb.onAddLcat}>Add LCAT</Btn>
+      </div>
     </div>
   );
 }

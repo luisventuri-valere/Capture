@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
   Brain, MessageCircle, CheckCircle2, AlertTriangle, Pencil, FileText, Printer,
-  CalendarPlus, RefreshCw, Loader2, FileSignature, Check, Sparkles, Lock,
+  CalendarPlus, RefreshCw, Loader2, FileSignature, Check, Sparkles, Lock, Plus, ListChecks,
 } from 'lucide-react';
-import type { Candidate, LCAT, DocStatus } from '../../../../types/staffing';
+import type { Candidate, LCAT, DocStatus, LcatClassification } from '../../../../types/staffing';
 import { F, recommendationFromScore, recTone, tone, moneyFull, titleCase, docTone, candStatusTone } from './helpers';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Btn, Pill, Dot, FieldLabel } from './ui';
 
@@ -221,3 +221,156 @@ export function LoiModal({ candidate, onClose, onGenerate }: {
 
 // re-export Lock for matrix use (single import site)
 export { Lock };
+
+// ─── Add LCAT Modal ───────────────────────────────────────────────────────────
+export type NewLcatFields = {
+  title: string;
+  isKeyPersonnel: boolean;
+  classification: LcatClassification;
+  quantity: number;
+  requirements: { education: string; yearsExp: number; certifications: string[]; clearance: string; location: string };
+  salaryRange: { min: number; max: number };
+};
+
+const INP: React.CSSProperties = {
+  width: '100%', boxSizing: 'border-box', background: 'var(--gh-bg-surface-muted)',
+  border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-sm)', padding: '7px 10px',
+  color: 'var(--gh-text)', fontSize: 'var(--gh-font-size-sm)', fontFamily: F, outline: 'none',
+};
+
+function Field({ label, children, span }: { label: string; children: React.ReactNode; span?: boolean }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 5, ...(span ? { gridColumn: '1 / -1' } : {}) }}>
+      <FieldLabel>{label}</FieldLabel>
+      {children}
+    </div>
+  );
+}
+
+export function AddLcatModal({ onClose, onConfirm }: {
+  onClose: () => void;
+  onConfirm: (fields: NewLcatFields) => void;
+}) {
+  const [title, setTitle] = useState('');
+  const [isKeyPersonnel, setIsKeyPersonnel] = useState(false);
+  const [classification, setClassification] = useState<LcatClassification>('commodity');
+  const [quantity, setQuantity] = useState(1);
+  const [education, setEducation] = useState("Bachelor's Degree");
+  const [yearsExp, setYearsExp] = useState(3);
+  const [certifications, setCertifications] = useState('');
+  const [clearance, setClearance] = useState('TS/SCI');
+  const [location, setLocation] = useState('Washington, DC');
+  const [salaryMin, setSalaryMin] = useState(100000);
+  const [salaryMax, setSalaryMax] = useState(130000);
+
+  const salaryError = salaryMin > salaryMax;
+  const valid = title.trim().length > 0 && !salaryError;
+
+  const handleConfirm = () => {
+    if (!valid) return;
+    onConfirm({
+      title: title.trim(),
+      isKeyPersonnel,
+      classification,
+      quantity: Math.max(1, quantity),
+      requirements: {
+        education,
+        yearsExp: Math.max(0, yearsExp),
+        certifications: certifications.split(',').map(s => s.trim()).filter(Boolean),
+        clearance,
+        location,
+      },
+      salaryRange: { min: salaryMin, max: salaryMax },
+    });
+    onClose();
+  };
+
+  return (
+    <Modal open onClose={onClose} width={640}>
+      <ModalHeader
+        tone="accent"
+        icon={<ListChecks size={18} />}
+        title="Add Labor Category"
+        subtitle="Define the requirements for this contract position"
+        onClose={onClose}
+      />
+      <ModalBody>
+        <Field label="Position Title" span>
+          <input
+            autoFocus
+            style={INP}
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter' && valid) handleConfirm(); }}
+            placeholder="e.g. Senior Systems Engineer"
+          />
+        </Field>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px auto', gap: 12, alignItems: 'end' }}>
+          <Field label="Classification">
+            <select
+              style={{ ...INP, appearance: 'none' as React.CSSProperties['appearance'] }}
+              value={classification}
+              onChange={e => setClassification(e.target.value as LcatClassification)}
+            >
+              <option value="commodity">Commodity</option>
+              <option value="critical">Critical</option>
+              <option value="discriminator">Discriminator</option>
+            </select>
+          </Field>
+          <Field label="Quantity">
+            <input style={INP} type="number" min={1} value={quantity} onChange={e => setQuantity(Math.max(1, parseInt(e.target.value) || 1))} />
+          </Field>
+          <div style={{ paddingBottom: 2 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap' }}>
+              <input type="checkbox" checked={isKeyPersonnel} onChange={e => setIsKeyPersonnel(e.target.checked)} style={{ accentColor: 'var(--gh-accent)', width: 15, height: 15 }} />
+              <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', fontFamily: F }}>Key Personnel</span>
+            </label>
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 80px', gap: 12 }}>
+          <Field label="Education Requirement">
+            <input style={INP} value={education} onChange={e => setEducation(e.target.value)} placeholder="e.g. Bachelor's Degree in Computer Science" />
+          </Field>
+          <Field label="Min Years">
+            <input style={INP} type="number" min={0} value={yearsExp} onChange={e => setYearsExp(Math.max(0, parseInt(e.target.value) || 0))} />
+          </Field>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <Field label="Clearance Required">
+            <input style={INP} value={clearance} onChange={e => setClearance(e.target.value)} placeholder="e.g. TS/SCI" />
+          </Field>
+          <Field label="Location">
+            <input style={INP} value={location} onChange={e => setLocation(e.target.value)} placeholder="e.g. Washington, DC" />
+          </Field>
+        </div>
+
+        <Field label="Certifications (comma-separated)" span>
+          <input style={INP} value={certifications} onChange={e => setCertifications(e.target.value)} placeholder="e.g. PMP, CISSP, AWS Solutions Architect" />
+        </Field>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <Field label="Salary Min ($)">
+            <input style={{ ...INP, borderColor: salaryError ? 'var(--gh-danger-border)' : 'var(--gh-border)' }} type="number" min={0} step={1000} value={salaryMin} onChange={e => setSalaryMin(parseInt(e.target.value) || 0)} />
+          </Field>
+          <Field label="Salary Max ($)">
+            <input style={{ ...INP, borderColor: salaryError ? 'var(--gh-danger-border)' : 'var(--gh-border)' }} type="number" min={0} step={1000} value={salaryMax} onChange={e => setSalaryMax(parseInt(e.target.value) || 0)} />
+          </Field>
+        </div>
+
+        {salaryError && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--gh-danger-fg-strong)', fontSize: 'var(--gh-font-size-sm)', fontFamily: F }}>
+            <AlertTriangle size={14} /> Minimum salary cannot exceed maximum salary.
+          </div>
+        )}
+      </ModalBody>
+      <ModalFooter>
+        <Btn kind="secondary" onClick={onClose}>Cancel</Btn>
+        <div style={{ flex: 1 }} />
+        <Btn kind="primary" disabled={!valid} onClick={handleConfirm} icon={<Plus size={14} />}>Add LCAT</Btn>
+      </ModalFooter>
+    </Modal>
+  );
+}

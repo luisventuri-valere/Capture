@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import { BookMarked, Target, FileText, Check, ShieldAlert, Layers, Library } from 'lucide-react';
+import { Target, FileText, Check, ShieldAlert, Layers, Library, AlertTriangle } from 'lucide-react';
 import { ppData } from '../../../../data/capture/pp-data';
 import type { PPLibraryEntry } from '../../../../types/pastPerformance';
 import { F, tone, type Tone } from '../staffing/helpers';
-import { Stat } from '../staffing/ui';
 import { SectionIndex, SectionIndexItem } from '../SectionIndex';
 import { PPLibrary } from './PPLibrary';
 import { OpportunityMatch } from './OpportunityMatch';
@@ -32,12 +31,13 @@ export function PastPerformanceScreen() {
 
   const maxRefs = rfpRules.maxReferences;
 
-  const coveragePct = useMemo(() => {
+  const { coveragePct, gapCount } = useMemo(() => {
     const covered = requirements.filter(req => {
       const row = coverage.find(c => c.requirementId === req.id);
       return row ? [...selected].some(id => { const s = row.perReference[id]; return s === 'strong' || s === 'moderate'; }) : false;
     });
-    return Math.round((covered.length / Math.max(requirements.length, 1)) * 100);
+    const pct = Math.round((covered.length / Math.max(requirements.length, 1)) * 100);
+    return { coveragePct: pct, gapCount: requirements.length - covered.length };
   }, [selected, requirements, coverage]);
 
   const toggleSelect = (id: string) => {
@@ -62,16 +62,29 @@ export function PastPerformanceScreen() {
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--gh-bg-canvas)', fontFamily: F, padding: 'var(--gh-space-8) 0', boxSizing: 'border-box' }}>
       <style>{`@keyframes gh-spin{to{transform:rotate(360deg)}}.gh-spin{animation:gh-spin .8s linear infinite}`}</style>
 
-      {/* ── Context header (compact) ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
-        <Stat label="Library References" value={library.length} icon={<BookMarked size={15} />} />
-        <Stat label="Selected for Proposal" value={`${selected.size}/${maxRefs}`} tone={selected.size > maxRefs ? 'danger' : 'accent'} icon={<Check size={15} />} />
-        <Stat label="Requirement Coverage" value={`${coveragePct}%`} tone={coveragePct >= 80 ? 'success' : coveragePct >= 50 ? 'warning' : 'neutral'} icon={<Layers size={15} />} />
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 7, marginLeft: 'auto' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 7, padding: '6px 12px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-secondary)', fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', border: '1px solid var(--gh-border)' }}>
+      {/* ── Context header (compact, Strategy-style) ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '0 var(--gh-space-12) 12px', flexShrink: 0 }}>
+        {/* Row 1: key decision metrics */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: selected.size > maxRefs ? 'var(--gh-danger-fg)' : 'var(--gh-text)' }}>
+            {selected.size} of {maxRefs} selected
+          </span>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px',
+            borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap',
+            background: coveragePct === 100 ? 'var(--gh-success-bg)' : coveragePct >= 60 ? 'var(--gh-warning-bg)' : 'var(--gh-danger-bg)',
+            color: coveragePct === 100 ? 'var(--gh-success-fg)' : coveragePct >= 60 ? 'var(--gh-warning-fg)' : 'var(--gh-danger-fg-strong)',
+          }}>
+            {coveragePct === 100 ? <Layers size={13} /> : <AlertTriangle size={13} />}
+            {coveragePct}% coverage{gapCount > 0 ? ` · ${gapCount} gap${gapCount === 1 ? '' : 's'}` : ''}
+          </span>
+        </div>
+        {/* Row 2: guard rails — RFP constraint + CPARS note side by side */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', whiteSpace: 'nowrap' }}>
             RFP: Max {rfpRules.maxReferences} refs • {rfpRules.recency} • {rfpRules.sizeThreshold}
           </span>
-          <span title={cparsDisclaimer} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--gh-warning-fg)', cursor: 'help' }}>
+          <span title={cparsDisclaimer} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--gh-warning-fg)', cursor: 'help', whiteSpace: 'nowrap' }}>
             <ShieldAlert size={12} /> CPARS ratings estimated — public data inference
           </span>
         </div>
@@ -101,7 +114,7 @@ export function PastPerformanceScreen() {
             <div style={{ padding: '16px 20px' }}>
               {selectedNav === 'library' && <PPLibrary library={library} aiPrefill={aiPrefill} onAdd={onAdd} />}
               {selectedNav === 'match' && <OpportunityMatch scored={scored} coverage={coverage} requirements={requirements} library={library} selected={selected} maxRefs={maxRefs} scoredRevealed={scoredRevealed} scoring={scoring} optimizing={optimizing} optimizeNote={optimizeNote} onScore={onScore} onToggleSelect={toggleSelect} onOptimize={onOptimize} onSuggestPartner={() => setToast('Links to Teaming tab — suggest a teammate reference')} />}
-              {selectedNav === 'narratives' && <Narratives selectedIds={[...selected]} narratives={narratives} library={library} requirements={requirements} onToast={setToast} />}
+              {selectedNav === 'narratives' && <Narratives selectedIds={[...selected]} narratives={narratives} library={library} requirements={requirements} scored={scored} onToast={setToast} />}
             </div>
           </DetailPanel>
         </div>

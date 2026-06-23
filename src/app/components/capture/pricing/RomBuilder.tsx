@@ -71,12 +71,16 @@ export function RomBuilder({
       {/* ── LABOR ── */}
       {sub === 'labor' && (
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, flexWrap: 'wrap' }}>
             <Pill tone="neutral" soft>{totalFte} prime FTE · {scenario.labor.length} LCATs</Pill>
             <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
               <Btn size="sm" icon={<Download size={13} />} onClick={onImportStaffing}>Import from Staffing</Btn>
               <Btn size="sm" kind="primary" icon={<Sparkles size={13} />} onClick={onAiRecommend}>AI Recommend Rates</Btn>
             </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 12, padding: '7px 10px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border-subtle)' }}>
+            <AlertTriangle size={12} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} />
+            <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Labor inputs depend on the <strong style={{ color: 'var(--gh-text-secondary)', fontWeight: 600 }}>Staffing</strong> module — use "Import from Staffing" to sync LCATs and base rates before pricing.</span>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>

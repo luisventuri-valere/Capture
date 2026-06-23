@@ -1,8 +1,8 @@
 import React from 'react';
-import { Building, BarChart3, Crosshair, TrendingDown, Sparkles } from 'lucide-react';
+import { TrendingDown, Sparkles, ChevronDown } from 'lucide-react';
 import type { GsaBenchmark, ScenarioData, IncumbentPricing } from '../../../../types/pricing';
 import { F, tone } from '../staffing/helpers';
-import { Pill, Btn, Panel } from '../staffing/ui';
+import { Pill, Btn } from '../staffing/ui';
 import { RangeBar, KV } from './pricingUi';
 import { marketPosition, positionLabel } from './pricingHelpers';
 import { fullyBurdenedRate, burdenMultiplier, fmtM, fmtRate, type Rollup } from './romMath';
@@ -35,7 +35,7 @@ export function CompetitiveAnalysis({ benchmarks, scenario, incumbent, rollup, w
       </div>
 
       {/* incumbent comparison */}
-      <Panel title={`Incumbent Analysis — ${incumbent.name}`} icon={<Building size={15} />} right={<Pill tone={ourTotal < incumbent.inflationAdjusted ? 'success' : 'warning'}>{ourTotal < incumbent.inflationAdjusted ? 'Below incumbent run-rate' : 'Above incumbent run-rate'}</Pill>}>
+      <CollapsiblePanel title={`Incumbent Analysis — ${incumbent.name}`} right={<Pill tone={ourTotal < incumbent.inflationAdjusted ? 'success' : 'warning'}>{ourTotal < incumbent.inflationAdjusted ? 'Below incumbent run-rate' : 'Above incumbent run-rate'}</Pill>}>
         <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', marginBottom: 16 }}>
           <KV label="Prior Contract" value={fmtM(incumbent.currentValue)} />
           <KV label="Annualized" value={fmtM(incumbent.annualized)} />
@@ -61,10 +61,10 @@ export function CompetitiveAnalysis({ benchmarks, scenario, incumbent, rollup, w
           ))}
         </div>
         <p style={{ margin: '14px 0 0', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)', lineHeight: 1.55 }}>{incumbent.analysis}</p>
-      </Panel>
+      </CollapsiblePanel>
 
       {/* GSA rate benchmarking */}
-      <Panel title="GSA CALC Rate Benchmarking" icon={<BarChart3 size={15} />} right={<Pill tone={aboveMarket ? 'warning' : 'success'}>{aboveMarket ? `${aboveMarket} above market` : 'all at-market'}</Pill>}>
+      <CollapsiblePanel title="GSA CALC Rate Benchmarking" right={<Pill tone={aboveMarket ? 'warning' : 'success'}>{aboveMarket ? `${aboveMarket} above market` : 'all at-market'}</Pill>}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {benchmarks.map(b => {
             const line = scenario.labor.find(l => l.lcat === b.lcat);
@@ -72,7 +72,7 @@ export function CompetitiveAnalysis({ benchmarks, scenario, incumbent, rollup, w
             const mp = marketPosition(our, b);
             const targetDirect = +(b.median / mult).toFixed(2);
             return (
-              <div key={b.lcat} style={{ padding: '12px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)' }}>
+              <div key={b.lcat} style={{ padding: '12px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-canvas)', border: '1px solid var(--gh-border)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
                   <span style={{ flex: 1, fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{b.lcat}</span>
                   <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-accent-tint)', fontVariantNumeric: 'tabular-nums' }}>{fmtRate(our)}</span>
@@ -90,23 +90,50 @@ export function CompetitiveAnalysis({ benchmarks, scenario, incumbent, rollup, w
             );
           })}
         </div>
-      </Panel>
+      </CollapsiblePanel>
 
       {/* price/risk quadrant */}
-      <Panel title="Price / Risk Position" icon={<Crosshair size={15} />} right={<Pill tone="accent">{pricePosition.quadrant}</Pill>}>
+      <CollapsiblePanel title="Price / Risk Position" right={<Pill tone="accent">{pricePosition.quadrant}</Pill>}>
         <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
           <Quadrant />
           <p style={{ flex: 1, margin: 0, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.6 }}>{pricePosition.note}</p>
         </div>
-      </Panel>
+      </CollapsiblePanel>
+    </div>
+  );
+}
+
+function CollapsiblePanel({ title, children, right, defaultOpen = true }: {
+  title: string; children: React.ReactNode; right?: React.ReactNode; defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = React.useState(defaultOpen);
+  return (
+    <div style={{ overflow: 'hidden' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10,
+          width: '100%', padding: '16px 24px',
+          background: '#0f172a', border: 'none', cursor: 'pointer', fontFamily: F,
+        }}
+      >
+        <span style={{ fontSize: 11, fontWeight: 600, color: '#cbd5e1', letterSpacing: '0.55px', textTransform: 'uppercase', flex: 1, textAlign: 'left' }}>{title}</span>
+        {right && <div style={{ lineHeight: 0, flexShrink: 0 }} onClick={e => e.stopPropagation()}>{right}</div>}
+        <ChevronDown size={16} style={{ color: '#94a3b8', flexShrink: 0, transform: open ? 'none' : 'rotate(-90deg)', transition: 'transform 0.15s ease' }} />
+      </button>
+      {open && (
+        <div style={{ background: '#1e293b', padding: '24px' }}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
 
 function Quadrant() {
-  // simple 2×2 with our position in the low-price / low-risk cell
   return (
-    <div style={{ flexShrink: 0, width: 160, height: 160, position: 'relative', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface)' }}>
+    <div style={{ flexShrink: 0, width: 160, height: 160, position: 'relative', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-canvas)' }}>
       <div style={{ position: 'absolute', top: '50%', left: 0, right: 0, height: 1, background: 'var(--gh-border)' }} />
       <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1, background: 'var(--gh-border)' }} />
       {/* our dot: low price (left), low risk (bottom) → bottom-left */}

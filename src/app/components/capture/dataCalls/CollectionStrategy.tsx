@@ -1,15 +1,26 @@
-import React from 'react';
-import { Sparkles, CheckCircle2, Lock, FileCheck2, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Sparkles, CheckCircle2, Lock, FileCheck2, ArrowRight, ChevronDown } from 'lucide-react';
 import type { CollectionStrategy as TStrategy } from '../../../../types/dataCalls';
 import { F, fmtDate, dueLabel, phaseLabel } from './helpers';
 import { Pill, Btn, PhaseBadge } from './ui';
 
 export function CollectionStrategy({ strategy, onConfirm }: { strategy: TStrategy; onConfirm: () => void }) {
   const confirmed = strategy.provenance === 'User Confirmed';
+  const [summaryOpen, setSummaryOpen] = useState(false);
+  const shortSummary = strategy.summary.split('. ')[0] + '.';
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: F }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-        <p style={{ flex: 1, margin: 0, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.6 }}>{strategy.summary}</p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <p style={{ margin: 0, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.6 }}>
+          {summaryOpen ? strategy.summary : shortSummary}
+        </p>
+        <button
+          onClick={() => setSummaryOpen(o => !o)}
+          style={{ alignSelf: 'flex-start', display: 'inline-flex', alignItems: 'center', gap: 3, marginTop: 4, fontSize: 11, color: 'var(--gh-text-tertiary)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: F, padding: 0 }}
+        >
+          <ChevronDown size={12} style={{ transform: summaryOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }} />
+          {summaryOpen ? 'Collapse' : 'Show full rationale'}
+        </button>
       </div>
 
       {/* priorities */}

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Sparkles, Loader2, Wand2, Plus, CheckCircle2, Circle, FileText, ListChecks,
+  ChevronDown, ChevronRight, ArrowRight,
 } from 'lucide-react';
-import type { PPNarrative, PPLibraryEntry, PPRequirement, NarrativeSection, QualityKey } from '../../../../types/pastPerformance';
+import type { PPNarrative, PPLibraryEntry, PPRequirement, NarrativeSection, QualityKey, ScoredReference } from '../../../../types/pastPerformance';
 import { F, tone } from '../staffing/helpers';
 import { Pill, Btn } from '../staffing/ui';
 import { QUALITY_LABELS, sectionQualityTone, relevanceTone, cparsTone } from './ppHelpers';
@@ -15,14 +16,25 @@ const EDIT_SECTIONS: { key: NarrativeSection; label: string }[] = [
 
 type SectMap = Record<NarrativeSection, string>;
 
-export function Narratives({ selectedIds, narratives, library, requirements, onToast }: {
-  selectedIds: string[]; narratives: PPNarrative[]; library: PPLibraryEntry[]; requirements: PPRequirement[]; onToast: (m: string) => void;
+export function Narratives({ selectedIds, narratives, library, requirements, scored, onToast }: {
+  selectedIds: string[]; narratives: PPNarrative[]; library: PPLibraryEntry[]; requirements: PPRequirement[];
+  scored: ScoredReference[]; onToast: (m: string) => void;
 }) {
   const [gen, setGen] = useState<Record<string, boolean>>({});
   const [generating, setGenerating] = useState<Set<string>>(new Set());
   const [text, setText] = useState<Record<string, SectMap>>({});
   const [strengthened, setStrengthened] = useState<Record<string, Set<NarrativeSection>>>({});
   const [busy, setBusy] = useState<Set<string>>(new Set()); // `${refId}:${section}`
+  const [collapsed, setCollapsed] = useState<Set<string>>(new Set()); // generated rows folded by user
+
+  // Order rows by relevance score descending — same order as Opportunity Match scored list
+  const sortedIds = useMemo(() => {
+    const scoreMap = Object.fromEntries(scored.map(s => [s.referenceId, s.overallRelevanceScore]));
+    return [...selectedIds].sort((a, b) => (scoreMap[b] ?? 0) - (scoreMap[a] ?? 0));
+  }, [selectedIds, scored]);
+
+  const toggleCollapse = (id: string) =>
+    setCollapsed(p => { const n = new Set(p); n.has(id) ? n.delete(id) : n.add(id); return n; });
 
   const reqLabel = (id: string) => requirements.find(r => r.id === id)?.label ?? id;
   const narrOf = (id: string) => narratives.find(n => n.referenceId === id);
@@ -65,38 +77,68 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
     );
   }
 
-  // combined quality
-  const genIds = selectedIds.filter(id => gen[id]);
+  const genIds = sortedIds.filter(id => gen[id]);
   const avgQ = genIds.length ? Math.round(genIds.reduce((s, id) => s + (narrOf(id)?.qualityScore ?? 0), 0) / genIds.length) : 0;
+  const allDrafted = sortedIds.length > 0 && genIds.length === sortedIds.length;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      {/* combined view */}
+      {/* progress band */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', padding: '11px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)' }}>
         <ListChecks size={16} style={{ color: 'var(--gh-accent-tint)' }} />
-        <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)' }}>{genIds.length} of {selectedIds.length} narratives drafted</span>
-        {genIds.length > 0 && <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Avg quality</span><span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(relevanceTone(avgQ)).fg }}>{avgQ}</span></span>}
+        <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)' }}>
+          {genIds.length} of {sortedIds.length} narratives drafted
+        </span>
+        {genIds.length > 0 && (
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Avg quality</span>
+            <span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(relevanceTone(avgQ)).fg }}>{avgQ}</span>
+          </span>
+        )}
+        {allDrafted && (
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: 'var(--gh-success-fg)', fontWeight: 'var(--gh-font-weight-semibold)', marginLeft: 'auto' }}>
+            <CheckCircle2 size={13} /> All drafted
+          </span>
+        )}
       </div>
 
-      {selectedIds.map(id => {
+      {sortedIds.map(id => {
         const n = narrOf(id); const lib = libOf(id);
         if (!n || !lib) return (
           <div key={id} style={{ padding: '12px 14px', borderRadius: 'var(--gh-radius-lg)', border: '1px solid var(--gh-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)' }}>No pre-written narrative on file for {id}.</div>
         );
-        const isGen = gen[id]; const t = text[id];
+        const isGen = gen[id]; const t = text[id]; const isColl = collapsed.has(id);
         return (
-          <div key={id} style={{ border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-xl)', overflow: 'hidden', background: 'var(--gh-bg-surface)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: isGen ? '1px solid var(--gh-border)' : 'none' }}>
+          <div key={id} style={{ border: `1px solid ${isGen ? 'var(--gh-border-strong)' : 'var(--gh-border)'}`, borderRadius: 'var(--gh-radius-xl)', overflow: 'hidden', background: 'var(--gh-bg-surface)' }}>
+            {/* Row header — always visible */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', borderBottom: (isGen && !isColl) ? '1px solid var(--gh-border)' : 'none' }}>
               <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)', flex: 1 }}>{lib.projectTitle}</span>
               <Pill tone={cparsTone(lib.cparsRating)} style={{ fontSize: 9 }}>{lib.cparsRating}</Pill>
-              {!isGen
-                ? <Btn kind="primary" size="sm" icon={generating.has(id) ? <Loader2 size={13} className="gh-spin" /> : <Sparkles size={13} />} onClick={() => generate(id)} disabled={generating.has(id)}>{generating.has(id) ? 'Drafting…' : 'Generate Narrative'}</Btn>
-                : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Quality</span><span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(relevanceTone(n.qualityScore)).fg }}>{n.qualityScore}</span></span>}
+              {!isGen ? (
+                <Btn kind="primary" size="sm" icon={generating.has(id) ? <Loader2 size={13} className="gh-spin" /> : <Sparkles size={13} />} onClick={() => generate(id)} disabled={generating.has(id)}>
+                  {generating.has(id) ? 'Drafting…' : 'Generate Narrative'}
+                </Btn>
+              ) : (
+                <>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Quality</span>
+                    <span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(relevanceTone(n.qualityScore)).fg }}>{n.qualityScore}</span>
+                  </span>
+                  <button
+                    onClick={() => toggleCollapse(id)}
+                    title={isColl ? 'Expand narrative' : 'Collapse narrative'}
+                    style={{ display: 'grid', placeItems: 'center', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', padding: 4, borderRadius: 'var(--gh-radius-sm)' }}
+                  >
+                    {isColl ? <ChevronRight size={16} /> : <ChevronDown size={16} />}
+                  </button>
+                </>
+              )}
             </div>
 
-            {isGen && t && (
+            {/* Editor — revealed when generated and not collapsed */}
+            {isGen && t && !isColl && (
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 250px', gap: 0 }}>
-                {/* editor */}
+                {/* left: editable sections */}
                 <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 14, borderRight: '1px solid var(--gh-border)' }}>
                   <DisplayBlock label="Contract Information" text={n.contractInfoBlock} />
                   <DisplayBlock label="Point of Contact" text={n.contactInfoBlock} />
@@ -108,20 +150,31 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
                       <div key={sec.key}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
                           <span style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{sec.label}</span>
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 9, color: qt.fg, fontWeight: 'var(--gh-font-weight-semibold)' }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: qt.fg }} />{q === 'strong' ? 'Strong' : q === 'moderate' ? 'Could add metrics' : 'Weak — generic'}</span>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 9, color: qt.fg, fontWeight: 'var(--gh-font-weight-semibold)' }}>
+                            <span style={{ width: 6, height: 6, borderRadius: '50%', background: qt.fg }} />
+                            {q === 'strong' ? 'Strong' : q === 'moderate' ? 'Could add metrics' : 'Weak — generic'}
+                          </span>
                           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
                             <button onClick={() => addMetric(id, sec.key)} style={miniBtn}><Plus size={11} /> Metric</button>
-                            {q !== 'strong' && <button onClick={() => strengthen(id, sec.key)} disabled={busy.has(k)} style={{ ...miniBtn, color: 'var(--gh-accent-tint)', borderColor: 'var(--gh-accent)' }}>{busy.has(k) ? <Loader2 size={11} className="gh-spin" /> : <Wand2 size={11} />} Strengthen</button>}
+                            {q !== 'strong' && (
+                              <button onClick={() => strengthen(id, sec.key)} disabled={busy.has(k)} style={{ ...miniBtn, color: 'var(--gh-accent-tint)', borderColor: 'var(--gh-accent)' }}>
+                                {busy.has(k) ? <Loader2 size={11} className="gh-spin" /> : <Wand2 size={11} />} Strengthen
+                              </button>
+                            )}
                           </div>
                         </div>
-                        <textarea value={t[sec.key]} onChange={e => setText(prev => ({ ...prev, [id]: { ...prev[id], [sec.key]: e.target.value } }))} rows={4}
-                          style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', background: 'var(--gh-bg-surface-muted)', border: `1px solid ${qt.bd}`, borderLeft: `3px solid ${qt.fg}`, borderRadius: 'var(--gh-radius-md)', padding: '9px 11px', color: 'var(--gh-text-secondary)', fontSize: 'var(--gh-font-size-sm)', lineHeight: 1.6, fontFamily: F }} />
+                        <textarea
+                          value={t[sec.key]}
+                          onChange={e => setText(prev => ({ ...prev, [id]: { ...prev[id], [sec.key]: e.target.value } }))}
+                          rows={4}
+                          style={{ width: '100%', boxSizing: 'border-box', resize: 'vertical', background: 'var(--gh-bg-surface-muted)', border: `1px solid ${qt.bd}`, borderLeft: `3px solid ${qt.fg}`, borderRadius: 'var(--gh-radius-md)', padding: '9px 11px', color: 'var(--gh-text-secondary)', fontSize: 'var(--gh-font-size-sm)', lineHeight: 1.6, fontFamily: F }}
+                        />
                       </div>
                     );
                   })}
                 </div>
 
-                {/* quality dashboard + requirement mapping */}
+                {/* right: quality dashboard + requirement mapping */}
                 <div style={{ padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 16, background: 'var(--gh-bg-canvas)' }}>
                   <div>
                     <Label>Quality Checklist</Label>
@@ -130,7 +183,9 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
                         const ok = n.qualityChecklist[k];
                         return (
                           <div key={k} style={{ display: 'flex', alignItems: 'flex-start', gap: 7, fontSize: 11, color: ok ? 'var(--gh-text-secondary)' : 'var(--gh-text-tertiary)' }}>
-                            {ok ? <CheckCircle2 size={13} style={{ color: 'var(--gh-success-fg)', flexShrink: 0, marginTop: 1 }} /> : <Circle size={13} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, marginTop: 1 }} />}
+                            {ok
+                              ? <CheckCircle2 size={13} style={{ color: 'var(--gh-success-fg)', flexShrink: 0, marginTop: 1 }} />
+                              : <Circle size={13} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, marginTop: 1 }} />}
                             {QUALITY_LABELS[k]}
                           </div>
                         );
@@ -141,14 +196,21 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
                     <Label>Requirements Addressed</Label>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
                       {n.requirementsAddressed.map(rid => (
-                        <div key={rid} style={{ display: 'flex', gap: 6, fontSize: 11, color: 'var(--gh-text-secondary)' }}><Pill tone="success" style={{ fontSize: 9 }}>{rid}</Pill><span style={{ lineHeight: 1.4 }}>{reqLabel(rid)}</span></div>
+                        <div key={rid} style={{ display: 'flex', gap: 6, fontSize: 11, color: 'var(--gh-text-secondary)' }}>
+                          <Pill tone="success" style={{ fontSize: 9 }}>{rid}</Pill>
+                          <span style={{ lineHeight: 1.4 }}>{reqLabel(rid)}</span>
+                        </div>
                       ))}
                     </div>
                   </div>
                   {n.metricsIncluded.length > 0 && (
                     <div>
                       <Label>Metrics Included</Label>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>{n.metricsIncluded.map((m, i) => <span key={i} style={{ fontSize: 9, padding: '2px 7px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-tertiary)' }}>{m}</span>)}</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                        {n.metricsIncluded.map((m, i) => (
+                          <span key={i} style={{ fontSize: 9, padding: '2px 7px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-tertiary)' }}>{m}</span>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -157,6 +219,20 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
           </div>
         );
       })}
+
+      {/* Forward affordance — only once all narratives are drafted */}
+      {allDrafted && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 18px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-success-bg)', border: '1px solid var(--gh-success-border)' }}>
+          <CheckCircle2 size={18} style={{ color: 'var(--gh-success-fg)', flexShrink: 0 }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-success-fg)' }}>All {sortedIds.length} narratives drafted</div>
+            <div style={{ fontSize: 11, color: 'var(--gh-text-secondary)', marginTop: 2 }}>Your Past Performance section is ready to include in the proposal.</div>
+          </div>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-success-fg)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+            Continue to proposal <ArrowRight size={14} />
+          </span>
+        </div>
+      )}
     </div>
   );
 }

@@ -425,11 +425,14 @@ export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) 
                   </div>
                 )}
                 {(selectedEnv?.confidence ?? 100) < 50 && (
-                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
-                    <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
-                    <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
-                      This recommendation is based on limited data. Run ANALYZE workflow for better intelligence.
-                    </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
+                    <AlertTriangle size={15} style={{ flexShrink: 0, color: 'var(--gh-warning-fg)' }} />
+                    <span style={{ flex: 1, fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', fontFamily: F }}>
+                      Based on limited data. Running analysis will improve this recommendation.
+                    </span>
+                    <button style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 'var(--gh-radius-md)', border: '1px solid var(--gh-warning-fg)', background: 'transparent', color: 'var(--gh-warning-fg)', fontSize: 'var(--gh-font-size-sm)', fontFamily: F, fontWeight: 500, cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
+                      Run analysis <ChevronRight size={12} />
+                    </button>
                   </div>
                 )}
                 {(selectedEnv?.conflicts ?? []).map((c, i) => (

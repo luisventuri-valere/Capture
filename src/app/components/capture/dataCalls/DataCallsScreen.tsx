@@ -1,13 +1,13 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
-  Compass, LayoutTemplate, FilePlus2, Inbox, Sparkles, ListTodo, Layers, Eye, AlertTriangle, Users2,
-  Gauge, Crown, Check, Send,
+  Compass, LayoutTemplate, FilePlus2, Inbox, Sparkles, ListTodo, Eye, AlertTriangle,
+  Crown, Check, Send, Lock, FileCheck2,
 } from 'lucide-react';
 import { dataCallsData } from '../../../../data/capture/datacalls-data';
 import type {
   DataCall, DataCallItem, AIRecommendation, QueuedAction, ActivityEvent, Partner, Priority, ItemStatus, DataCallStatus, AIScope,
 } from '../../../../types/dataCalls';
-import { F, ORANGE, ORANGE_TINT, orangeTone, TODAY, fmtDate, isOverdue, awaitingReview, itemAccepted, partnerAgg, callProgress } from './helpers';
+import { F, ORANGE, ORANGE_TINT, orangeTone, TODAY, fmtDate, isOverdue, awaitingReview, itemAccepted, partnerAgg, callProgress, phaseLabel, phaseSub } from './helpers';
 import { Stat } from '../staffing/ui';
 import { SectionIndex, SectionIndexItem } from '../SectionIndex';
 import { Pill, Btn, PhaseBadge, StatusPill, QualityBadge } from './ui';
@@ -164,27 +164,26 @@ export function DataCallsScreen() {
       <style>{`@keyframes gh-spin{to{transform:rotate(360deg)}}.gh-spin{animation:gh-spin .8s linear infinite}`}</style>
 
       {/* ── Context header ── */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
-        <div style={{ flex: 1, minWidth: 280 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-            <span style={{ width: 30, height: 30, borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, color: ORANGE_TINT, display: 'grid', placeItems: 'center', border: `1px solid ${orangeTone.bd}` }}><Inbox size={16} /></span>
-            <h1 style={{ margin: 0, fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>{opportunity.title}</h1>
-          </div>
-          <div style={{ marginTop: 6, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)' }}>
-            {opportunity.agency} / {opportunity.subAgency} • {opportunity.value} • {opportunity.role} • NAICS {opportunity.naics}
-          </div>
+      <div style={{ marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
+        <h1 style={{ margin: 0, fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>{opportunity.title}</h1>
+        <div style={{ marginTop: 6, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)' }}>
+          {opportunity.agency} / {opportunity.subAgency} • {opportunity.value} • {opportunity.role} • NAICS {opportunity.naics}
         </div>
-        <ModeToggle mode={mode} setMode={setMode} />
       </div>
 
       {/* ── Dashboard stats ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 16, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
-        <Stat label="Active Data Calls" value={stats.active} icon={<Layers size={15} />} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 8, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
         <Stat label="Items Awaiting Review" value={stats.awaiting} tone={stats.awaiting ? 'warning' : 'neutral'} icon={<Eye size={15} />} />
         <Stat label="Overdue Items" value={stats.overdue} tone={stats.overdue ? 'danger' : 'success'} icon={<AlertTriangle size={15} />} />
-        <Stat label="Partners Engaged" value={stats.partners} icon={<Users2 size={15} />} />
-        <Stat label="Avg Quality Score" value={stats.avgQuality} tone={stats.avgQuality >= 85 ? 'success' : stats.avgQuality >= 75 ? 'warning' : 'neutral'} icon={<Gauge size={15} />} />
       </div>
+
+      {/* ── Mode toggle ── */}
+      <div style={{ margin: '24px 0', flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
+        <ModeToggle mode={mode} setMode={setMode} />
+      </div>
+
+      {/* ── Pre-TA / Post-TA phase indicator (prime mode) ── */}
+      {mode === 'prime' && <PhaseIndicator dataCalls={dataCalls} />}
 
       {mode === 'sub' ? (
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '0 var(--gh-space-12)' }}>
@@ -239,6 +238,41 @@ export function DataCallsScreen() {
   );
 }
 
+function PhaseIndicator({ dataCalls }: { dataCalls: DataCall[] }) {
+  const preActive = dataCalls.filter(c => c.phase === 'pre-ta' && c.status !== 'COMPLETE').length;
+  const postActive = dataCalls.filter(c => c.phase === 'post-ta' && c.status !== 'COMPLETE').length;
+  return (
+    <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)', alignSelf: 'flex-start' }}>
+      <PhasePanel phase="pre-ta" activeCount={preActive}
+        rule="Evaluate partner fit with lightweight requests. Never request detailed rates, named personnel, or proprietary approach before a Teaming Agreement is signed." />
+      <PhasePanel phase="post-ta" activeCount={postActive}
+        rule="Collect RFP-formatted material — full resumes, complete rate cards — each mapped to Section L/M." />
+    </div>
+  );
+}
+
+function PhasePanel({ phase, activeCount, rule }: { phase: 'pre-ta' | 'post-ta'; activeCount: number; rule: string }) {
+  const isPre = phase === 'pre-ta';
+  return (
+    <div style={{
+      padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)',
+      background: isPre ? 'var(--gh-warning-bg)' : 'var(--gh-info-bg)',
+      border: `1px solid ${isPre ? 'var(--gh-warning-border)' : 'var(--gh-info-border)'}`,
+      display: 'flex', flexDirection: 'column', gap: 5,
+    }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+        {isPre
+          ? <Lock size={12} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} />
+          : <FileCheck2 size={12} style={{ color: 'var(--gh-info-fg)', flexShrink: 0 }} />}
+        <span style={{ fontSize: 11, fontWeight: 700, color: isPre ? 'var(--gh-warning-fg)' : 'var(--gh-info-fg)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{phaseLabel(phase)}</span>
+        <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{phaseSub(phase)}</span>
+        {activeCount > 0 && <Pill tone={isPre ? 'warning' : 'info'} soft>{activeCount} active</Pill>}
+      </div>
+      <p style={{ margin: 0, fontSize: 11, color: 'var(--gh-text-secondary)', lineHeight: 1.5, minWidth: 0 }}>{rule}</p>
+    </div>
+  );
+}
+
 function ModeToggle({ mode, setMode }: { mode: 'prime' | 'sub'; setMode: (m: 'prime' | 'sub') => void }) {
   return (
     <div style={{ display: 'inline-flex', gap: 3, padding: 3, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)' }}>
@@ -256,7 +290,7 @@ function ModeToggle({ mode, setMode }: { mode: 'prime' | 'sub'; setMode: (m: 'pr
 function SubMode({ dataCalls, partnerName, onToast }: { dataCalls: DataCall[]; partnerName: (id: string) => string; onToast: (m: string) => void }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '11px 14px', borderRadius: 'var(--gh-radius-lg)', background: orangeTone.bg, border: `1px solid ${orangeTone.bd}` }}>
+      <div style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', gap: 9, padding: '11px 14px', borderRadius: 'var(--gh-radius-lg)', background: orangeTone.bg, border: `1px solid ${orangeTone.bd}`, whiteSpace: 'nowrap' }}>
         <Inbox size={16} style={{ color: ORANGE_TINT }} />
         <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)' }}>
           <strong style={{ color: 'var(--gh-text)' }}>Sub mode</strong> — incoming requests from the prime. Respond by submitting each requested item.
