@@ -219,45 +219,43 @@ function WinThemesPanel({ collapsed, onToggle }: { collapsed: boolean; onToggle:
 
   return (
     <div style={{
-      border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)',
+      border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-xl)',
       marginBottom: 'var(--gh-space-8)', overflow: 'hidden',
-      background: 'var(--gh-bg-elevated)',
+      background: 'var(--gh-bg-surface)',
     }}>
-      <button
-        onClick={onToggle}
-        style={{
-          width: '100%', display: 'flex', alignItems: 'center', gap: 'var(--gh-space-4)',
-          padding: 'var(--gh-space-5) var(--gh-space-8)',
-          background: 'var(--gh-bg-surface-muted)',
-          border: 'none', borderBottom: collapsed ? 'none' : '1px solid var(--gh-border)',
-          cursor: 'pointer',
-        }}
-      >
-        <Target size={14} color="var(--gh-accent-tint)" />
-        <span style={{
-          flex: 1, textAlign: 'left' as const,
-          fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-          fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)',
-        }}>
-          Win Themes &amp; Goal Coverage
-        </span>
-        <Chip bg="var(--gh-success-bg)" fg="var(--gh-success-fg)">
-          {goalCoverage.percent}% covered
-        </Chip>
-        {collapsed
-          ? <ChevronRight size={14} color="var(--gh-text-tertiary)" />
-          : <ChevronDown size={14} color="var(--gh-text-tertiary)" />}
-      </button>
+      {/* Header — matches Staffing IncumbentContextCard layout */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px' }}>
+        <div style={{ width: 38, height: 38, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface-muted)', display: 'grid', placeItems: 'center', color: 'var(--gh-accent-tint)', flexShrink: 0 }}>
+          <Target size={18} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' as const }}>
+            <span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)', fontFamily: 'var(--gh-font)' }}>Win Themes &amp; Goal Coverage</span>
+            <Chip bg="var(--gh-success-bg)" fg="var(--gh-success-fg)">{goalCoverage.percent}% covered</Chip>
+          </div>
+          {collapsed && (
+            <div style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', marginTop: 2, fontFamily: 'var(--gh-font)' }}>
+              {winThemes.length} themes · {goalCoverage.covered.length} factors covered
+            </div>
+          )}
+        </div>
+        <button
+          onClick={onToggle}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'transparent', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '5px 10px', cursor: 'pointer', color: 'var(--gh-text-tertiary)', fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)', fontWeight: 'var(--gh-font-weight-medium)', whiteSpace: 'nowrap' }}
+        >
+          {!collapsed ? <><ChevronDown size={13} /> Hide</> : <><ChevronRight size={13} /> Details</>}
+        </button>
+      </div>
 
       {!collapsed && (
-        <div style={{ padding: 'var(--gh-space-7) var(--gh-space-8)' }}>
+        <div style={{ padding: '0 14px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Win theme cards */}
-          <div style={{ display: 'flex', gap: 'var(--gh-space-5)', marginBottom: 'var(--gh-space-7)', flexWrap: 'wrap' as const }}>
+          <div style={{ display: 'flex', gap: 'var(--gh-space-5)', flexWrap: 'wrap' as const }}>
             {winThemes.map(wt => (
               <div key={wt.id} style={{
                 flex: '1 1 200px',
                 padding: 'var(--gh-space-5) var(--gh-space-6)',
-                background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)',
+                background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)',
                 borderRadius: 'var(--gh-radius-md)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)', marginBottom: 'var(--gh-space-3)' }}>
@@ -286,7 +284,7 @@ function WinThemesPanel({ collapsed, onToggle }: { collapsed: boolean; onToggle:
 
           {/* Goal coverage card */}
           <div style={{
-            background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)',
+            background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)',
             borderRadius: 'var(--gh-radius-md)', padding: 'var(--gh-space-5) var(--gh-space-6)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-4)', marginBottom: 'var(--gh-space-5)' }}>
