@@ -31,6 +31,12 @@ export default defineConfig({
     },
   },
 
+  server: {
+    // Honor the port injected by the host (e.g. the preview runner's autoPort).
+    // Falls back to Vite's default when PORT is unset.
+    port: process.env.PORT ? Number(process.env.PORT) : 5173,
+  },
+
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
 })

@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import { ClipboardList, Search, Lightbulb, ListChecks, Bot, Paperclip, Lock, BarChart2, ChevronUp, ChevronDown, AlertTriangle } from 'lucide-react';
-
-const BAND_ICONS: Record<string, React.ReactNode> = {
-  facts:           <ClipboardList size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
-  analysis:        <Search       size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
-  intelligence:    <Lightbulb   size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
-  recommendations: <ListChecks  size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
-};
+import { Lock, ChevronDown, AlertTriangle } from 'lucide-react';
 import type {
   StrategicPositioningSection,
   WinStrategySection,
@@ -25,17 +18,26 @@ const F = 'var(--gh-font)';
 
 // ─── Primitives ───────────────────────────────────────────────────────────────
 
-function Band({ icon, label, children }: { icon: string; label: string; children: React.ReactNode }) {
-  const iconNode = BAND_ICONS[icon] ?? null;
+// Collapsible band (Figma 2141:185): elevated header bar (uppercase title + chevron)
+// over a surface body. Full-width — bands stack edge-to-edge.
+export function Band({ label, children, defaultOpen = true }: { icon?: string; label: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <div style={{ marginBottom: 28 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        {iconNode}
-        <span style={{ fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: F }}>
+    <div style={{ width: '100%', fontFamily: F }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '16px 24px', background: 'var(--gh-bg-elevated)', border: 'none', cursor: 'pointer', fontFamily: F }}
+      >
+        <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.55px' }}>
           {label}
         </span>
-      </div>
-      <div style={{ color: 'var(--gh-text)', fontFamily: F }}>{children}</div>
+        <ChevronDown size={16} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, transform: open ? 'none' : 'rotate(-90deg)', transition: 'transform .15s' }} />
+      </button>
+      {open && (
+        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-surface)', color: 'var(--gh-text)' }}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -43,15 +45,16 @@ function Band({ icon, label, children }: { icon: string; label: string; children
 // Fix 3: two variants — primary (decision-critical) and normal
 function KV({ label, value, primary }: { label: string; value: React.ReactNode; primary?: boolean }) {
   return (
-    <div style={{ display: 'flex', gap: 8, marginBottom: 6, fontSize: 'var(--gh-font-size-base)' }}>
+    <div style={{ display: 'flex', gap: 8, marginBottom: 7, fontSize: 13, lineHeight: 1.5 }}>
       <span style={{
         fontWeight: primary ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-normal)',
         color: primary ? 'var(--gh-text-secondary)' : 'var(--gh-text-tertiary)',
-        minWidth: 180, flexShrink: 0,
+        width: 176, flexShrink: 0,
       }}>
         {label}
       </span>
       <span style={{
+        flex: 1, minWidth: 0,
         color: 'var(--gh-text)',
         fontWeight: primary ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-normal)',
       }}>
@@ -129,7 +132,7 @@ function StatusPill({ status }: { status: string }) {
 
 function RiskScorePill({ score }: { score: number }) {
   const bg = score >= 12 ? 'var(--gh-danger-bg)' : score >= 8 ? 'var(--gh-warning-bg)' : 'var(--gh-success-bg)';
-  const color = score >= 12 ? 'var(--gh-danger-fg)' : score >= 8 ? 'var(--gh-warning-fg)' : 'var(--gh-success-fg)';
+  const color = score >= 12 ? 'var(--gh-danger-fg-strong)' : score >= 8 ? 'var(--gh-warning-fg)' : 'var(--gh-success-fg)';
   // Risk scores are always attention-relevant — never quieted
   return <Pill bg={bg} color={color}>Score {score}</Pill>;
 }
@@ -201,15 +204,18 @@ function CollapseList({ items, maxItems = 3, renderItem }: {
 export function SourceChipsRow({ sources }: { sources?: Array<{ label: string }> }) {
   if (!sources?.length) return null;
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 14, paddingTop: 10, borderTop: '1px solid var(--gh-border)' }}>
-      {sources.map((s, i) => (
-        <span
-          key={i}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-secondary)', border: '1px solid var(--gh-border)', fontFamily: F }}
-        >
-          <Paperclip size={11} /> {s.label}
-        </span>
-      ))}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 14, width: '100%' }}>
+      <div style={{ height: 1, width: '100%', background: 'var(--gh-border-strong)' }} />
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+        {sources.map((s, i) => (
+          <span
+            key={i}
+            style={{ padding: '2px 8px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-secondary)', border: '1px solid var(--gh-border-strong)', fontFamily: F }}
+          >
+            {s.label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
@@ -338,7 +344,7 @@ function TeamStrategyContent({ data, sources }: { data: TeamStrategySection; sou
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
               <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{g.id}</span>
               <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{g.gap}</span>
-              <Pill bg={g.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={g.severity === 'HIGH' ? 'var(--gh-danger-fg)' : 'var(--gh-warning-fg)'}>{g.severity}</Pill>
+              <Pill bg={g.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={g.severity === 'HIGH' ? 'var(--gh-danger-fg-strong)' : 'var(--gh-warning-fg)'}>{g.severity}</Pill>
               <StatusPill status={g.status} />
             </div>
             <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-text-secondary)', marginBottom: 6 }}>{g.description}</p>
@@ -382,7 +388,7 @@ function TeamStrategyContent({ data, sources }: { data: TeamStrategySection; sou
 function CustomerEngagementContent({ data, sources }: { data: CustomerEngagementSection; sources?: Array<{label: string}> }) {
   const strengthStyle = (s: string): [string, string] => {
     if (s === 'WARM') return ['var(--gh-bg-surface-muted)', 'var(--gh-success-fg)'];
-    if (s === 'COLD') return ['var(--gh-bg-surface-muted)', 'var(--gh-danger-fg)'];
+    if (s === 'COLD') return ['var(--gh-danger-bg)', 'var(--gh-danger-fg-strong)'];
     return ['var(--gh-bg-surface-muted)', 'var(--gh-text-tertiary)'];
   };
 
@@ -432,7 +438,7 @@ function CustomerEngagementContent({ data, sources }: { data: CustomerEngagement
             </div>
             <div style={{ flexShrink: 0, fontSize: 11, color: 'var(--gh-text-tertiary)', textAlign: 'right' }}>
               {r.nextActionDate ?? 'No date'}<br />
-              <span style={{ color: 'var(--gh-text-disabled)' }}>{r.owner}</span>
+              <span style={{ color: 'var(--gh-text-tertiary)' }}>{r.owner}</span>
             </div>
           </div>
         ))}
@@ -456,7 +462,7 @@ function StaffingStrategyContent({ data, sources }: { data: StaffingStrategySect
             <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{pos.lcat}</span>,
             <Pill bg="var(--gh-bg-surface-muted)" color="var(--gh-info-fg)" quiet>{pos.designation}</Pill>,
             pos.clearance,
-            pos.candidate ?? <span style={{ color: 'var(--gh-text-disabled)' }}>TBD</span>,
+            pos.candidate ?? <span style={{ color: 'var(--gh-text-tertiary)' }}>TBD</span>,
             pos.source,
             pos.startDate,
             <StatusPill status={pos.status} />,
@@ -525,7 +531,7 @@ function PastPerformanceContent({ data, sources }: { data: PastPerformanceSectio
                 <KV label="Relevance" value={
                   <Pill
                     bg={ref.relevance === 'CRITICAL' ? 'var(--gh-danger-bg)' : ref.relevance === 'HIGH' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface)'}
-                    color={ref.relevance === 'CRITICAL' ? 'var(--gh-danger-fg)' : ref.relevance === 'HIGH' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'}
+                    color={ref.relevance === 'CRITICAL' ? 'var(--gh-danger-fg-strong)' : ref.relevance === 'HIGH' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'}
                   >{ref.relevance}</Pill>
                 } />
               </div>
@@ -703,8 +709,8 @@ function RiskRegisterContent({ data, sources }: { data: RiskRegisterSection; sou
             <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{r.id}</span>,
             <span style={{ fontWeight: 'var(--gh-font-weight-medium)', color: 'var(--gh-text)' }}>{r.risk}</span>,
             r.category,
-            <Pill bg={r.likelihoodScore >= 4 ? 'var(--gh-danger-bg)' : r.likelihoodScore >= 3 ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.likelihoodScore >= 4 ? 'var(--gh-danger-fg)' : r.likelihoodScore >= 3 ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'} quiet={r.likelihoodScore < 3}>{r.likelihood}</Pill>,
-            <Pill bg={r.impactScore >= 5 ? 'var(--gh-danger-bg)' : r.impactScore >= 4 ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.impactScore >= 5 ? 'var(--gh-danger-fg)' : r.impactScore >= 4 ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'} quiet={r.impactScore < 4}>{r.impact}</Pill>,
+            <Pill bg={r.likelihoodScore >= 4 ? 'var(--gh-danger-bg)' : r.likelihoodScore >= 3 ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.likelihoodScore >= 4 ? 'var(--gh-danger-fg-strong)' : r.likelihoodScore >= 3 ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'} quiet={r.likelihoodScore < 3}>{r.likelihood}</Pill>,
+            <Pill bg={r.impactScore >= 5 ? 'var(--gh-danger-bg)' : r.impactScore >= 4 ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.impactScore >= 5 ? 'var(--gh-danger-fg-strong)' : r.impactScore >= 4 ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'} quiet={r.impactScore < 4}>{r.impact}</Pill>,
             <RiskScorePill score={r.riskScore} />,
             <StatusPill status={r.status} />,
           ])}
@@ -726,7 +732,7 @@ function RiskRegisterContent({ data, sources }: { data: RiskRegisterSection; sou
                   <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text)' }}>{r.risk}</span>
                   <RiskScorePill score={r.riskScore} />
                   <StatusPill status={r.status} />
-                  <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--gh-text-disabled)' }}>Updated {r.lastUpdated} · {r.owner}</span>
+                  <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Updated {r.lastUpdated} · {r.owner}</span>
                 </div>
                 <KV label="Mitigation"  value={r.mitigation} />
                 <KV label="Contingency" value={r.contingency} />

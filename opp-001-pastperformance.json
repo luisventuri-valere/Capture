@@ -1,0 +1,183 @@
+{
+  "id": "opp-001",
+  "noticeId": "DHS-2026-CLOUD-0042",
+  "title": "Enterprise Cloud Migration and Modernization Services",
+  "lastUpdated": "2026-02-10T12:15:00Z",
+  "_provenance": "DERIVED MOCK — no PPF-001 past-performance capture exists for opp-001. Synthesized 2026-06-11 from opp-001-datacalls.json (DC-001 past-performance package: DHS Cybersecurity Modernization / Exceptional, Army Cloud Migration / Very Good, Treasury IT Modernization / Very Good, capability statement), opp-001-strategy.json (3 references + CPARS + CORs), and partner references from opp-001-teaming.json (GovFlow DHS ServiceNow $3.1M; DataBridge USCIS $4.2M). NOTE: resolves the strategy/teaming VA-vs-Army inconsistency in favor of ARMY for the 180-application / CloudPathfinder reference, per the authoritative DC-001 collection — Solutioning sol-1's 'VA Migration' proof line should reconcile to this. Pending Greg ratification. Never present as live agent output.",
+  "generatedBy": "Past Performance Agent (PPF-001) · v3 · 2026-02-10",
+  "overallConfidence": 76,
+  "cparsDisclaimer": "All CPARS ratings shown are estimated — public data inference. Direct CPARS access is government-restricted; ratings are inferred from public award data, agency reporting, and reference confirmations, never pulled from the CPARS system of record.",
+  "overview": {
+    "referenceCount": 5,
+    "ownReferences": 3,
+    "partnerReferences": 2,
+    "leadReference": "PP-01 (DHS Cybersecurity Modernization)",
+    "relevanceSummary": "Three own-company references span the exact discriminators: same-agency DHS cybersecurity (Exceptional), cloud migration at scale (Army, Very Good), and FedRAMP compliance (Treasury, Very Good). Two partner references close the data-migration and ServiceNow capability gaps. The reference set covers evaluation factors M.1–M.3; M.4 (Transition & Staffing) has no dedicated past-performance reference and is flagged.",
+    "evaluationFactorCoverage": {
+      "covered": ["M.1 — Technical Approach (cloud migration, ZTA, FedRAMP)", "M.2 — Management Approach (program management track record)", "M.3 — Past Performance (CPARS-estimated ratings)"],
+      "uncovered": [
+        { "factor": "M.4 — Transition & Staffing", "note": "No past-performance reference specifically substantiates a transition-in / staffing-ramp narrative. The DHS CISA reference touches it tangentially; Staffing-tab data (transition plans, LOIs) is the better source. Flagged to Staffing." }
+      ]
+    },
+    "counts": { "validated": 3, "needsWork": 1, "shaping": 1, "confirmed": 0 }
+  },
+  "references": [
+    {
+      "id": "PP-01",
+      "contract": "DHS Cybersecurity Modernization",
+      "type": "Own — Prime",
+      "status": "validated",
+      "agency": "Department of Homeland Security (CISA)",
+      "value": 12500000,
+      "periodOfPerformance": "2023–present",
+      "cparsRating": "Exceptional",
+      "cparsBasis": "estimated — public data inference",
+      "cor": "Michelle Adams (confirmed available as reference)",
+      "linkage": { "winThemes": ["WT-03"], "discriminators": ["D-04"], "factors": ["M.1", "M.2", "M.3"] },
+      "fair": {
+        "facts": "DHS CISA cybersecurity modernization, $12.5M, 2023–present, CPARS Exceptional (estimated — public data inference). COR Michelle Adams confirmed as a reference. Same department, same security regime as this pursuit.",
+        "analysis": "This is the strongest possible reference: same agency, active (not historical), and the highest CPARS band. It directly substantiates WT-03 (mission-embedded zero trust) and D-04 (same-department experience). Performance highlights — ZTA Level 3 in 8 months, 15-minute MTTD — map to the M.1 technical-approach evaluation.",
+        "intelligence": "🔒 An active Exceptional rating with a confirmed COR willing to speak is the rarest and most defensible evidence class an evaluator can verify. The incumbent's known DHS performance issues make this contrast sharper if surfaced carefully.",
+        "recommendations": "PP-01-R1: Use as the lead past-performance reference. · PP-01-R2: Pre-brief COR Michelle Adams on likely evaluator questions. · PP-01-R3: Pull the ZTA and MTTD metrics into the M.1 narrative."
+      },
+      "envelope": {
+        "confidence": 92,
+        "aiReasoning": "Highest-confidence reference: same agency, active, Exceptional CPARS (estimated), confirmed COR. The strongest card in the deck.",
+        "sources": [
+          { "label": "DC-001-01 — PP package (qualityScore 95)" },
+          { "label": "Public award data — DHS CISA (estimated CPARS)" },
+          { "label": "COR confirmation — Michelle Adams" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "From DC-001-01 package" }],
+        "conflicts": []
+      }
+    },
+    {
+      "id": "PP-02",
+      "contract": "Army Enterprise Cloud Migration",
+      "type": "Own — Prime",
+      "status": "validated",
+      "agency": "U.S. Army",
+      "value": null,
+      "periodOfPerformance": "2022–2025",
+      "cparsRating": "Very Good",
+      "cparsBasis": "estimated — public data inference",
+      "cor": "Lt. Col. Whitaker (confirmed)",
+      "linkage": { "winThemes": ["WT-01"], "discriminators": ["D-02"], "factors": ["M.1", "M.3"] },
+      "fair": {
+        "facts": "U.S. Army enterprise cloud migration, 2022–2025, CPARS Very Good (estimated — public data inference). COR Lt. Col. Whitaker confirmed. Largest prior data migration: 180 applications, CloudPathfinder-assessed, completed ahead of schedule.",
+        "analysis": "The proof point for WT-01 (accelerated mission outcomes) and D-02 (CloudPathfinder). 180 applications is directly comparable to the DHS 340+ portfolio scale, and the CloudPathfinder dependency-catch metric (23 undocumented dependencies found) substantiates the migration-factory claim in Solutioning sol-1.",
+        "intelligence": "🔒 This reference carries one flagged weakness from the data call: the FinOps savings figures need independent verification (DC-001-02). Cite the migration metrics freely; hold the FinOps dollar figures until verified to avoid an evaluator challenge.",
+        "recommendations": "PP-02-R1: Use as reference #2, anchoring the migration-at-scale narrative. · PP-02-R2: Complete the FinOps savings verification flagged in DC-001-02 before citing those figures. · PP-02-R3: Foreground the 180-app / 23-dependency CloudPathfinder metrics in M.1."
+      },
+      "envelope": {
+        "confidence": 85,
+        "aiReasoning": "Strong, directly comparable migration reference with a confirmed COR; confidence is held below the 90s by the unverified FinOps savings figures flagged in DC-001-02.",
+        "sources": [
+          { "label": "DC-001-02 — PP package (qualityScore 88)" },
+          { "label": "Public award data — U.S. Army (estimated CPARS)" },
+          { "label": "COR confirmation — Lt. Col. Whitaker" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "From DC-001-02 package; FinOps figures flagged" }],
+        "conflicts": []
+      }
+    },
+    {
+      "id": "PP-03",
+      "contract": "Treasury IT Modernization",
+      "type": "Own — Prime",
+      "status": "validated",
+      "agency": "Department of the Treasury",
+      "value": 6200000,
+      "periodOfPerformance": "2021–2024",
+      "cparsRating": "Very Good",
+      "cparsBasis": "estimated — public data inference",
+      "cor": "Karen Blackwell (confirmed)",
+      "linkage": { "winThemes": ["WT-02"], "discriminators": ["D-01"], "factors": ["M.3"] },
+      "fair": {
+        "facts": "Treasury IT modernization, $6.2M, 2021–2024, CPARS Very Good (estimated — public data inference). COR Karen Blackwell confirmed. Narrative centers on FedRAMP compliance achievement.",
+        "analysis": "A supporting reference for WT-02 (zero-day FedRAMP compliance) and D-01. Less directly relevant to cloud-migration scope than PP-01/PP-02, so it is positioned as supporting evidence rather than a lead — strongest on the compliance dimension.",
+        "intelligence": "🔒 Positioning matters: leading with Treasury would dilute the cloud-migration story. Used deliberately to reinforce the FedRAMP discriminator where an evaluator probes compliance depth.",
+        "recommendations": "PP-03-R1: Use as a supporting reference on the FedRAMP/compliance factor. · PP-03-R2: Keep the narrative tight on compliance; do not over-claim migration relevance."
+      },
+      "envelope": {
+        "confidence": 74,
+        "aiReasoning": "Solid Very Good reference with a confirmed COR, but lower relevance to the core migration scope caps its weight — correctly a supporting, not lead, reference.",
+        "sources": [
+          { "label": "DC-001-03 — PP package (qualityScore 82)" },
+          { "label": "Public award data — Treasury (estimated CPARS)" },
+          { "label": "COR confirmation — Karen Blackwell" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "From DC-001-03 package" }],
+        "conflicts": []
+      }
+    },
+    {
+      "id": "PP-04",
+      "contract": "DHS ServiceNow Integration (GovFlow Technologies)",
+      "type": "Partner — Subcontractor",
+      "status": "needs-work",
+      "agency": "Department of Homeland Security",
+      "value": 3100000,
+      "periodOfPerformance": "2022–2024",
+      "cparsRating": "Very Good",
+      "cparsBasis": "estimated — public data inference",
+      "cor": "Partner-provided (not independently confirmed)",
+      "linkage": { "capabilityGaps": ["CG-02"], "factors": ["M.1", "M.3"] },
+      "fair": {
+        "facts": "GovFlow Technologies — DHS ServiceNow integration, $3.1M, 2022–2024, CPARS Very Good (estimated — public data inference). Partner-provided reference. Same agency, same platform as the CG-02 requirement.",
+        "analysis": "Closes the CG-02 capability gap (DHS-specific ServiceNow). Same-instance experience is exactly what evaluators familiar with the DHS OCIO ServiceNow environment will probe for. The weakness is governance: GovFlow's TA is unsigned (term sheet), so this cannot yet be cited as a team reference of record.",
+        "intelligence": "🔒 A partner-provided rating is weaker evidence than an own-company CPARS — it should be corroborated against public award data before it enters the proposal, and it depends on the GovFlow TA executing.",
+        "recommendations": "PP-04-R1: Corroborate the GovFlow rating against public award data. · PP-04-R2: Cite as a team reference only after the GovFlow TA is executed. · PP-04-R3: Position as the CG-02 proof point in M.1."
+      },
+      "envelope": {
+        "confidence": 68,
+        "aiReasoning": "Relevant same-agency same-platform reference, but partner-provided (weaker class) and dependent on an unsigned TA. Confidence reflects both caveats.",
+        "sources": [
+          { "label": "TMI-001 Teaming — GovFlow partner reference" },
+          { "label": "Public award data — DHS ServiceNow (estimated CPARS)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "From teaming GovFlow reference; TA pending" }],
+        "conflicts": []
+      }
+    },
+    {
+      "id": "PP-05",
+      "contract": "USCIS Data Modernization (DataBridge Analytics)",
+      "type": "Partner — Subcontractor",
+      "status": "shaping",
+      "agency": "USCIS (DHS component)",
+      "value": 4200000,
+      "periodOfPerformance": "2021–2023",
+      "cparsRating": "Satisfactory",
+      "cparsBasis": "estimated — public data inference",
+      "cor": "Partner-provided (not independently confirmed)",
+      "linkage": { "capabilityGaps": ["CG-01"], "factors": ["M.3"], "cascadeAnchor": true },
+      "fair": {
+        "facts": "DataBridge Analytics — USCIS data modernization, $4.2M, 2021–2023, CPARS Satisfactory (estimated — public data inference). Partner-provided. Demonstrates DHS-component data-migration and ETL experience (the CG-01 capability).",
+        "analysis": "Substantiates DataBridge's data-migration capability for CG-01 and sol-1's ETL factory. Two weaknesses: it is the lowest CPARS band of the reference set (Satisfactory, not Very Good/Exceptional), and it is partner-provided and dependent on DataBridge's unsigned TA. Use it for capability evidence, not as a quality discriminator.",
+        "intelligence": "🔒 A Satisfactory rating is a double-edged citation — it proves capability but signals mediocre performance. Frame around the specific schema-migration experience (DHS HR Connect, TECS), not the overall rating.",
+        "recommendations": "PP-05-R1: Cite DataBridge for CG-01 capability, foregrounding the specific legacy-schema experience over the rating. · PP-05-R2: Corroborate against public award data. · PP-05-R3: Cite as a team reference only after the DataBridge TA executes."
+      },
+      "envelope": {
+        "confidence": 58,
+        "aiReasoning": "Weakest reference of the set: Satisfactory CPARS (estimated), partner-provided, and dependent on an unsigned TA. Useful for capability evidence but not as a quality signal — appropriately the lowest-confidence reference.",
+        "sources": [
+          { "label": "TMI-001 Teaming — DataBridge partner reference" },
+          { "label": "Public award data — USCIS (estimated CPARS)" }
+        ],
+        "versionHistory": [{ "version": 1, "changedAt": "2026-02-10", "changedBy": "agent", "changeSummary": "From teaming DataBridge reference; TA pending" }],
+        "conflicts": []
+      },
+      "cascade": {
+        "onDataBridgeWithdrawal": {
+          "lineStruck": "PP-05 — USCIS Data Modernization (DataBridge)",
+          "reason": "Withdrawn — DataBridge no longer bidding (2026-02-12); partner reference removed",
+          "effect": "The CG-01 data-migration capability loses its past-performance proof point. The replacement partner (MigrationPro Federal / Attain Federal) must provide its own reference — none is on file yet.",
+          "newRecommendation": "Obtain a past-performance reference from the CG-01 replacement partner; until then, the data-migration capability has no partner CPARS evidence.",
+          "downstreamFlag": "Reference count drops to 4; M.1/M.3 coverage for data migration flagged for regeneration."
+        }
+      }
+    }
+  ]
+}

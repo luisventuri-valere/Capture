@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, RefreshCw, Edit2, MessageCircle, AlertTriangle, X, ChevronRight, ArrowRight, History, ClipboardList, Search, Lightbulb, ListChecks, Bot, Paperclip, Lock, ChevronUp, ChevronDown, CheckCircle, Circle } from 'lucide-react';
+import { Check, RefreshCw, Edit2, AlertTriangle, X, ChevronRight, History, ClipboardList, Search, Lightbulb, ListChecks, Sparkles, Paperclip, Lock, ChevronUp, ChevronDown, CheckCircle, Circle, Info, Undo2 } from 'lucide-react';
 
 const BAND_ICONS: Record<string, React.ReactNode> = {
   facts:           <ClipboardList size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0 }} />,
@@ -9,6 +9,8 @@ const BAND_ICONS: Record<string, React.ReactNode> = {
 };
 import { PartnerKanban } from './PartnerKanban';
 import { AskAIDrawer } from './AskAIDrawer';
+import { SectionIndex, SectionIndexItem } from './SectionIndex';
+import { DetailPanel, ActionButton } from './DetailPanel';
 import {
   TEAMING_ENVELOPE,
   TEAMING_SECTION_META,
@@ -46,17 +48,25 @@ function KV({ label, value, primary }: { label: string; value: React.ReactNode; 
   );
 }
 
-function Band({ icon, label, children }: { icon: string; label: string; children: React.ReactNode }) {
-  const iconNode = BAND_ICONS[icon] ?? null;
+function Band({ icon, label, children, defaultOpen = true }: { icon?: string; label: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
+  const iconNode = icon ? BAND_ICONS[icon] ?? null : null;
   return (
-    <div style={{ marginBottom: 28 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-        {iconNode}
-        <span style={{ fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: F }}>
-          {label}
+    <div style={{ width: '100%', fontFamily: F }}>
+      <button onClick={() => setOpen(o => !o)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '16px 24px', background: 'var(--gh-bg-elevated)', border: 'none', cursor: 'pointer', fontFamily: F }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {iconNode}
+          <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.55px' }}>
+            {label}
+          </span>
         </span>
-      </div>
-      <div style={{ color: 'var(--gh-text)', fontFamily: F }}>{children}</div>
+        <ChevronDown size={16} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, transform: open ? 'none' : 'rotate(-90deg)', transition: 'transform .15s' }} />
+      </button>
+      {open && (
+        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-surface)', color: 'var(--gh-text)' }}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -82,66 +92,82 @@ function SourceChips({ sources }: { sources: Array<{ label: string }> }) {
   );
 }
 
-function ConfidenceChip({ confidence }: { confidence: number }) {
-  const [bg, color] = confidence >= 75 ? ['var(--gh-success-bg)', 'var(--gh-success-fg)'] :
-    confidence >= 50 ? ['var(--gh-warning-bg)', 'var(--gh-warning-fg)'] :
-    ['var(--gh-danger-bg)', 'var(--gh-danger-fg)'];
-  return <Pill bg={bg} color={color}>{confidence}%</Pill>;
-}
-
 // ─── Recommendations band ─────────────────────────────────────────────────────
 
-function RecsBand({ env, localStatuses, onAccept, demo, demoAddedRec }: {
+function RecsBand({ env, localStatuses, onAccept, onReject, onReset, demo, demoAddedRec }: {
   env: SectionEnv;
   localStatuses: Record<string, 'accepted' | 'proposed' | 'rejected'>;
   onAccept: (id: string) => void;
+  onReject: (id: string) => void;
+  onReset: (id: string) => void;
   demo?: boolean;
   demoAddedRec?: EnvRec;
 }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText]   = useState('');
+  const [localTexts, setLocalTexts] = useState<Record<string, string>>({});
+
   const recs = [
     ...env.recommendations.map(r => ({ ...r, status: localStatuses[r.id] ?? r.status })),
     ...(demo && demoAddedRec ? [demoAddedRec] : []),
   ];
   if (!recs.length) return null;
+
+  const startEdit = (id: string, text: string) => { setEditingId(id); setEditText(localTexts[id] ?? text); };
+  const saveEdit  = (id: string) => { if (editText.trim()) setLocalTexts(p => ({ ...p, [id]: editText.trim() })); setEditingId(null); };
+
   return (
     <Band icon="recommendations" label="Recommendations & Actions">
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         {recs.map(rec => {
-          const accepted = rec.status === 'accepted';
-          const rejected = rec.status === 'rejected';
+          const accepted  = rec.status === 'accepted';
+          const rejected  = rec.status === 'rejected';
+          const isEditing = editingId === rec.id;
           const rowBg = accepted ? 'var(--gh-success-bg)' : rejected ? 'var(--gh-danger-bg)' : 'var(--gh-bg-surface)';
-          const leftBar = accepted ? 'var(--gh-success-fg)' : rejected ? 'var(--gh-danger-fg)' : 'transparent';
-          const rowBorder = accepted ? 'var(--gh-success-border)' : rejected ? 'var(--gh-danger-border)' : 'var(--gh-border)';
           return (
-            <div key={rec.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '8px 12px', borderRadius: 'var(--gh-radius-lg)', background: rowBg, borderTopWidth: 1, borderBottomWidth: 1, borderRightWidth: 1, borderLeftWidth: 3, borderTopStyle: 'solid', borderBottomStyle: 'solid', borderRightStyle: 'solid', borderLeftStyle: 'solid', borderTopColor: rowBorder, borderBottomColor: rowBorder, borderRightColor: rowBorder, borderLeftColor: leftBar }}>
-              <div style={{ flexShrink: 0, marginTop: 2 }}>
-                {accepted ? (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Check size={10} color="var(--gh-success-bg)" />
-                  </div>
-                ) : rejected ? (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-danger-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <X size={10} color="var(--gh-danger-bg)" />
-                  </div>
+            <div key={rec.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, background: rowBg, fontFamily: F }}>
+              {/* Status dot */}
+              <div style={{ width: 16, height: 16, borderRadius: 9999, flexShrink: 0, background: accepted ? 'var(--gh-success-fg)' : rejected ? 'var(--gh-danger-fg)' : 'transparent', border: (!accepted && !rejected) ? '1px solid var(--gh-border)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {accepted && <Check size={10} color="var(--gh-success-bg)" />}
+                {rejected && <X size={10} color="var(--gh-danger-bg)" />}
+              </div>
+
+              {/* Text or edit input */}
+              <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+                {isEditing ? (
+                  <input
+                    autoFocus
+                    value={editText}
+                    onChange={e => setEditText(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') saveEdit(rec.id); if (e.key === 'Escape') setEditingId(null); }}
+                    style={{ width: '100%', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-accent)', borderRadius: 'var(--gh-radius-sm)', padding: '4px 8px', color: 'var(--gh-text)', fontSize: 13, fontFamily: F, outline: 'none', boxSizing: 'border-box' }}
+                  />
                 ) : (
-                  <div style={{ width: 16, height: 16, borderRadius: 'var(--gh-radius-full)', border: '1.5px solid var(--gh-border)' }} />
+                  <span style={{ fontSize: 13, color: 'var(--gh-text)', fontFamily: F, display: 'block', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                    {localTexts[rec.id] ?? rec.text}
+                  </span>
                 )}
               </div>
-              <div style={{ flex: 1 }}>
-                <span style={{ fontSize: 'var(--gh-font-size-base)', color: rejected ? 'var(--gh-text-disabled)' : 'var(--gh-text)', textDecoration: rejected ? 'line-through' : 'none', fontFamily: F }}>
-                  {rec.text}
-                </span>
-              </div>
-              {rec.status === 'proposed' && (
-                <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                  <button title="Accept" onClick={() => onAccept(rec.id)} style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-success-bg)', border: '1px solid var(--gh-success-border)', cursor: 'pointer', color: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Check size={15} />
+
+              {/* Actions — ghost icon buttons, no borders */}
+              {accepted || rejected ? (
+                <button title="Undo" onClick={() => onReset(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Undo2 size={14} />
+                </button>
+              ) : isEditing ? (
+                <button title="Save" onClick={() => saveEdit(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Check size={16} />
+                </button>
+              ) : (
+                <div style={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>
+                  <button title="Accept" onClick={() => onAccept(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Check size={16} />
                   </button>
-                  <button title="Reject" style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'transparent', border: '1px solid var(--gh-border)', cursor: 'pointer', color: 'var(--gh-danger-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <X size={15} />
+                  <button title="Reject" onClick={() => onReject(rec.id)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <X size={16} />
                   </button>
-                  <button title="Edit" style={{ width: 32, height: 32, borderRadius: 'var(--gh-radius-lg)', background: 'transparent', border: '1px solid var(--gh-border)', cursor: 'pointer', color: 'var(--gh-text-disabled)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Edit2 size={14} />
+                  <button title="Edit" onClick={() => startEdit(rec.id, localTexts[rec.id] ?? rec.text)} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Edit2 size={16} />
                   </button>
                 </div>
               )}
@@ -249,7 +275,7 @@ function CapabilityGapsContent({ data, demo }: { data: TD; demo: boolean }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{g.id}</span>
                 <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{g.capability}</span>
-                <Pill bg={g.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={g.severity === 'HIGH' ? 'var(--gh-danger-fg)' : 'var(--gh-warning-fg)'}>{g.severity}</Pill>
+                <Pill bg={g.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={g.severity === 'HIGH' ? 'var(--gh-danger-fg-strong)' : 'var(--gh-warning-fg)'}>{g.severity}</Pill>
                 <Pill bg={g.status === 'FILLING' ? 'var(--gh-info-bg)' : 'var(--gh-warning-bg)'} color={g.status === 'FILLING' ? 'var(--gh-info-fg)' : 'var(--gh-warning-fg)'} quiet>{g.status}</Pill>
                 {isReopened && <Pill bg="var(--gh-warning-bg)" color="var(--gh-warning-fg)">Reopened</Pill>}
               </div>
@@ -324,9 +350,9 @@ function PartnerPipelineContent({ data, demo }: { data: TD; demo: boolean }) {
             { label: 'Evaluating', count: evaluating, bg: 'var(--gh-info-bg)',         color: 'var(--gh-info-fg)' },
             { label: 'Contacted',  count: contacted,  bg: 'var(--gh-bg-surface)',      color: 'var(--gh-text-secondary)' },
             { label: 'Identified', count: identified, bg: 'var(--gh-bg-surface)',      color: 'var(--gh-text-tertiary)' },
-            { label: 'Declined',   count: declined,   bg: 'var(--gh-danger-bg)',       color: 'var(--gh-danger-fg)' },
+            { label: 'Declined',   count: declined,   bg: 'var(--gh-danger-bg)',       color: 'var(--gh-danger-fg-strong)' },
           ].map(item => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', borderRadius: 'var(--gh-radius-lg)', background: item.bg, border: `1px solid ${item.color === 'var(--gh-success-fg)' ? 'var(--gh-success-border)' : item.color === 'var(--gh-danger-fg)' ? 'var(--gh-danger-border)' : 'var(--gh-border)'}` }}>
+            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', borderRadius: 'var(--gh-radius-lg)', background: item.bg, border: `1px solid ${item.color === 'var(--gh-success-fg)' ? 'var(--gh-success-border)' : item.color === 'var(--gh-danger-fg-strong)' ? 'var(--gh-danger-border)' : 'var(--gh-border)'}` }}>
               <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: item.color }}>{item.count}</span>
               <span style={{ fontSize: 'var(--gh-font-size-sm)', color: item.color }}>{item.label}</span>
             </div>
@@ -353,7 +379,7 @@ function PartnerPipelineContent({ data, demo }: { data: TD; demo: boolean }) {
             {p.risks.map((r, i) => (
               <div key={i} style={{ padding: '7px 10px', borderRadius: 'var(--gh-radius-md)', marginBottom: 4, background: r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)', border: `1px solid ${r.severity === 'HIGH' ? 'var(--gh-danger-border)' : 'var(--gh-warning-border)'}`, fontSize: 'var(--gh-font-size-base)' }}>
                 <div style={{ display: 'flex', gap: 6, marginBottom: 3 }}>
-                  <Pill bg={r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={r.severity === 'HIGH' ? 'var(--gh-danger-fg)' : 'var(--gh-warning-fg)'}>{r.severity}</Pill>
+                  <Pill bg={r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={r.severity === 'HIGH' ? 'var(--gh-danger-fg-strong)' : 'var(--gh-warning-fg)'}>{r.severity}</Pill>
                   <span style={{ color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-medium)' }}>{r.risk}</span>
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--gh-text-secondary)' }}>Mitigation: {r.mitigation}</div>
@@ -410,7 +436,7 @@ function WorkshareContent({ data, demo }: { data: TD; demo: boolean }) {
     <>
       <Band icon="facts" label="Facts — Workshare Allocation">
         {belowPlan && (
-          <div style={{ marginBottom: 12, padding: '8px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-danger-bg)', border: '1px solid var(--gh-danger-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-danger-fg)' }}>
+          <div style={{ marginBottom: 12, padding: '8px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-danger-bg)', border: '1px solid var(--gh-danger-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-danger-fg-strong)' }}>
             20% / $9.0M hole — DataBridge workshare unallocated. Total drops to {totalWorkshare}%. Below 45% sub-target.
           </div>
         )}
@@ -436,7 +462,7 @@ function WorkshareContent({ data, demo }: { data: TD; demo: boolean }) {
                     <td style={{ padding: '8px 12px 8px 0', color: 'var(--gh-text)', whiteSpace: 'nowrap' }}>{isHole ? '—' : Money(r.estimatedValue)}</td>
                     <td style={{ padding: '8px 12px 8px 0', color: 'var(--gh-text-tertiary)' }}>{isHole ? '—' : r.fte}</td>
                     <td style={{ padding: '8px 12px 8px 0' }}>
-                      <Pill bg="var(--gh-bg-surface-muted)" color="var(--gh-info-fg)" quiet>{r.sbCategory}</Pill>
+                      <Pill bg="var(--gh-info-bg)" color="var(--gh-info-fg)" quiet>{r.sbCategory}</Pill>
                     </td>
                     <td style={{ padding: '8px 12px 8px 0', color: 'var(--gh-text-secondary)', fontSize: 11 }}>
                       {r.scope.slice(0, 2).join(' · ')}{r.scope.length > 2 ? ` +${r.scope.length - 2}` : ''}
@@ -506,6 +532,8 @@ interface SectionDetailProps {
   demoActive: boolean;
   localStatuses: Record<string, 'accepted' | 'proposed' | 'rejected'>;
   onAccept: (id: string) => void;
+  onReject: (id: string) => void;
+  onReset: (id: string) => void;
   onConfirm: () => void;
   onRequestReview: () => void;
   onEdit: () => void;
@@ -517,14 +545,8 @@ interface SectionDetailProps {
 }
 
 function SectionDetail(props: SectionDetailProps) {
-  const { sectionKey, env, demoActive, localStatuses, onAccept, onConfirm, onRequestReview, onEdit, onAskAI, confirmed, uiStatus, vhExtra, meta } = props;
+  const { sectionKey, env, demoActive, localStatuses, onAccept, onReject, onReset, onConfirm, onRequestReview, onEdit, onAskAI, confirmed, vhExtra } = props;
   const isLowConf = env.confidence < 50 || (demoActive && sectionKey === 'partnerPipeline');
-  const effectiveConf = demoActive && sectionKey === 'partnerPipeline' ? 46 : demoActive && sectionKey === 'capabilityGaps' ? 55 : env.confidence;
-
-  const statusLabel = uiStatus === 'confirmed' ? 'Confirmed' : uiStatus === 'needs_review' ? 'Needs Review' : 'Draft';
-  const [sBg, sColor] = uiStatus === 'confirmed' ? ['var(--gh-success-bg)', 'var(--gh-success-fg)'] :
-    uiStatus === 'needs_review' ? ['var(--gh-warning-bg)', 'var(--gh-warning-fg)'] :
-    ['var(--gh-bg-surface)', 'var(--gh-text-tertiary)'];
 
   // Demo auto-added rec for CG-01
   const demoCGRec: EnvRec | undefined = demoActive && sectionKey === 'capabilityGaps'
@@ -532,110 +554,82 @@ function SectionDetail(props: SectionDetailProps) {
     : undefined;
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: F }}>
-      {/* Sticky header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 10, padding: '14px 24px 10px', background: 'var(--gh-bg-canvas)', borderBottom: '1px solid var(--gh-border)' }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 10 }}>
-          <div style={{ flexShrink: 0, width: 32, height: 32, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-accent)', color: 'var(--gh-accent-fg)', fontSize: 'var(--gh-font-size-base)', fontWeight: 'var(--gh-font-weight-bold)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            {meta.number}
-          </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 3 }}>
-              <h2 style={{ margin: 0, fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{meta.title}</h2>
-              <span style={{ padding: '2px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', background: sBg, color: sColor }}>{statusLabel}</span>
-              <ConfidenceChip confidence={effectiveConf} />
+    <DetailPanel
+      scrollKey={sectionKey}
+      background="var(--gh-bg-canvas)"
+      onAskAI={onAskAI}
+      actions={() => (
+        <>
+          <ActionButton variant="ghost" icon={<Edit2 size={15} />} onClick={onEdit}>Edit</ActionButton>
+          <ActionButton variant="secondary" icon={<RefreshCw size={15} />} onClick={onRequestReview}>Request Review</ActionButton>
+          <ActionButton variant="primary" icon={<Check size={15} />} onClick={onConfirm}>{confirmed ? 'Re-confirm' : 'Confirm'}</ActionButton>
+        </>
+      )}
+    >
+      {/* Warning banners — outside bands */}
+      {(demoActive && (sectionKey === 'capabilityGaps' || sectionKey === 'partnerPipeline' || sectionKey === 'workshareSmallBusiness') || isLowConf || env.conflicts.length > 0) && (
+        <div style={{ padding: '16px 24px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {demoActive && (sectionKey === 'capabilityGaps' || sectionKey === 'partnerPipeline' || sectionKey === 'workshareSmallBusiness') && (
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
+              <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
+              <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
+                Change detected — CG-01 reopened; downstream flagged for regeneration: Staffing, Pricing, Workshare.
+              </p>
             </div>
-          </div>
+          )}
+          {isLowConf && (
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
+              <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
+              <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
+                This recommendation is based on limited data. Run ANALYZE workflow for better intelligence.
+              </p>
+            </div>
+          )}
+          {env.conflicts.map((c, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
+              <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
+              <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
+                <strong>Conflict:</strong> {c.message}
+              </p>
+            </div>
+          ))}
         </div>
-        {/* Action bar — pyramid */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          <button onClick={onConfirm} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 16px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-accent)', color: 'var(--gh-accent-fg)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', cursor: 'pointer', fontFamily: F }}>
-            <Check size={13} /> {confirmed ? 'Re-confirm' : 'Confirm'}
-          </button>
-          <button onClick={onRequestReview} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'transparent', color: 'var(--gh-accent)', border: '1px solid var(--gh-accent)', fontSize: 'var(--gh-font-size-sm)', cursor: 'pointer', fontFamily: F }}>
-            <RefreshCw size={13} /> Request Review
-          </button>
-          <button onClick={onEdit} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 'var(--gh-radius-lg)', background: 'transparent', color: 'var(--gh-text-tertiary)', fontSize: 'var(--gh-font-size-sm)', cursor: 'pointer', fontFamily: F }}>
-            <Edit2 size={13} /> Edit
-          </button>
-          <button onClick={onAskAI} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px', borderRadius: 'var(--gh-radius-lg)', background: 'transparent', color: 'var(--gh-text-tertiary)', fontSize: 'var(--gh-font-size-sm)', cursor: 'pointer', fontFamily: F }}>
-            <MessageCircle size={13} /> Ask AI
-          </button>
-          <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
-            {meta.feeds.map(f => (
-              <span key={f} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, padding: '3px 8px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface)', color: 'var(--gh-text-tertiary)', border: '1px solid var(--gh-border)' }}>
-                <ArrowRight size={9} /> {f}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
 
-      {/* Body */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
-        {/* Change detected banner */}
-        {demoActive && (sectionKey === 'capabilityGaps' || sectionKey === 'partnerPipeline' || sectionKey === 'workshareSmallBusiness') && (
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 16, background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
-            <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
-            <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
-              Change detected — CG-01 reopened; downstream flagged for regeneration: Staffing, Pricing, Workshare.
-            </p>
-          </div>
-        )}
-
-        {/* AI Reasoning */}
-        <div style={{ display: 'flex', gap: 12, padding: '12px 16px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 24, background: 'var(--gh-info-bg)', border: '1px solid var(--gh-info-border)' }}>
-          <Bot size={16} style={{ flexShrink: 0, color: 'var(--gh-info-fg)' }} />
-          <div>
-            <p style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', marginBottom: 4, color: 'var(--gh-info-fg)', fontFamily: F }}>AI Reasoning — Teaming Intelligence Agent v3</p>
-            <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-text-secondary)', margin: 0, fontFamily: F }}>{env.ai_reasoning}</p>
-          </div>
-        </div>
-
-        {/* Low-confidence banner */}
-        {isLowConf && (
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 16, background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
-            <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
-            <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
-              This recommendation is based on limited data. Run ANALYZE workflow for better intelligence.
-            </p>
-          </div>
-        )}
-
-        {/* Conflict callout */}
-        {env.conflicts.map((c, i) => (
-          <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 16, background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)' }}>
-            <AlertTriangle size={15} style={{ flexShrink: 0, marginTop: 1, color: 'var(--gh-warning-fg)' }} />
-            <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-warning-fg)', margin: 0, fontFamily: F }}>
-              <strong>Conflict:</strong> {c.message}
-            </p>
-          </div>
-        ))}
-
-        {/* FAIR content */}
-        {sectionKey === 'teamingStrategy'        && <TeamingStrategyContent data={teamingData as TD} demo={demoActive} />}
-        {sectionKey === 'capabilityGaps'          && <CapabilityGapsContent data={teamingData as TD} demo={demoActive} />}
-        {sectionKey === 'partnerPipeline'         && <PartnerPipelineContent data={teamingData as TD} demo={demoActive} />}
-        {sectionKey === 'workshareSmallBusiness'  && <WorkshareContent data={teamingData as TD} demo={demoActive} />}
-
-        {/* Recommendations */}
-        <RecsBand
-          env={env}
-          localStatuses={localStatuses}
-          onAccept={onAccept}
-          demo={demoActive && sectionKey === 'capabilityGaps'}
-          demoAddedRec={demoCGRec}
-        />
-
-        {/* Footer */}
-        <div style={{ paddingTop: 12, borderTop: '1px solid var(--gh-border)' }}>
-          <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginBottom: 4, fontFamily: F }}>
-            Last reviewed 2026-02-10 · Teaming Intelligence Agent v3
-          </div>
-          <VersionHistoryFooter env={env} vhExtra={vhExtra} />
+      {/* AI Reasoning — standalone card matching Strategy */}
+      <div style={{ margin: 24, display: 'flex', gap: 12, alignItems: 'flex-start', padding: 24, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-elevated)' }}>
+        <Sparkles size={14} style={{ flexShrink: 0, marginTop: 2, color: 'var(--gh-accent-tint)' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <span style={{ fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-accent-tint)', fontFamily: F }}>AI Reasoning</span>
+          <p style={{ fontSize: 14, lineHeight: 1.5, color: 'var(--gh-text-secondary)', margin: 0, fontFamily: F }}>{env.ai_reasoning}</p>
         </div>
       </div>
-    </div>
+
+      {/* FAIR content — each renders its own Facts / Analysis / Intelligence bands */}
+      {sectionKey === 'teamingStrategy'        && <TeamingStrategyContent data={teamingData as TD} demo={demoActive} />}
+      {sectionKey === 'capabilityGaps'          && <CapabilityGapsContent data={teamingData as TD} demo={demoActive} />}
+      {sectionKey === 'partnerPipeline'         && <PartnerPipelineContent data={teamingData as TD} demo={demoActive} />}
+      {sectionKey === 'workshareSmallBusiness'  && <WorkshareContent data={teamingData as TD} demo={demoActive} />}
+
+      {/* Recommendations */}
+      <RecsBand
+        env={env}
+        localStatuses={localStatuses}
+        onAccept={onAccept}
+        onReject={onReject}
+        onReset={onReset}
+        demo={demoActive && sectionKey === 'capabilityGaps'}
+        demoAddedRec={demoCGRec}
+      />
+
+      {/* Footer */}
+      <div style={{ padding: '12px 24px', borderTop: '1px solid var(--gh-border)' }}>
+        <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', marginBottom: 4, fontFamily: F }}>
+          Last reviewed 2026-02-10 · Teaming Intelligence Agent v3
+        </div>
+        <VersionHistoryFooter env={env} vhExtra={vhExtra} />
+      </div>
+    </DetailPanel>
   );
 }
 
@@ -654,7 +648,7 @@ const DEMO_VH_EXTRA = {
   ],
 };
 
-export function TeamingTab() {
+export function TeamingTab({ chromeHidden = false }: { chromeHidden?: boolean }) {
   const [selectedKey, setSelectedKey] = useState<TeamingSectionKey>('teamingStrategy');
   const [confirmedKeys, setConfirmedKeys] = useState<Set<TeamingSectionKey>>(new Set(['teamingStrategy']));
   const [uiOverrides, setUiOverrides] = useState<Partial<Record<TeamingSectionKey, UiStatus>>>({ teamingStrategy: 'confirmed' });
@@ -702,6 +696,16 @@ export function TeamingTab() {
     setRecStatuses(prev => ({ ...prev, [sectionKey]: { ...(prev[sectionKey] ?? {}), [recId]: 'accepted' } }));
   };
 
+  const handleReject = (sectionKey: TeamingSectionKey, recId: string) => {
+    if (demoActive) return;
+    setRecStatuses(prev => ({ ...prev, [sectionKey]: { ...(prev[sectionKey] ?? {}), [recId]: 'rejected' } }));
+  };
+
+  const handleReset = (sectionKey: TeamingSectionKey, recId: string) => {
+    if (demoActive) return;
+    setRecStatuses(prev => ({ ...prev, [sectionKey]: { ...(prev[sectionKey] ?? {}), [recId]: 'proposed' } }));
+  };
+
   const selectedMeta = TEAMING_SECTION_META.find(m => m.key === selectedKey)!;
   const selectedEnv  = getEnv(selectedKey);
 
@@ -718,84 +722,56 @@ export function TeamingTab() {
       {/* Ask AI drawer */}
       {aiSection && (
         <>
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} onClick={() => setAiSection(null)} />
+          <div style={{ position: 'fixed', inset: 0, background: 'var(--gh-backdrop)', zIndex: 40 }} onClick={() => setAiSection(null)} />
           <AskAIDrawer sectionTitle={aiSection} chatSeed={CHAT_SEED} onClose={() => setAiSection(null)} />
         </>
       )}
 
       {/* Plan header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', paddingBottom: 12, flexShrink: 0 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '0 var(--gh-space-12) 12px', flexShrink: 0, overflow: 'hidden', maxHeight: chromeHidden ? 0 : 120, opacity: chromeHidden ? 0 : 1, transition: 'max-height 0.3s ease, opacity 0.18s ease' }}>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 3 }}>
-            <Pill bg="var(--gh-warning-bg)" color="var(--gh-warning-fg)">{TEAMING_ENVELOPE.overall_confidence}% confidence</Pill>
-            <Pill bg={confirmedCount === 4 ? 'var(--gh-success-bg)' : 'var(--gh-bg-surface)'} color={confirmedCount === 4 ? 'var(--gh-success-fg)' : 'var(--gh-text-secondary)'}>{confirmedCount} / 4 confirmed</Pill>
-            <Pill bg="var(--gh-info-bg)" color="var(--gh-info-fg)" quiet>Active Qualification</Pill>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
+            <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>
+              {confirmedCount} of {TEAMING_SECTION_META.length} confirmed
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', fontFamily: F }}>
+              {TEAMING_ENVELOPE.overall_confidence}% confidence
+              <Info size={13} />
+            </span>
           </div>
-          <p style={{ fontSize: 11, color: 'var(--gh-text-disabled)', margin: 0, fontFamily: F }}>
-            Drafted by {TEAMING_ENVELOPE.generated_by}
+          <p style={{ fontSize: 11, color: 'var(--gh-white)', margin: 0, fontFamily: F }}>
+            {TEAMING_ENVELOPE.generated_by}
           </p>
         </div>
-
-        {/* Demo toggle */}
-        {demoActive ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-            <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-warning-fg)', padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-warning-bg)', border: '1px solid var(--gh-warning-border)', fontFamily: F }}>
-              DataBridge withdrawal cascade
-            </span>
-            <button onClick={() => setDemoActive(false)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface)', color: 'var(--gh-text-tertiary)', border: '1px solid var(--gh-border)', fontSize: 11, cursor: 'pointer', fontFamily: F }}>
-              <X size={11} /> Exit demo
-            </button>
-          </div>
-        ) : (
-          <button onClick={() => setDemoActive(true)} style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '5px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', border: '1px solid var(--gh-warning-border)', fontSize: 11, cursor: 'pointer', fontFamily: F, flexShrink: 0 }}>
-            <AlertTriangle size={11} /> Preview cascade
-          </button>
-        )}
       </div>
 
-      {/* Top pill nav + full-width content — same pattern for all 4 sections */}
-      <div style={{ display: 'flex', flex: 1, minHeight: 0, flexDirection: 'column', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-xl)', overflow: 'hidden' }}>
-
-        {/* Top pill nav */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '10px 16px', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-elevated)', flexShrink: 0, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-disabled)', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: F, marginRight: 4 }}>Sections</span>
-          {TEAMING_SECTION_META.map(meta => {
-            const isActive = meta.key === selectedKey;
+      {/* Master / detail — shared shell (section index left + detail) */}
+      <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        {/* Shared collapsible/resizable section index */}
+        <SectionIndex
+          title="Sections"
+          renderItems={(narrow) => TEAMING_SECTION_META.map(meta => {
             const conf = demoActive && meta.key === 'partnerPipeline' ? 46 :
                          demoActive && meta.key === 'capabilityGaps' ? 55 :
                          getEnv(meta.key).confidence;
-            const [confBg, confColor] = conf >= 75 ? ['var(--gh-success-bg)', 'var(--gh-success-fg)'] :
-              conf >= 50 ? ['var(--gh-warning-bg)', 'var(--gh-warning-fg)'] :
-              ['var(--gh-danger-bg)', 'var(--gh-danger-fg)'];
             return (
-              <button
+              <SectionIndexItem
                 key={meta.key}
-                onClick={() => setSelectedKey(meta.key)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 6,
-                  padding: '5px 14px', borderRadius: 'var(--gh-radius-full)',
-                  background: isActive ? 'var(--gh-accent)' : 'var(--gh-bg-surface)',
-                  color: isActive ? 'var(--gh-accent-fg)' : 'var(--gh-text-secondary)',
-                  border: `1px solid ${isActive ? 'var(--gh-accent)' : 'var(--gh-border)'}`,
-                  fontSize: 'var(--gh-font-size-sm)',
-                  fontWeight: isActive ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-normal)',
-                  cursor: 'pointer', fontFamily: F, whiteSpace: 'nowrap',
-                }}
-              >
-                <span>{meta.number}. {meta.title}</span>
-                {!isActive && (
-                  <span style={{ padding: '1px 5px', borderRadius: 'var(--gh-radius-full)', fontSize: 10, fontWeight: 'var(--gh-font-weight-semibold)', background: confBg, color: confColor }}>{conf}%</span>
-                )}
-                {activeFlagged.has(meta.key) && !isActive && (
-                  <span style={{ width: 6, height: 6, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-warning-fg)', display: 'inline-block' }} />
-                )}
-              </button>
+                title={meta.title}
+                subtitle={meta.feeds.join(', ')}
+                confidence={conf}
+                confirmed={activeConfirmed.has(meta.key)}
+                selected={meta.key === selectedKey}
+                flagged={activeFlagged.has(meta.key)}
+                narrow={narrow}
+                onSelect={() => setSelectedKey(meta.key)}
+              />
             );
           })}
-        </div>
+        />
 
-        {/* Full-width section content */}
-        <div key={selectedKey} style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', background: 'var(--gh-bg-canvas)' }}>
+        {/* Detail */}
+        <div key={selectedKey} style={{ flex: 1, minWidth: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', background: 'var(--gh-bg-canvas)' }}>
           <SectionDetail
             sectionKey={selectedKey}
             meta={selectedMeta}
@@ -803,6 +779,8 @@ export function TeamingTab() {
             demoActive={demoActive}
             localStatuses={recStatuses[selectedKey] ?? {}}
             onAccept={id => handleAccept(selectedKey, id)}
+            onReject={id => handleReject(selectedKey, id)}
+            onReset={id => handleReset(selectedKey, id)}
             onConfirm={() => handleConfirm(selectedKey)}
             onRequestReview={() => handleReview(selectedKey)}
             onEdit={() => handleReview(selectedKey)}

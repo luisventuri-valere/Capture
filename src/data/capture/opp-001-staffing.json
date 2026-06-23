@@ -1,0 +1,670 @@
+{
+  "id": "opp-001",
+  "noticeId": "DHS-2026-CLOUD-0042",
+  "title": "Enterprise Cloud Migration and Modernization Services",
+  "lastUpdated": "2026-02-10T09:15:00Z",
+  "staffingOverview": {
+    "totalFTE": 33,
+    "primeStaff": 18,
+    "subcontractorStaff": 15,
+    "keyPersonnel": 3,
+    "criticalPositions": 5,
+    "commodityPositions": 8,
+    "clearanceRequirements": {
+      "tsSci": 18,
+      "secret": 12,
+      "publicTrust": 3
+    },
+    "staffingHealth": {
+      "committed": 14,
+      "reviewing": 8,
+      "sourcing": 6,
+      "partner": 5,
+      "overallReadiness": 72,
+      "riskLevel": "MEDIUM"
+    }
+  },
+  "lcats": [
+    {
+      "id": "LCAT-01",
+      "title": "Program Manager",
+      "designation": "Key",
+      "importance": "Discriminator",
+      "importanceRationale": "Program Manager is identified as Key Personnel in draft PWS Section 3.1. Evaluators will assess PM qualifications against specific requirements. Strong PM with DHS experience is a significant discriminator given incumbent's management challenges.",
+      "fte": 1,
+      "location": "Washington, DC (on-site 4 days/week)",
+      "requirements": {
+        "education": {
+          "minimum": "Bachelor's degree in IT, Computer Science, Business Administration, or related field",
+          "preferred": "Master's degree or PMP certification",
+          "substitute": "8 additional years of relevant experience may substitute for degree"
+        },
+        "experience": {
+          "minimum": "12 years program management experience, including 8 years managing federal IT programs of $10M+ value",
+          "preferred": "15+ years with DHS-specific program management experience",
+          "specific": [
+            "Managed cloud migration programs of similar scope and complexity",
+            "Experience with DHS OCIO governance processes and reporting requirements",
+            "Track record of on-time, on-budget delivery for federal IT modernization"
+          ]
+        },
+        "certifications": {
+          "required": ["PMP", "ITIL v4 Foundation"],
+          "preferred": ["CSM or SAFe Agilist", "AWS Cloud Practitioner"],
+          "notes": "PMP must be active at time of proposal submission"
+        },
+        "clearance": {
+          "required": "TS/SCI",
+          "status": "Active — no interim acceptable for Key Personnel"
+        }
+      },
+      "candidates": [
+        {
+          "id": "C-01-01",
+          "name": "Angela Rodriguez",
+          "source": "Internal",
+          "currentEmployer": "TechForward Solutions",
+          "currentRole": "Program Manager — DHS Cybersecurity Modernization",
+          "matchScore": 96,
+          "education": "MS Information Systems, George Washington University; BS Computer Science, Virginia Tech",
+          "yearsExperience": 18,
+          "relevantExperience": "15 years federal PM experience. Currently managing TechForward's DHS CISA contract ($12.5M, Exceptional CPARS). Previously PM for Treasury IT Modernization ($6.2M, Very Good CPARS).",
+          "certifications": ["PMP", "ITIL v4 Managing Professional", "CSM", "AWS Cloud Practitioner"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "Exceptional CPARS as PM on active DHS contract — strongest possible reference",
+            "Deep understanding of DHS OCIO governance, reporting, and culture",
+            "Proven track record delivering ahead of schedule (ZTA Level 3 in 8 months)",
+            "Established relationships with DHS OCIO leadership including Deputy CIO",
+            "Bilingual (English/Spanish) — asset for diverse workforce management"
+          ],
+          "concerns": [
+            "Currently managing active DHS contract — transition plan needed to backfill",
+            "Would need to complete CISA contract transition by award date (Jul 2026)"
+          ],
+          "status": "committed",
+          "availabilityDate": "2026-08-01",
+          "compensationRange": "$185,000 - $210,000",
+          "loiSigned": true,
+          "loiDate": "2026-02-06",
+          "interviewDate": null,
+          "notes": "Strongest possible PM candidate. Her Exceptional CPARS on DHS work is a proposal discriminator. Backfill plan: promote Marcus Williams to DHS CISA PM role."
+        },
+        {
+          "id": "C-01-02",
+          "name": "Steven Mitchell",
+          "source": "External",
+          "currentEmployer": "Perspecta (now Peraton)",
+          "currentRole": "Deputy Program Manager — DHS Infrastructure Operations",
+          "matchScore": 82,
+          "education": "MBA, University of Maryland; BS Information Technology, Old Dominion University",
+          "yearsExperience": 14,
+          "relevantExperience": "12 years federal PM experience. Deputy PM on $50M DHS infrastructure contract. Previously PM for CBP network modernization ($8M).",
+          "certifications": ["PMP", "ITIL v4 Foundation", "SAFe 5 Agilist"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "DHS infrastructure operations experience at larger scale ($50M)",
+            "Understands DHS OCIO from infrastructure perspective",
+            "SAFe Agilist certification supports agile delivery approach"
+          ],
+          "concerns": [
+            "Deputy PM — has not served as lead PM on contract of this size",
+            "Current employer is Peraton — potential non-compete issues",
+            "No cloud migration-specific PM experience"
+          ],
+          "status": "reviewing",
+          "availabilityDate": "2026-09-01",
+          "compensationRange": "$175,000 - $195,000",
+          "loiSigned": false,
+          "loiDate": null,
+          "interviewDate": "2026-02-14",
+          "notes": "Strong backup candidate. Non-compete review with legal in progress. His DHS infrastructure knowledge would complement the team even if not PM."
+        }
+      ]
+    },
+    {
+      "id": "LCAT-02",
+      "title": "Technical Lead / Cloud Architect",
+      "designation": "Key",
+      "importance": "Critical",
+      "importanceRationale": "Technical Lead is Key Personnel per draft PWS. This role drives the cloud migration architecture and oral presentation. Must combine deep AWS/Azure expertise with DHS environment knowledge. The single most important technical hire for this pursuit.",
+      "fte": 1,
+      "location": "Washington, DC (on-site 3 days/week)",
+      "requirements": {
+        "education": {
+          "minimum": "Bachelor's degree in Computer Science, Engineering, or related technical field",
+          "preferred": "Master's degree in Cloud Computing, Computer Science, or Cybersecurity",
+          "substitute": "10 additional years of relevant technical experience may substitute for degree"
+        },
+        "experience": {
+          "minimum": "10 years cloud architecture experience, including 5 years designing and executing federal cloud migrations",
+          "preferred": "12+ years with DHS or IC agency cloud architecture experience",
+          "specific": [
+            "Architected AWS GovCloud and/or Azure Government solutions at enterprise scale (200+ applications)",
+            "Experience with FedRAMP High architecture requirements",
+            "Led technical teams of 15+ engineers on cloud migration programs"
+          ]
+        },
+        "certifications": {
+          "required": ["AWS Solutions Architect Professional", "AWS Security Specialty"],
+          "preferred": ["Azure Solutions Architect Expert", "CISSP", "CCSP"],
+          "notes": "Must hold both required AWS certifications at time of proposal"
+        },
+        "clearance": {
+          "required": "TS/SCI",
+          "status": "Active — no interim acceptable for Key Personnel"
+        }
+      },
+      "candidates": [
+        {
+          "id": "C-02-01",
+          "name": "David Kim",
+          "source": "External — Booz Allen Hamilton",
+          "currentEmployer": "Booz Allen Hamilton",
+          "currentRole": "Principal Cloud Architect — DHS Programs",
+          "matchScore": 94,
+          "education": "MS Computer Science, Carnegie Mellon University; BS Electrical Engineering, MIT",
+          "yearsExperience": 16,
+          "relevantExperience": "Former DHS OCIO cloud architect (2019-2023). Designed DHS's initial multi-cloud strategy. Led Booz Allen's DHS cloud practice. Architected cloud solutions for 250+ application portfolio.",
+          "certifications": ["AWS Solutions Architect Professional", "AWS Security Specialty", "Azure Solutions Architect Expert", "CISSP", "CCSP"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "Former DHS OCIO cloud architect — intimate knowledge of the environment and application portfolio",
+            "Holds all required AND preferred certifications",
+            "Designed DHS's original multi-cloud strategy — evaluators will recognize his name",
+            "16 years experience with 250+ application migration portfolio — exceeds scope",
+            "Articulate presenter — ideal for oral presentation evaluation"
+          ],
+          "concerns": [
+            "High-demand candidate — Booz Allen will likely counteroffer aggressively",
+            "Compensation expectations are at top of range ($225K+)",
+            "18-month non-solicitation clause with Booz Allen — legal review needed"
+          ],
+          "status": "committed",
+          "availabilityDate": "2026-08-01",
+          "compensationRange": "$210,000 - $235,000",
+          "loiSigned": true,
+          "loiDate": "2026-02-04",
+          "interviewDate": null,
+          "notes": "Platinum candidate. His DHS OCIO background is an enormous discriminator. LOI includes retention bonus and equity. Non-solicitation review: legal advises clause applies to Booz Allen clients, not competitors for new contracts — we are clear."
+        },
+        {
+          "id": "C-02-02",
+          "name": "Jason Patel",
+          "source": "External — General Dynamics IT",
+          "currentEmployer": "General Dynamics IT",
+          "currentRole": "Senior Cloud Architect — DHS EAGLE II",
+          "matchScore": 78,
+          "education": "MS Cloud Computing, University of Maryland; BS Computer Science, Georgia Tech",
+          "yearsExperience": 11,
+          "relevantExperience": "8 years DHS cloud architecture on EAGLE II contracts. Designed multi-cloud environments for FEMA and TSA. AWS and Azure dual-certified.",
+          "certifications": ["AWS Solutions Architect Professional", "Azure Solutions Architect Expert", "CCSP"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "Active DHS EAGLE II experience across FEMA and TSA",
+            "Dual AWS/Azure certification matches multi-cloud requirement",
+            "Younger talent — long-term growth potential"
+          ],
+          "concerns": [
+            "Missing AWS Security Specialty certification (required) — could obtain before proposal",
+            "Has not led migrations at 340+ application scale",
+            "Less well-known to DHS OCIO evaluators than David Kim"
+          ],
+          "status": "reviewing",
+          "availabilityDate": "2026-09-01",
+          "compensationRange": "$180,000 - $200,000",
+          "loiSigned": false,
+          "loiDate": null,
+          "interviewDate": "2026-02-18",
+          "notes": "Strong backup for David Kim. If LOI'd, should immediately schedule AWS Security Specialty exam. Could serve as Deputy Technical Lead if David Kim is secured."
+        },
+        {
+          "id": "C-02-03",
+          "name": "Maria Santos",
+          "source": "External — AWS Professional Services",
+          "currentEmployer": "Amazon Web Services",
+          "currentRole": "Principal Solutions Architect — Federal",
+          "matchScore": 72,
+          "education": "BS Computer Engineering, University of Texas at Austin",
+          "yearsExperience": 13,
+          "relevantExperience": "10 years AWS professional services. Led 50+ federal cloud migrations. Deep AWS GovCloud expertise. Limited Azure experience.",
+          "certifications": ["AWS Solutions Architect Professional", "AWS Security Specialty", "AWS DevOps Engineer Professional"],
+          "clearance": "Secret (TS/SCI eligible — previously held)",
+          "strengths": [
+            "Deepest possible AWS expertise — wrote several AWS migration whitepapers",
+            "50+ federal migration reference implementations",
+            "Previously held TS/SCI — reinstatement timeline shorter than new clearance"
+          ],
+          "concerns": [
+            "TS/SCI clearance lapsed — reinstatement takes 3-6 months",
+            "No Azure experience — DHS requires multi-cloud capability",
+            "Significant compensation premium to leave AWS ($250K+ total comp)",
+            "Non-compete with AWS may restrict DHS work for 12 months"
+          ],
+          "status": "sourcing",
+          "availabilityDate": "2026-10-01",
+          "compensationRange": "$220,000 - $260,000",
+          "loiSigned": false,
+          "loiDate": null,
+          "interviewDate": null,
+          "notes": "Aspirational candidate. Only pursue if David Kim and Jason Patel both fall through. Clearance and non-compete issues make her a high-risk option."
+        }
+      ]
+    },
+    {
+      "id": "LCAT-03",
+      "title": "Cloud Architect (Migration)",
+      "designation": "Key",
+      "importance": "Critical",
+      "importanceRationale": "Dedicated migration architect responsible for CloudPathfinder deployment and execution of the 340+ application migration waves. Must have hands-on experience with large-scale federal migrations and multi-cloud environments.",
+      "fte": 2,
+      "location": "Washington, DC / Remote hybrid",
+      "requirements": {
+        "education": {
+          "minimum": "Bachelor's degree in Computer Science, Engineering, or related field",
+          "preferred": "Master's degree in relevant field",
+          "substitute": "8 additional years of relevant experience"
+        },
+        "experience": {
+          "minimum": "8 years cloud architecture, including 4 years federal cloud migration execution",
+          "preferred": "10+ years with experience migrating 100+ applications",
+          "specific": [
+            "Hands-on AWS GovCloud and Azure Government migration execution",
+            "Experience with automated migration assessment and dependency mapping tools",
+            "Designed and executed phased migration waves for enterprise portfolios"
+          ]
+        },
+        "certifications": {
+          "required": ["AWS Solutions Architect Associate (minimum)", "AWS Migration Specialty (or equivalent experience)"],
+          "preferred": ["AWS Solutions Architect Professional", "Azure Administrator Associate"],
+          "notes": "Migration-specific certification highly valued"
+        },
+        "clearance": {
+          "required": "TS/SCI",
+          "status": "Active preferred — interim acceptable for non-Key positions"
+        }
+      },
+      "candidates": [
+        {
+          "id": "C-03-01",
+          "name": "Chris Morgan",
+          "source": "Internal",
+          "currentEmployer": "TechForward Solutions",
+          "currentRole": "Cloud Architect — Army Cloud Migration Program",
+          "matchScore": 88,
+          "education": "MS Information Systems, Johns Hopkins University; BS Computer Science, Penn State",
+          "yearsExperience": 10,
+          "relevantExperience": "Lead migration architect on TechForward's Army cloud program. Deployed CloudPathfinder for 180-application assessment. 6 years federal cloud migration experience.",
+          "certifications": ["AWS Solutions Architect Professional", "AWS Migration Specialty", "Azure Administrator Associate"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "CloudPathfinder subject matter expert — designed and deployed the tool",
+            "Migrated 180 applications on Army program — directly transferable experience",
+            "Internal candidate — no recruiting risk, immediate availability",
+            "Holds rare AWS Migration Specialty certification"
+          ],
+          "concerns": [
+            "Pulling from active Army program requires backfill plan",
+            "Has not worked at 340+ application scale (only 180)"
+          ],
+          "status": "committed",
+          "availabilityDate": "2026-08-01",
+          "compensationRange": "$165,000 - $185,000",
+          "loiSigned": true,
+          "loiDate": "2026-02-07",
+          "interviewDate": null,
+          "notes": "Ideal migration architect. His CloudPathfinder expertise directly supports our key discriminator. Army program backfill: promote junior architect + recruit replacement."
+        },
+        {
+          "id": "C-03-02",
+          "name": "Natasha Volkov",
+          "source": "External — Accenture Federal Services",
+          "currentEmployer": "Accenture Federal Services",
+          "currentRole": "Cloud Migration Lead — VA Enterprise Cloud",
+          "matchScore": 82,
+          "education": "BS Computer Engineering, Virginia Tech; AWS Certified (multiple)",
+          "yearsExperience": 9,
+          "relevantExperience": "Led migration of 220 applications for VA Enterprise Cloud program. Multi-cloud (AWS + Azure) migration experience. Strong automation background.",
+          "certifications": ["AWS Solutions Architect Professional", "AWS Migration Specialty", "Terraform Associate"],
+          "clearance": "Secret (TS eligible)",
+          "strengths": [
+            "220-application migration portfolio — closest scale match to DHS requirement",
+            "VA migration experience at enterprise scale",
+            "Strong Infrastructure-as-Code and automation skills"
+          ],
+          "concerns": [
+            "Only Secret clearance — TS/SCI upgrade needed (90-120 days)",
+            "Accenture non-compete clause requires legal review",
+            "No DHS-specific experience"
+          ],
+          "status": "reviewing",
+          "availabilityDate": "2026-09-01",
+          "compensationRange": "$170,000 - $190,000",
+          "loiSigned": false,
+          "loiDate": null,
+          "interviewDate": "2026-02-20",
+          "notes": "Strong second migration architect to pair with Chris Morgan. Her 220-app VA experience complements his 180-app Army experience. Clearance timeline is manageable if we start upgrade immediately upon hiring."
+        }
+      ]
+    },
+    {
+      "id": "LCAT-04",
+      "title": "Security Engineer",
+      "designation": "Critical",
+      "importance": "Critical",
+      "importanceRationale": "Security Engineer leads zero trust implementation and FedRAMP continuous monitoring — two of our top discriminators. This role directly supports two of three win themes. Must have hands-on ZTA and FedRAMP High experience.",
+      "fte": 3,
+      "location": "Washington, DC (on-site for classified work)",
+      "requirements": {
+        "education": {
+          "minimum": "Bachelor's degree in Cybersecurity, Computer Science, or related field",
+          "preferred": "Master's degree in Cybersecurity or Information Assurance",
+          "substitute": "6 additional years of relevant security experience"
+        },
+        "experience": {
+          "minimum": "6 years cybersecurity engineering, including 3 years federal cloud security",
+          "preferred": "8+ years with zero trust architecture implementation experience",
+          "specific": [
+            "Zero trust architecture design and implementation (CISA maturity model)",
+            "FedRAMP High security control implementation and assessment",
+            "Cloud-native security tools (AWS Security Hub, Azure Sentinel, GuardDuty)",
+            "SIEM/SOAR integration in cloud environments"
+          ]
+        },
+        "certifications": {
+          "required": ["CISSP or CCSP", "AWS Security Specialty"],
+          "preferred": ["CISM", "OSCP", "Zero Trust Certified"],
+          "notes": "CISSP strongly preferred over CCSP for lead security engineer"
+        },
+        "clearance": {
+          "required": "TS/SCI",
+          "status": "Active required — classified security architecture review"
+        }
+      },
+      "candidates": [
+        {
+          "id": "C-04-01",
+          "name": "Rachel Foster",
+          "source": "External — Peraton (incumbent contract)",
+          "currentEmployer": "Peraton Inc.",
+          "currentRole": "Security Operations Lead — DHS Cloud Migration",
+          "matchScore": 92,
+          "education": "MS Cybersecurity, Georgetown University; BS Computer Science, Howard University",
+          "yearsExperience": 11,
+          "relevantExperience": "Lead security engineer on this exact DHS cloud migration contract for 3 years. Designed security architecture for current cloud environment. ZTA implementation lead for DHS OCIO pilot.",
+          "certifications": ["CISSP", "CCSP", "AWS Security Specialty", "CISM"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "Currently the security lead on this exact contract — unmatched environment knowledge",
+            "Led DHS OCIO zero trust pilot — evaluators know her work",
+            "Holds all required AND preferred certifications",
+            "Frustrated with Peraton's management — genuinely motivated to move"
+          ],
+          "concerns": [
+            "Recruiting from incumbent raises ethical concerns — must be handled carefully",
+            "Peraton may invoke non-compete if they learn of our interest",
+            "Evaluators may view this as predatory recruiting if not handled delicately"
+          ],
+          "status": "committed",
+          "availabilityDate": "2026-08-01",
+          "compensationRange": "$175,000 - $195,000",
+          "loiSigned": true,
+          "loiDate": "2026-02-05",
+          "interviewDate": null,
+          "notes": "She approached our recruiter independently — we did not solicit. Ethical wall protocols established. Her resume will not reference current contract by name — uses sanitized description. Legal reviewed and approved."
+        },
+        {
+          "id": "C-04-02",
+          "name": "Derek Washington",
+          "source": "Internal",
+          "currentEmployer": "TechForward Solutions",
+          "currentRole": "Senior Security Engineer — DHS CISA Contract",
+          "matchScore": 78,
+          "education": "BS Cybersecurity, University of Maryland Baltimore County",
+          "yearsExperience": 7,
+          "relevantExperience": "5 years on TechForward's DHS CISA cybersecurity modernization contract. Implemented microsegmentation and zero trust controls. Strong hands-on security engineering skills.",
+          "certifications": ["CISSP", "AWS Security Specialty", "CompTIA Security+"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "Internal candidate with DHS experience on our Exceptional CPARS contract",
+            "Hands-on zero trust implementation experience at CISA",
+            "No recruiting risk — committed TechForward employee"
+          ],
+          "concerns": [
+            "Less senior than Rachel Foster — 7 years vs 11 years experience",
+            "Has not served as lead security engineer on a program",
+            "Pulling from CISA contract requires backfill"
+          ],
+          "status": "committed",
+          "availabilityDate": "2026-08-01",
+          "compensationRange": "$145,000 - $165,000",
+          "loiSigned": true,
+          "loiDate": "2026-02-07",
+          "interviewDate": null,
+          "notes": "Excellent second security engineer to support Rachel Foster. Can grow into lead role over contract period. CISA backfill: recruit external replacement."
+        }
+      ]
+    },
+    {
+      "id": "LCAT-05",
+      "title": "DevOps Engineer",
+      "designation": "Commodity",
+      "importance": "Commodity",
+      "importanceRationale": "DevOps Engineers execute CI/CD pipeline development and infrastructure-as-code. Important for delivery but not a discriminator in evaluation. Standard skills widely available in the market.",
+      "fte": 4,
+      "location": "Washington, DC / Remote hybrid",
+      "requirements": {
+        "education": {
+          "minimum": "Bachelor's degree in Computer Science or related field",
+          "preferred": "Relevant certifications may substitute",
+          "substitute": "4 additional years of DevOps experience"
+        },
+        "experience": {
+          "minimum": "4 years DevOps/DevSecOps experience, including 2 years federal environments",
+          "preferred": "6+ years with CI/CD pipeline experience in FedRAMP environments",
+          "specific": [
+            "CI/CD pipeline design using Jenkins, GitLab CI, or GitHub Actions",
+            "Infrastructure-as-Code (Terraform, CloudFormation, ARM templates)",
+            "Container orchestration (ECS, EKS, AKS)",
+            "Automated testing and deployment in FedRAMP environments"
+          ]
+        },
+        "certifications": {
+          "required": ["AWS DevOps Engineer Associate (minimum)"],
+          "preferred": ["AWS DevOps Engineer Professional", "HashiCorp Terraform Associate", "CKA"],
+          "notes": "Container and IaC certifications valued"
+        },
+        "clearance": {
+          "required": "Secret (minimum)",
+          "status": "Active or interim acceptable"
+        }
+      },
+      "candidates": [
+        {
+          "id": "C-05-01",
+          "name": "Marcus Williams",
+          "source": "Internal",
+          "currentEmployer": "TechForward Solutions",
+          "currentRole": "Lead DevOps Engineer — Army Cloud Migration",
+          "matchScore": 85,
+          "education": "BS Computer Science, NC State University",
+          "yearsExperience": 8,
+          "relevantExperience": "Lead DevOps on Army cloud migration. Built CI/CD pipelines for 180 migrated applications. Terraform and CloudFormation expert.",
+          "certifications": ["AWS DevOps Engineer Professional", "HashiCorp Terraform Associate", "CKA"],
+          "clearance": "Secret (active)",
+          "strengths": [
+            "Built DevSecOps pipeline for our most relevant past performance",
+            "Terraform expert — authored TechForward's IaC standards",
+            "Internal candidate — no risk"
+          ],
+          "concerns": [
+            "Only Secret clearance — may need TS/SCI upgrade for certain DHS work",
+            "Pulling from Army program impacts that delivery"
+          ],
+          "status": "committed",
+          "availabilityDate": "2026-08-01",
+          "compensationRange": "$140,000 - $155,000",
+          "loiSigned": true,
+          "loiDate": "2026-02-07",
+          "interviewDate": null,
+          "notes": "Will serve as DevOps Lead. Other 3 DevOps positions to be filled from recruiting pipeline and partner staff."
+        },
+        {
+          "id": "C-05-02",
+          "name": "Sarah Abrams",
+          "source": "External pipeline",
+          "currentEmployer": "Booz Allen Hamilton",
+          "currentRole": "DevOps Engineer — DHS EAGLE II",
+          "matchScore": 72,
+          "education": "BS Information Technology, James Madison University",
+          "yearsExperience": 5,
+          "relevantExperience": "3 years DevOps on DHS EAGLE II task orders. Jenkins and GitLab CI experience. Kubernetes and container deployments.",
+          "certifications": ["AWS DevOps Engineer Associate", "CKA"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "Active TS/SCI clearance — valuable for cleared DevOps work",
+            "DHS EAGLE II experience adds familiarity with environment",
+            "Available within 30 days of offer"
+          ],
+          "concerns": [
+            "Less experienced — 5 years total",
+            "No Terraform certification (self-taught)",
+            "May need mentoring for enterprise-scale pipelines"
+          ],
+          "status": "sourcing",
+          "availabilityDate": "2026-08-15",
+          "compensationRange": "$120,000 - $135,000",
+          "loiSigned": false,
+          "loiDate": null,
+          "interviewDate": "2026-02-22",
+          "notes": "Good complement to Marcus Williams. Her TS/SCI clearance fills the gap in the DevOps team. Interview scheduled."
+        }
+      ]
+    },
+    {
+      "id": "LCAT-06",
+      "title": "Systems Administrator",
+      "designation": "Commodity",
+      "importance": "Commodity",
+      "importanceRationale": "Systems Administrators provide day-to-day operational support for migrated cloud environments. Standard role with well-defined skill requirements. Not a discriminator but essential for delivery.",
+      "fte": 4,
+      "location": "Washington, DC / Remote (after initial 90-day on-site period)",
+      "requirements": {
+        "education": {
+          "minimum": "Associate's degree in IT or related field",
+          "preferred": "Bachelor's degree in Computer Science or IT",
+          "substitute": "4 additional years of systems administration experience"
+        },
+        "experience": {
+          "minimum": "3 years systems administration experience, including 1 year cloud (AWS/Azure)",
+          "preferred": "5+ years with federal cloud operations experience",
+          "specific": [
+            "AWS and/or Azure cloud administration",
+            "Linux and Windows server administration",
+            "Monitoring and alerting (CloudWatch, Azure Monitor, Splunk)",
+            "Patch management and vulnerability remediation"
+          ]
+        },
+        "certifications": {
+          "required": ["AWS SysOps Administrator Associate OR Azure Administrator Associate"],
+          "preferred": ["CompTIA Security+", "Linux+"],
+          "notes": "Security+ required within 90 days of start per DoD 8570"
+        },
+        "clearance": {
+          "required": "Secret (minimum)",
+          "status": "Active or interim acceptable"
+        }
+      },
+      "candidates": [
+        {
+          "id": "C-06-01",
+          "name": "Tyler Jackson",
+          "source": "Internal",
+          "currentEmployer": "TechForward Solutions",
+          "currentRole": "Senior Systems Administrator — Treasury Contract",
+          "matchScore": 80,
+          "education": "BS Information Technology, Western Governors University",
+          "yearsExperience": 6,
+          "relevantExperience": "4 years federal cloud systems administration. Currently managing AWS environment for Treasury contract. Linux and Windows dual-certified.",
+          "certifications": ["AWS SysOps Administrator Associate", "CompTIA Security+", "RHCSA"],
+          "clearance": "Secret (active)",
+          "strengths": [
+            "Internal candidate with federal cloud administration experience",
+            "AWS SysOps certified with hands-on GovCloud experience",
+            "Strong Linux skills — RHCSA certified"
+          ],
+          "concerns": [
+            "Treasury contract may need him through FY2026 — timing coordination needed",
+            "No DHS-specific environment experience"
+          ],
+          "status": "reviewing",
+          "availabilityDate": "2026-09-01",
+          "compensationRange": "$95,000 - $115,000",
+          "loiSigned": false,
+          "loiDate": null,
+          "interviewDate": null,
+          "notes": "Solid SysAdmin candidate. Remaining 3 SysAdmin positions will be filled from recruiting pipeline — commodity skill set with strong market availability."
+        },
+        {
+          "id": "C-06-02",
+          "name": "Emma Rodriguez",
+          "source": "Recruiting Pipeline",
+          "currentEmployer": "SAIC",
+          "currentRole": "Cloud Systems Administrator — DoD",
+          "matchScore": 68,
+          "education": "AS Network Administration, Northern Virginia Community College; pursuing BS",
+          "yearsExperience": 4,
+          "relevantExperience": "3 years DoD cloud administration. AWS and Azure experience. Monitoring and alerting configuration.",
+          "certifications": ["AWS SysOps Administrator Associate", "Azure Administrator Associate", "CompTIA Security+"],
+          "clearance": "Secret (active)",
+          "strengths": [
+            "Dual AWS + Azure certification matches multi-cloud requirement",
+            "Available within 2 weeks of offer",
+            "Competitive salary expectations for commodity role"
+          ],
+          "concerns": [
+            "Relatively junior — 4 years experience",
+            "No federal civilian agency experience (DoD only)",
+            "Still completing bachelor's degree"
+          ],
+          "status": "sourcing",
+          "availabilityDate": "2026-08-15",
+          "compensationRange": "$85,000 - $100,000",
+          "loiSigned": false,
+          "loiDate": null,
+          "interviewDate": "2026-02-25",
+          "notes": "Pipeline candidate for one of 4 SysAdmin positions. Dual certification is a plus. Junior level is acceptable for commodity role with senior oversight."
+        },
+        {
+          "id": "C-06-03",
+          "name": "Ahmad Khalil",
+          "source": "Recruiting Pipeline",
+          "currentEmployer": "Leidos",
+          "currentRole": "Systems Administrator — DHS CBP",
+          "matchScore": 75,
+          "education": "BS Computer Science, George Mason University",
+          "yearsExperience": 5,
+          "relevantExperience": "3 years DHS CBP cloud and on-prem systems administration. AWS GovCloud experience. Splunk monitoring and alerting.",
+          "certifications": ["AWS SysOps Administrator Associate", "CompTIA Security+", "Splunk Core Certified User"],
+          "clearance": "TS/SCI (active)",
+          "strengths": [
+            "DHS experience (CBP) — understands DHS operational environment",
+            "TS/SCI cleared — immediately deployable to classified environments",
+            "Splunk certification aligns with DHS SIEM toolset"
+          ],
+          "concerns": [
+            "Leidos non-compete clause — 6-month restriction for DHS work",
+            "May be difficult to extract from current Leidos contract"
+          ],
+          "status": "sourcing",
+          "availabilityDate": "2026-09-01",
+          "compensationRange": "$100,000 - $120,000",
+          "loiSigned": false,
+          "loiDate": null,
+          "interviewDate": null,
+          "notes": "Attractive due to DHS experience and TS/SCI clearance. Legal reviewing Leidos non-compete. If cleared, would be strong addition for classified work."
+        }
+      ]
+    }
+  ]
+}

@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import './globals.css';
-@import '@make-kits/govhub-design-system/style.css';
+/* '@make-kits/govhub-design-system/style.css' removed: private Figma Make
+   package, not on the public npm registry. All GovHub tokens it would provide
+   are already defined locally in globals.css (and shadcn tokens in theme.css),
+   so this import is redundant for running the app. */
 @import './tailwind.css';

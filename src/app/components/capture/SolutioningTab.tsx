@@ -1,11 +1,13 @@
 import React, { useState, useCallback } from 'react';
 import {
-  ClipboardList, Search, Lightbulb, ListChecks, Bot, Paperclip,
+  ClipboardList, Search, Lightbulb, ListChecks, Bot, Sparkles, Paperclip, Undo2,
   Lock, CheckCircle, AlertTriangle, XCircle, ChevronDown, ChevronRight,
-  Check, X, Edit2, MessageSquare, AlertCircle, ArrowRight, Target,
+  Check, X, Edit2, ArrowRight, Target, Info,
   BarChart2, TrendingUp,
 } from 'lucide-react';
 import solRaw from '../../../imports/opp-001-solutioning.json';
+import { SectionIndex } from './SectionIndex';
+import { DetailPanel, ActionButton } from './DetailPanel';
 
 // ─── Types aligned to the real JSON shape ────────────────────────────────────
 
@@ -53,7 +55,7 @@ type TriageFilter = 'All' | 'Passed' | 'Conditional' | 'Failed';
 function verdictFg(v: string): string {
   if (v === 'PASSED' || v === 'PASS') return 'var(--gh-success-fg)';
   if (v === 'CONDITIONAL') return 'var(--gh-warning-fg)';
-  return 'var(--gh-danger-fg)';
+  return 'var(--gh-danger-fg-strong)';
 }
 function verdictBg(v: string): string {
   if (v === 'PASSED' || v === 'PASS') return 'var(--gh-success-bg)';
@@ -61,7 +63,7 @@ function verdictBg(v: string): string {
   return 'var(--gh-danger-bg)';
 }
 function confidenceFg(c: number): string {
-  return c >= 75 ? 'var(--gh-success-fg)' : c >= 50 ? 'var(--gh-warning-fg)' : 'var(--gh-danger-fg)';
+  return c >= 75 ? 'var(--gh-success-fg)' : c >= 50 ? 'var(--gh-warning-fg)' : 'var(--gh-danger-fg-strong)';
 }
 function confidenceBg(c: number): string {
   return c >= 75 ? 'var(--gh-success-bg)' : c >= 50 ? 'var(--gh-warning-bg)' : 'var(--gh-danger-bg)';
@@ -137,7 +139,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
     <div style={{
       fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
       fontWeight: 'var(--gh-font-weight-semibold)',
-      color: 'var(--gh-text-disabled)', textTransform: 'uppercase' as const,
+      color: 'var(--gh-text-tertiary)', textTransform: 'uppercase' as const,
       letterSpacing: '0.06em', marginBottom: 'var(--gh-space-2)',
     }}>
       {children}
@@ -174,36 +176,37 @@ function SourceChips({ sources }: { sources: EnvSource[] }) {
 
 // ─── Band wrapper ─────────────────────────────────────────────────────────────
 
-function Band({ icon, title, verdict, children }: {
-  icon: React.ReactNode; title: string; verdict?: string; children: React.ReactNode;
+function Band({ icon, title, verdict, children, defaultOpen = true }: {
+  icon: React.ReactNode; title: string; verdict?: string; children: React.ReactNode; defaultOpen?: boolean;
 }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
-    <div style={{
-      border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)',
-      marginBottom: 'var(--gh-space-6)', overflow: 'hidden',
-    }}>
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 'var(--gh-space-4)',
-        padding: 'var(--gh-space-5) var(--gh-space-8)',
-        background: 'var(--gh-bg-surface-muted)',
-        borderBottom: '1px solid var(--gh-border)',
+    <div style={{ width: '100%', fontFamily: 'var(--gh-font)' }}>
+      <button onClick={() => setOpen(o => !o)} style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%',
+        padding: '16px 24px', background: 'var(--gh-bg-elevated)',
+        border: 'none', cursor: 'pointer', fontFamily: 'var(--gh-font)',
       }}>
-        <span style={{ color: 'var(--gh-text-tertiary)', display: 'flex', flexShrink: 0 }}>{icon}</span>
-        <span style={{
-          flex: 1, fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-          fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)',
-        }}>
-          {title}
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ color: 'var(--gh-text-tertiary)', display: 'flex', flexShrink: 0 }}>{icon}</span>
+          <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-secondary)', textTransform: 'uppercase' as const, letterSpacing: '0.55px' }}>
+            {title}
+          </span>
         </span>
-        {verdict && (
-          <Chip bg={verdictBg(verdict)} fg={verdictFg(verdict)}>
-            {verdict === 'PASSED' ? '✓ PASSED' : verdict === 'CONDITIONAL' ? '△ CONDITIONAL' : '✕ FAILED'}
-          </Chip>
-        )}
-      </div>
-      <div style={{ padding: 'var(--gh-space-7) var(--gh-space-8)', background: 'var(--gh-bg-elevated)' }}>
-        {children}
-      </div>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          {verdict && (
+            <Chip bg={verdictBg(verdict)} fg={verdictFg(verdict)}>
+              {verdict === 'PASSED' ? '✓ PASSED' : verdict === 'CONDITIONAL' ? '△ CONDITIONAL' : '✕ FAILED'}
+            </Chip>
+          )}
+          <ChevronDown size={16} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, transform: open ? 'none' : 'rotate(-90deg)', transition: 'transform .15s' }} />
+        </span>
+      </button>
+      {open && (
+        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-surface)', color: 'var(--gh-text)' }}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -216,50 +219,48 @@ function WinThemesPanel({ collapsed, onToggle }: { collapsed: boolean; onToggle:
 
   return (
     <div style={{
-      border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)',
+      border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-xl)',
       marginBottom: 'var(--gh-space-8)', overflow: 'hidden',
-      background: 'var(--gh-bg-elevated)',
+      background: 'var(--gh-bg-surface)',
     }}>
-      <button
-        onClick={onToggle}
-        style={{
-          width: '100%', display: 'flex', alignItems: 'center', gap: 'var(--gh-space-4)',
-          padding: 'var(--gh-space-5) var(--gh-space-8)',
-          background: 'var(--gh-bg-surface-muted)',
-          border: 'none', borderBottom: collapsed ? 'none' : '1px solid var(--gh-border)',
-          cursor: 'pointer',
-        }}
-      >
-        <Target size={14} color="var(--gh-accent-tint)" />
-        <span style={{
-          flex: 1, textAlign: 'left' as const,
-          fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-          fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)',
-        }}>
-          Win Themes &amp; Goal Coverage
-        </span>
-        <Chip bg="var(--gh-success-bg)" fg="var(--gh-success-fg)">
-          {goalCoverage.percent}% covered
-        </Chip>
-        {collapsed
-          ? <ChevronRight size={14} color="var(--gh-text-tertiary)" />
-          : <ChevronDown size={14} color="var(--gh-text-tertiary)" />}
-      </button>
+      {/* Header — matches Staffing IncumbentContextCard layout */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px' }}>
+        <div style={{ width: 38, height: 38, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface-muted)', display: 'grid', placeItems: 'center', color: 'var(--gh-accent-tint)', flexShrink: 0 }}>
+          <Target size={18} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' as const }}>
+            <span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)', fontFamily: 'var(--gh-font)' }}>Win Themes &amp; Goal Coverage</span>
+            <Chip bg="var(--gh-success-bg)" fg="var(--gh-success-fg)">{goalCoverage.percent}% covered</Chip>
+          </div>
+          {collapsed && (
+            <div style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', marginTop: 2, fontFamily: 'var(--gh-font)' }}>
+              {winThemes.length} themes · {goalCoverage.covered.length} factors covered
+            </div>
+          )}
+        </div>
+        <button
+          onClick={onToggle}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'transparent', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '5px 10px', cursor: 'pointer', color: 'var(--gh-text-tertiary)', fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)', fontWeight: 'var(--gh-font-weight-medium)', whiteSpace: 'nowrap' }}
+        >
+          {!collapsed ? <><ChevronDown size={13} /> Hide</> : <><ChevronRight size={13} /> Details</>}
+        </button>
+      </div>
 
       {!collapsed && (
-        <div style={{ padding: 'var(--gh-space-7) var(--gh-space-8)' }}>
+        <div style={{ padding: '0 14px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {/* Win theme cards */}
-          <div style={{ display: 'flex', gap: 'var(--gh-space-5)', marginBottom: 'var(--gh-space-7)', flexWrap: 'wrap' as const }}>
+          <div style={{ display: 'flex', gap: 'var(--gh-space-5)', flexWrap: 'wrap' as const }}>
             {winThemes.map(wt => (
               <div key={wt.id} style={{
                 flex: '1 1 200px',
                 padding: 'var(--gh-space-5) var(--gh-space-6)',
-                background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)',
+                background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)',
                 borderRadius: 'var(--gh-radius-md)',
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)', marginBottom: 'var(--gh-space-3)' }}>
                   <Chip bg="var(--gh-info-bg)" fg="var(--gh-info-fg)">{wt.id}</Chip>
-                  <Chip bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-disabled)">
+                  <Chip bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-tertiary)">
                     <Paperclip size={9} /> {wt.source}
                   </Chip>
                 </div>
@@ -283,7 +284,7 @@ function WinThemesPanel({ collapsed, onToggle }: { collapsed: boolean; onToggle:
 
           {/* Goal coverage card */}
           <div style={{
-            background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)',
+            background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)',
             borderRadius: 'var(--gh-radius-md)', padding: 'var(--gh-space-5) var(--gh-space-6)',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-4)', marginBottom: 'var(--gh-space-5)' }}>
@@ -338,106 +339,115 @@ function WinThemesPanel({ collapsed, onToggle }: { collapsed: boolean; onToggle:
 
 // ─── Zone B: Element rail ─────────────────────────────────────────────────────
 
-function ElementRail({ selected, onSelect, filter, cascade }: {
+// Grouped rail items — rendered inside the shared SectionIndex (provides the
+// collapsible/resizable frame). Returns the win-theme groups; `narrow` → title-only.
+function renderRailGroups({ selected, onSelect, filter, cascade, narrow }: {
   selected: string; onSelect: (id: string) => void;
-  filter: TriageFilter; cascade: boolean;
+  filter: TriageFilter; cascade: boolean; narrow: boolean;
 }) {
-  return (
-    <div style={{
-      width: 284, flexShrink: 0, display: 'flex', flexDirection: 'column',
-      borderRight: '1px solid var(--gh-border)', overflowY: 'auto',
-    }}>
-      <div style={{
-        padding: 'var(--gh-space-5) var(--gh-space-6)',
-        borderBottom: '1px solid var(--gh-border)',
-        background: 'var(--gh-bg-surface)', flexShrink: 0,
-      }}>
-        <span style={{
-          fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-          fontWeight: 'var(--gh-font-weight-semibold)', letterSpacing: '0.07em',
-          textTransform: 'uppercase' as const, color: 'var(--gh-text-disabled)',
-        }}>
-          Solution Elements · {sol.solutionElements.length}
-        </span>
-      </div>
+  return RAIL_GROUPS.map(group => {
+    const items = sol.solutionElements.filter(el => groupForElement(el) === group.id);
+    const shown = items.filter(el => {
+      if (filter === 'All') return true;
+      const v = elementVerdict(el, cascade);
+      if (filter === 'Passed') return v === 'PASSED';
+      if (filter === 'Conditional') return v === 'CONDITIONAL';
+      return v === 'FAILED';
+    });
+    if (shown.length === 0) return null;
 
-      {RAIL_GROUPS.map(group => {
-        const items = sol.solutionElements.filter(el => groupForElement(el) === group.id);
-        const shown = items.filter(el => {
-          if (filter === 'All') return true;
-          const v = elementVerdict(el, cascade);
-          if (filter === 'Passed') return v === 'PASSED';
-          if (filter === 'Conditional') return v === 'CONDITIONAL';
-          return v === 'FAILED';
-        });
-        if (shown.length === 0) return null;
-
-        return (
-          <div key={group.id}>
-            <div style={{
-              padding: 'var(--gh-space-2) var(--gh-space-6)',
-              fontSize: 9, fontFamily: 'var(--gh-font)',
-              fontWeight: 'var(--gh-font-weight-semibold)', letterSpacing: '0.04em',
-              color: group.id === 'NO_THEME' ? 'var(--gh-warning-fg)' : 'var(--gh-text-disabled)',
-              borderBottom: '1px solid var(--gh-border)',
-              background: group.id === 'NO_THEME' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-canvas)',
-              textTransform: 'none' as const,
-            }}>
-              {group.id === 'NO_THEME'
-                ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><AlertTriangle size={9} /> {group.label}</span>
-                : group.label}
-            </div>
-
-            {shown.map(el => {
-              const v = elementVerdict(el, cascade);
-              const conf = elementConfidence(el, cascade);
-              const isSelected = el.id === selected;
-              const DotIcon = v === 'PASSED' ? CheckCircle : v === 'CONDITIONAL' ? AlertTriangle : XCircle;
-
-              return (
-                <button
-                  key={el.id}
-                  onClick={() => onSelect(el.id)}
-                  style={{
-                    width: '100%', textAlign: 'left' as const,
-                    display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-4)',
-                    padding: 'var(--gh-space-5) var(--gh-space-6)',
-                    background: isSelected ? 'var(--gh-bg-surface-muted)' : 'transparent',
-                    borderLeft: `2px solid ${isSelected ? 'var(--gh-accent)' : 'transparent'}`,
-                    borderTop: 'none', borderRight: 'none',
-                    borderBottom: '1px solid var(--gh-border)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <DotIcon size={12} color={verdictFg(v)} style={{ marginTop: 2, flexShrink: 0 }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{
-                      fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-                      fontWeight: 'var(--gh-font-weight-medium)',
-                      color: isSelected ? 'var(--gh-text)' : 'var(--gh-text-secondary)',
-                      marginBottom: 'var(--gh-space-2)', lineHeight: 1.35,
-                      overflow: 'hidden', display: '-webkit-box',
-                      WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const,
-                    }}>
-                      {el.title}
-                    </div>
-                    <div style={{ display: 'flex', gap: 'var(--gh-space-2)', flexWrap: 'wrap' as const }}>
-                      <Chip bg="var(--gh-bg-surface)" fg="var(--gh-text-disabled)" style={{ fontSize: 9 }}>
-                        {el.howRatio}% HOW
-                      </Chip>
-                      <Chip bg={confidenceBg(conf)} fg={confidenceFg(conf)} style={{ fontSize: 9 }}>
-                        {conf}%
-                      </Chip>
-                    </div>
-                  </div>
-                </button>
-              );
-            })}
+    return (
+      <div key={group.id}>
+        {!narrow && (
+          <div style={{
+            padding: 'var(--gh-space-2) var(--gh-space-6)',
+            fontSize: 9, fontFamily: 'var(--gh-font)',
+            fontWeight: 'var(--gh-font-weight-semibold)', letterSpacing: '0.04em',
+            color: group.id === 'NO_THEME' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)',
+            borderBottom: '1px solid var(--gh-border)',
+            background: group.id === 'NO_THEME' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-canvas)',
+            textTransform: 'none' as const,
+          }}>
+            {group.id === 'NO_THEME'
+              ? <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}><AlertTriangle size={9} /> {group.label}</span>
+              : group.label}
           </div>
-        );
-      })}
-    </div>
-  );
+        )}
+
+        {shown.map(el => {
+          const v = elementVerdict(el, cascade);
+          const conf = elementConfidence(el, cascade);
+          const isSelected = el.id === selected;
+          const DotIcon = v === 'PASSED' ? CheckCircle : v === 'CONDITIONAL' ? AlertTriangle : XCircle;
+
+          if (narrow) {
+            return (
+              <button
+                key={el.id}
+                onClick={() => onSelect(el.id)}
+                style={{
+                  width: '100%', textAlign: 'left' as const,
+                  display: 'flex', alignItems: 'flex-start', gap: 6,
+                  padding: '12px 10px',
+                  background: isSelected ? 'var(--gh-blue-900)' : 'transparent',
+                  border: 'none', cursor: 'pointer',
+                }}
+              >
+                <DotIcon size={12} color={verdictFg(v)} style={{ marginTop: 2, flexShrink: 0 }} />
+                <span style={{
+                  fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.35,
+                  color: isSelected ? 'var(--gh-text)' : 'var(--gh-slate-400)',
+                  overflow: 'hidden', display: '-webkit-box',
+                  WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const,
+                }}>
+                  {el.title}
+                </span>
+              </button>
+            );
+          }
+
+          return (
+            <button
+              key={el.id}
+              onClick={() => onSelect(el.id)}
+              style={{
+                width: '100%', textAlign: 'left' as const,
+                display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-4)',
+                padding: 'var(--gh-space-5) var(--gh-space-6)',
+                background: isSelected ? 'var(--gh-blue-900)' : 'transparent',
+                borderLeft: `2px solid ${isSelected ? 'var(--gh-accent)' : 'transparent'}`,
+                borderTop: 'none', borderRight: 'none',
+                borderBottom: '1px solid var(--gh-border)',
+                cursor: 'pointer',
+              }}
+            >
+              <DotIcon size={12} color={verdictFg(v)} style={{ marginTop: 2, flexShrink: 0 }} />
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{
+                  fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
+                  fontWeight: 'var(--gh-font-weight-medium)',
+                  color: isSelected ? 'var(--gh-text)' : 'var(--gh-text-secondary)',
+                  marginBottom: 'var(--gh-space-2)', lineHeight: 1.35,
+                  overflow: 'hidden', display: '-webkit-box',
+                  WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const,
+                }}>
+                  {el.title}
+                </div>
+                <div style={{ display: 'flex', gap: 'var(--gh-space-2)', flexWrap: 'wrap' as const }}>
+                  <Chip bg="var(--gh-bg-surface)" fg="var(--gh-text-tertiary)" style={{ fontSize: 9 }}>
+                    {el.howRatio}% HOW
+                  </Chip>
+                  <Chip bg={confidenceBg(conf)} fg={confidenceFg(conf)} style={{ fontSize: 9 }}>
+                    {conf}%
+                  </Chip>
+                </div>
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    );
+  });
 }
 
 // ─── Suggestion item (string-based from real JSON) ────────────────────────────
@@ -446,68 +456,66 @@ interface SugState { [key: string]: 'proposed' | 'accepted' | 'rejected' }
 
 function SuggestionItem({ text, stateKey, states, onAction }: {
   text: string; stateKey: string;
-  states: SugState; onAction: (k: string, a: 'accepted' | 'rejected') => void;
+  states: SugState; onAction: (k: string, a: 'accepted' | 'rejected' | 'proposed') => void;
 }) {
-  const current = states[stateKey] ?? 'proposed';
+  const [editing, setEditing] = useState(false);
+  const [localText, setLocalText] = useState(text);
+  const [savedText, setSavedText] = useState(text);
+
+  const current  = states[stateKey] ?? 'proposed';
+  const accepted = current === 'accepted';
+  const rejected = current === 'rejected';
+  const rowBg = accepted ? 'var(--gh-success-bg)' : rejected ? 'var(--gh-danger-bg)' : 'var(--gh-bg-surface)';
+
+  const saveEdit = () => { if (localText.trim()) setSavedText(localText.trim()); setEditing(false); };
+
   return (
-    <div style={{
-      display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-5)',
-      padding: 'var(--gh-space-4) var(--gh-space-5)',
-      background: current === 'accepted' ? 'var(--gh-success-bg)' : 'var(--gh-bg-surface)',
-      border: `1px solid ${current === 'accepted' ? 'var(--gh-success-border)' : current === 'rejected' ? 'var(--gh-border)' : 'var(--gh-border)'}`,
-      borderRadius: 'var(--gh-radius-default)',
-      opacity: current === 'rejected' ? 0.45 : 1,
-    }}>
-      <BodyText style={{
-        flex: 1, fontSize: 'var(--gh-font-size-xs)',
-        textDecoration: current === 'rejected' ? 'line-through' : 'none',
-        color: current === 'accepted' ? 'var(--gh-success-fg)' : 'var(--gh-text-secondary)',
-      }}>
-        {text}
-      </BodyText>
-      <div style={{ display: 'flex', gap: 'var(--gh-space-2)', flexShrink: 0 }}>
-        {(['accepted', 'rejected'] as const).map(action => {
-          const Icon = action === 'accepted' ? Check : X;
-          const isActive = current === action;
-          return (
-            <button
-              key={action}
-              onClick={() => onAction(stateKey, action)}
-              title={action === 'accepted' ? 'Accept' : 'Reject'}
-              style={{
-                width: 32, height: 32,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isActive
-                  ? (action === 'accepted' ? 'var(--gh-success-bg)' : 'var(--gh-danger-bg)')
-                  : 'var(--gh-bg-surface-muted)',
-                border: `1px solid ${isActive
-                  ? (action === 'accepted' ? 'var(--gh-success-border)' : 'var(--gh-danger-border)')
-                  : 'var(--gh-border)'}`,
-                borderRadius: 'var(--gh-radius-sm)',
-                cursor: 'pointer',
-                color: isActive
-                  ? (action === 'accepted' ? 'var(--gh-success-fg)' : 'var(--gh-danger-fg)')
-                  : 'var(--gh-text-disabled)',
-              }}
-            >
-              <Icon size={13} />
-            </button>
-          );
-        })}
-        <button
-          title="Edit"
-          style={{
-            width: 32, height: 32,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'var(--gh-bg-surface-muted)',
-            border: '1px solid var(--gh-border)',
-            borderRadius: 'var(--gh-radius-sm)', cursor: 'pointer',
-            color: 'var(--gh-text-disabled)',
-          }}
-        >
-          <Edit2 size={12} />
-        </button>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 12px', borderRadius: 8, background: rowBg, fontFamily: 'var(--gh-font)' }}>
+      {/* Status dot */}
+      <div style={{ width: 16, height: 16, borderRadius: 9999, flexShrink: 0, background: accepted ? 'var(--gh-success-fg)' : rejected ? 'var(--gh-danger-fg)' : 'transparent', border: (!accepted && !rejected) ? '1px solid var(--gh-border)' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {accepted && <Check size={10} color="var(--gh-success-bg)" />}
+        {rejected && <X size={10} color="var(--gh-danger-bg)" />}
       </div>
+
+      {/* Text or input */}
+      <div style={{ flex: 1, minWidth: 0, overflow: 'hidden' }}>
+        {editing ? (
+          <input
+            autoFocus
+            value={localText}
+            onChange={e => setLocalText(e.target.value)}
+            onKeyDown={e => { if (e.key === 'Enter') saveEdit(); if (e.key === 'Escape') { setLocalText(savedText); setEditing(false); } }}
+            style={{ width: '100%', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-accent)', borderRadius: 'var(--gh-radius-sm)', padding: '4px 8px', color: 'var(--gh-text)', fontSize: 13, fontFamily: 'var(--gh-font)', outline: 'none', boxSizing: 'border-box' }}
+          />
+        ) : (
+          <span style={{ fontSize: 13, color: 'var(--gh-text)', display: 'block', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+            {savedText}
+          </span>
+        )}
+      </div>
+
+      {/* Actions — ghost icon buttons, no borders */}
+      {accepted || rejected ? (
+        <button title="Undo" onClick={() => onAction(stateKey, 'proposed')} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Undo2 size={14} />
+        </button>
+      ) : editing ? (
+        <button title="Save" onClick={saveEdit} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-success-fg)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Check size={16} />
+        </button>
+      ) : (
+        <div style={{ display: 'flex', flexShrink: 0, alignItems: 'center' }}>
+          <button title="Accept" onClick={() => onAction(stateKey, 'accepted')} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Check size={16} />
+          </button>
+          <button title="Reject" onClick={() => onAction(stateKey, 'rejected')} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <X size={16} />
+          </button>
+          <button title="Edit" onClick={() => { setLocalText(savedText); setEditing(true); }} style={{ width: 32, height: 32, borderRadius: 6, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Edit2 size={16} />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -536,7 +544,6 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
   const status = elementStatus(el, cascade);
   const isFailed = verdict === 'FAILED';
   const isLimitedData = confidence < 50;
-  const isPPFlagged = cascade && elementId === 'sol-1';
 
   // Build suggestions list: cascade injects at top for sol-1
   const suggestions: string[] = [
@@ -555,20 +562,33 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
   ];
 
   return (
-    <div style={{ flex: 1, overflowY: 'auto', padding: 'var(--gh-space-8) var(--gh-space-10)' }}>
+    <DetailPanel
+      scrollKey={elementId}
+      background="var(--gh-bg-canvas)"
+      onAskAI={() => {}}
+      actions={() => (
+        <>
+          <ActionButton variant="ghost" icon={<Edit2 size={13} />}>Edit</ActionButton>
+          <ActionButton variant="secondary" icon={<AlertTriangle size={13} />}>Request Review</ActionButton>
+          <ActionButton
+            variant="primary"
+            icon={<CheckCircle size={13} />}
+            disabled={isFailed}
+            title={isFailed ? 'Cannot confirm a failed validation' : 'Confirm'}
+          >
+            Confirm
+          </ActionButton>
+        </>
+      )}
+    >
+      <div style={{ padding: '24px 24px 0' }}>
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-5)', marginBottom: 'var(--gh-space-6)' }}>
         <Chip bg={verdictBg(verdict)} fg={verdictFg(verdict)} style={{ padding: 'var(--gh-space-2) var(--gh-space-5)', fontSize: 11 }}>
           {verdict === 'PASSED' ? '✓ PASSED' : verdict === 'CONDITIONAL' ? '△ CONDITIONAL' : '✕ FAILED'}
         </Chip>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <h2 style={{
-            margin: 0, fontSize: 'var(--gh-font-size-lg)', fontFamily: 'var(--gh-font)',
-            fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)', lineHeight: 1.3,
-          }}>
-            {el.title}
-          </h2>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)', marginTop: 'var(--gh-space-4)', flexWrap: 'wrap' as const }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)', flexWrap: 'wrap' as const }}>
             <Chip bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-tertiary)">{el.category}</Chip>
             <StatusBadge status={status} />
           </div>
@@ -593,107 +613,35 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
           <Chip bg="var(--gh-bg-surface)" fg="var(--gh-text-secondary)">{el.linkage.partner}</Chip>
         )}
       </div>
-
-      {/* Action row */}
-      <div style={{
-        display: 'flex', alignItems: 'center', gap: 'var(--gh-space-4)',
-        marginBottom: 'var(--gh-space-8)', flexWrap: 'wrap' as const,
-        paddingBottom: 'var(--gh-space-6)', borderBottom: '1px solid var(--gh-border)',
-      }}>
-        <button
-          disabled={isFailed}
-          title={isFailed ? 'Cannot confirm a failed validation' : 'Confirm'}
-          style={{
-            height: 32, padding: '0 var(--gh-space-7)',
-            background: isFailed ? 'var(--gh-bg-surface-muted)' : 'var(--gh-accent)',
-            color: isFailed ? 'var(--gh-text-disabled)' : 'var(--gh-accent-fg)',
-            border: 'none', borderRadius: 'var(--gh-radius-md)',
-            fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-            fontWeight: 'var(--gh-font-weight-medium)',
-            cursor: isFailed ? 'not-allowed' : 'pointer',
-            display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)',
-          }}
-        >
-          <CheckCircle size={13} /> Confirm
-        </button>
-        {[
-          { label: 'Request Review', icon: <AlertTriangle size={13} /> },
-          { label: 'Edit', icon: <Edit2 size={13} /> },
-        ].map(({ label, icon }) => (
-          <button key={label} style={{
-            height: 32, padding: '0 var(--gh-space-7)',
-            background: 'transparent', color: 'var(--gh-text-secondary)',
-            border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)',
-            fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-            fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)',
-          }}>
-            {icon} {label}
-          </button>
-        ))}
-        <button style={{
-          height: 32, padding: '0 var(--gh-space-7)',
-          background: 'transparent', color: 'var(--gh-text-tertiary)',
-          border: 'none', borderRadius: 'var(--gh-radius-md)',
-          fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-          fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)',
-        }}>
-          <MessageSquare size={13} /> Ask AI
-        </button>
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--gh-space-3)' }}>
-          <Chip
-            bg={isPPFlagged ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'}
-            fg={isPPFlagged ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'}
-          >
-            <ArrowRight size={9} /> Past Performance {isPPFlagged && <AlertTriangle size={9} />}
-          </Chip>
-          <Chip bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-tertiary)">
-            <ArrowRight size={9} /> Proposal
-          </Chip>
-        </div>
       </div>
 
       {/* AI Reasoning */}
-      <div style={{
-        border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)',
-        marginBottom: 'var(--gh-space-6)', overflow: 'hidden',
-      }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 'var(--gh-space-4)',
-          padding: 'var(--gh-space-4) var(--gh-space-6)',
-          background: 'var(--gh-bg-surface-muted)',
-          borderBottom: '1px solid var(--gh-border)',
-        }}>
-          <Bot size={13} color="var(--gh-accent-tint)" />
-          <span style={{
-            fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-            fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)',
-          }}>
-            AI Reasoning — Solutioning Agent v3
-          </span>
-        </div>
-        <div style={{ padding: 'var(--gh-space-5) var(--gh-space-6)', background: 'var(--gh-bg-elevated)' }}>
-          <BodyText style={{ fontSize: 'var(--gh-font-size-xs)' }}>{aiReasoning}</BodyText>
+      <div style={{ margin: 24, display: 'flex', gap: 12, alignItems: 'flex-start', padding: 24, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-elevated)' }}>
+        <Sparkles size={14} style={{ flexShrink: 0, marginTop: 2, color: 'var(--gh-accent-tint)' }} />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <span style={{ fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-accent-tint)', fontFamily: 'var(--gh-font)' }}>AI Reasoning</span>
+          <p style={{ fontSize: 14, lineHeight: 1.5, color: 'var(--gh-text-secondary)', margin: 0, fontFamily: 'var(--gh-font)' }}>{aiReasoning}</p>
         </div>
       </div>
 
       {/* Limited data banner — sol-6 */}
       {isLimitedData && (
-        <div style={{
-          display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-4)',
-          padding: 'var(--gh-space-5) var(--gh-space-6)',
-          background: 'var(--gh-warning-bg)',
-          border: '1px solid var(--gh-warning-border)',
-          borderRadius: 'var(--gh-radius-md)', marginBottom: 'var(--gh-space-6)',
-        }}>
-          <BarChart2 size={14} color="var(--gh-warning-fg)" style={{ flexShrink: 0, marginTop: 1 }} />
-          <span style={{
-            fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-            color: 'var(--gh-warning-fg)', fontWeight: 'var(--gh-font-weight-medium)',
+        <div style={{ margin: '0 24px 16px' }}>
+          <div style={{
+            display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-4)',
+            padding: 'var(--gh-space-5) var(--gh-space-6)',
+            background: 'var(--gh-warning-bg)',
+            border: '1px solid var(--gh-warning-border)',
+            borderRadius: 'var(--gh-radius-md)',
           }}>
-            This recommendation is based on limited data. Run ANALYZE workflow for better intelligence.
-          </span>
+            <BarChart2 size={14} color="var(--gh-warning-fg)" style={{ flexShrink: 0, marginTop: 1 }} />
+            <span style={{
+              fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
+              color: 'var(--gh-warning-fg)', fontWeight: 'var(--gh-font-weight-medium)',
+            }}>
+              This recommendation is based on limited data. Run ANALYZE workflow for better intelligence.
+            </span>
+          </div>
         </div>
       )}
 
@@ -743,11 +691,11 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
           borderRadius: 'var(--gh-radius-default)', marginBottom: 'var(--gh-space-6)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)', marginBottom: 'var(--gh-space-3)' }}>
-            <Lock size={11} color="var(--gh-text-disabled)" />
+            <Lock size={11} color="var(--gh-text-tertiary)" />
             <span style={{
               fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
               fontWeight: 'var(--gh-font-weight-semibold)',
-              color: 'var(--gh-text-disabled)', textTransform: 'uppercase' as const, letterSpacing: '0.06em',
+              color: 'var(--gh-text-tertiary)', textTransform: 'uppercase' as const, letterSpacing: '0.06em',
             }}>
               Internal only — competitive intelligence
             </span>
@@ -771,7 +719,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
                   background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)',
                   borderRadius: 'var(--gh-radius-default)',
                 }}>
-                  <Paperclip size={10} color="var(--gh-text-disabled)" style={{ flexShrink: 0 }} />
+                  <Paperclip size={10} color="var(--gh-text-tertiary)" style={{ flexShrink: 0 }} />
                   <span style={{
                     flex: 1, fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
                     color: 'var(--gh-text-secondary)',
@@ -814,7 +762,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
               </Chip>
               <span style={{
                 fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-                color: 'var(--gh-text-disabled)',
+                color: 'var(--gh-text-secondary)',
               }}>
                 threshold: {sol.overview.howThreshold}%
               </span>
@@ -895,7 +843,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
         }}>
           <span style={{
             fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-            color: 'var(--gh-text-disabled)',
+            color: 'var(--gh-text-tertiary)',
           }}>
             Last generated {el.envelope.versionHistory[0]?.changedAt} · SOL-001/STV-001
           </span>
@@ -908,7 +856,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
           </button>
         </div>
       </Band>
-    </div>
+    </DetailPanel>
   );
 }
 
@@ -937,7 +885,7 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
       </span>
       <button onClick={onClose} style={{
         background: 'none', border: 'none', cursor: 'pointer',
-        color: 'var(--gh-text-disabled)', padding: 0, flexShrink: 0,
+        color: 'var(--gh-text-tertiary)', padding: 0, flexShrink: 0,
       }}>
         <X size={12} />
       </button>
@@ -947,19 +895,18 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
 
 // ─── SolutioningTab (root) ────────────────────────────────────────────────────
 
-export function SolutioningTab() {
+export function SolutioningTab({ chromeHidden = false }: { chromeHidden?: boolean }) {
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [selected, setSelected] = useState('sol-1');
   const [filter, setFilter] = useState<TriageFilter>('All');
-  const [cascade, setCascade] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [sugStates, setSugStates] = useState<SugState>({});
 
   const { counts, overallConfidence } = { counts: sol.overview.counts, overallConfidence: sol.overallConfidence };
 
-  const validatedLabel = cascade ? `${counts.stvPassed - 1} / ${sol.solutionElements.length}` : `${counts.stvPassed} / ${sol.solutionElements.length}`;
-  const triagePassed = cascade ? counts.stvPassed - 1 : counts.stvPassed;
-  const triageCond = cascade ? counts.stvConditional + 1 : counts.stvConditional;
+  const validatedLabel = `${counts.stvPassed} / ${sol.solutionElements.length}`;
+  const triagePassed = counts.stvPassed;
+  const triageCond = counts.stvConditional;
   const triageFailed = counts.stvFailed;
 
   const filterCounts: Record<TriageFilter, number> = {
@@ -969,16 +916,7 @@ export function SolutioningTab() {
     Failed: triageFailed,
   };
 
-  const handleCascade = useCallback(() => {
-    const next = !cascade;
-    setCascade(next);
-    if (next) {
-      setSelected('sol-1');
-      setToast('Change detected — Strategy §3 edit propagated: sol-1 re-validated. Downstream flagged for regeneration: Past Performance, Pricing.');
-    }
-  }, [cascade]);
-
-  const handleSugAction = useCallback((k: string, a: 'accepted' | 'rejected') => {
+  const handleSugAction = useCallback((k: string, a: 'accepted' | 'rejected' | 'proposed') => {
     setSugStates(prev => ({ ...prev, [k]: a }));
   }, []);
 
@@ -990,80 +928,25 @@ export function SolutioningTab() {
       background: 'var(--gh-bg-canvas)', overflow: 'hidden',
       fontFamily: 'var(--gh-font)',
     }}>
-      {/* Plan header strip */}
-      <div style={{
-        padding: 'var(--gh-space-5) var(--gh-space-10)',
-        background: 'var(--gh-bg-elevated)',
-        borderBottom: '1px solid var(--gh-border)',
-        display: 'flex', alignItems: 'center', gap: 'var(--gh-space-5)',
-        flexWrap: 'wrap' as const, flexShrink: 0,
-      }}>
-        <Chip bg={confidenceBg(overallConfidence)} fg={confidenceFg(overallConfidence)} style={{ fontSize: 11 }}>
-          ✦ {overallConfidence}% confidence
-        </Chip>
-        <Chip bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-secondary)">
-          {validatedLabel} validated
-        </Chip>
-        <span style={{
-          fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-          color: 'var(--gh-text-disabled)',
-        }}>
-          Drafted by{' '}
-          <strong style={{ color: 'var(--gh-text-tertiary)' }}>Solutioning Agent (SOL-001)</strong>
-          {' · '}validated by{' '}
-          <strong style={{ color: 'var(--gh-text-tertiary)' }}>Strength Validator (STV-001)</strong>
-          {' · '}v3 · 2026-02-10
-        </span>
-
-        {/* Triage filter pills */}
-        <div style={{ display: 'flex', gap: 'var(--gh-space-1)' }}>
-          {FILTERS.map(f => (
-            <button
-              key={f}
-              onClick={() => setFilter(f)}
-              style={{
-                height: 24, padding: '0 var(--gh-space-5)',
-                background: filter === f ? 'var(--gh-bg-surface-muted)' : 'transparent',
-                border: `1px solid ${filter === f ? 'var(--gh-border-strong)' : 'transparent'}`,
-                borderRadius: 'var(--gh-radius-sm)',
-                fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-                fontWeight: filter === f ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)',
-                color: filter === f ? 'var(--gh-text)' : 'var(--gh-text-disabled)',
-                cursor: 'pointer',
-              }}
-            >
-              {f}{f !== 'All' && <span style={{ opacity: 0.6 }}> ({filterCounts[f]})</span>}
-            </button>
-          ))}
+      {/* Plan header */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap', padding: '24px var(--gh-space-12) 12px', flexShrink: 0, overflow: 'hidden', maxHeight: chromeHidden ? 0 : 120, opacity: chromeHidden ? 0 : 1, transition: 'max-height 0.3s ease, opacity 0.18s ease' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
+            <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>
+              {validatedLabel} validated
+            </span>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', fontFamily: 'var(--gh-font)' }}>
+              {overallConfidence}% confidence
+              <Info size={13} />
+            </span>
+          </div>
+          <p style={{ fontSize: 11, color: 'var(--gh-white)', margin: 0, fontFamily: 'var(--gh-font)' }}>
+            Drafted by Solutioning Agent (SOL-001) · validated by Strength Validator (STV-001) · v3 · 2026-02-10
+          </p>
         </div>
-
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: 'var(--gh-space-4)' }}>
-          <button style={{
-            height: 28, padding: '0 var(--gh-space-6)',
-            background: 'transparent', color: 'var(--gh-text-tertiary)',
-            border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)',
-            fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-            fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)',
-          }}>
-            <Bot size={11} /> Regenerate
-          </button>
-          <button
-            onClick={handleCascade}
-            style={{
-              height: 28, padding: '0 var(--gh-space-6)',
-              background: cascade ? 'var(--gh-warning-bg)' : 'transparent',
-              color: cascade ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)',
-              border: `1px solid ${cascade ? 'var(--gh-warning-border)' : 'var(--gh-border)'}`,
-              borderRadius: 'var(--gh-radius-md)',
-              fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-              fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)',
-            }}
-          >
-            <AlertCircle size={11} /> Preview cascade
-          </button>
-        </div>
+        <button style={{ height: 28, padding: '0 var(--gh-space-6)', background: 'transparent', color: 'var(--gh-text-tertiary)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)', fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)' }}>
+          <Bot size={11} /> Regenerate
+        </button>
       </div>
 
       {/* Zone A — Win Themes panel (scrolls with content above the split) */}
@@ -1071,17 +954,29 @@ export function SolutioningTab() {
         <WinThemesPanel collapsed={panelCollapsed} onToggle={() => setPanelCollapsed(p => !p)} />
       </div>
 
-      {/* Zone B + C — Rail + Detail */}
+      {/* Zone B + C — shared section index + Detail */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
-        <ElementRail
-          selected={selected}
-          onSelect={setSelected}
-          filter={filter}
-          cascade={cascade}
+        <SectionIndex
+          title={`Solution Elements · ${sol.solutionElements.length}`}
+          filter={(
+            <div style={{ padding: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: 4, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-overlay-xs)' }}>
+                {FILTERS.map(f => {
+                  const on = filter === f;
+                  return (
+                    <button key={f} onClick={() => setFilter(f)} style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 10px', borderRadius: 'var(--gh-radius-md)', border: 'none', cursor: 'pointer', fontFamily: 'var(--gh-font)', fontSize: 11, whiteSpace: 'nowrap' as const, background: on ? 'var(--gh-overlay-sm)' : 'transparent', color: on ? 'var(--gh-text)' : 'var(--gh-slate-400)', fontWeight: on ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)' }}>
+                      {f}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          renderItems={(narrow) => renderRailGroups({ selected, onSelect: setSelected, filter, cascade: false, narrow })}
         />
         <ElementDetail
           elementId={selected}
-          cascade={cascade}
+          cascade={false}
           sugStates={sugStates}
           onSugAction={handleSugAction}
         />

@@ -38,12 +38,12 @@ export function RecommendationItem({ rec, onUpdate }: Props) {
               style={{ width: '100%', borderRadius: 'var(--gh-radius-md)', padding: '6px 8px', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text)', border: `1px solid var(--gh-border)`, fontSize: 'var(--gh-font-size-base)', fontFamily: 'var(--gh-font)', resize: 'vertical' }}
             />
           ) : (
-            <p style={{ fontSize: 'var(--gh-font-size-base)', color: rec.status === 'rejected' ? 'var(--gh-text-disabled)' : 'var(--gh-text)', textDecoration: rec.status === 'rejected' ? 'line-through' : 'none', margin: 0 }}>
+            <p style={{ fontSize: 'var(--gh-font-size-base)', color: rec.status === 'rejected' ? 'var(--gh-text-tertiary)' : 'var(--gh-text)', textDecoration: rec.status === 'rejected' ? 'line-through' : 'none', margin: 0 }}>
               {rec.editedText ?? rec.text}
             </p>
           )}
           {rec.status === 'rejected' && rec.rejectedReason && (
-            <p style={{ fontSize: 11, marginTop: 4, color: 'var(--gh-danger-fg)', margin: '4px 0 0' }}>Rejected: {rec.rejectedReason}</p>
+            <p style={{ fontSize: 11, marginTop: 4, color: 'var(--gh-danger-fg-strong)', margin: '4px 0 0' }}>Rejected: {rec.rejectedReason}</p>
           )}
           {showRejectInput && (
             <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 8 }}>
@@ -66,14 +66,14 @@ export function RecommendationItem({ rec, onUpdate }: Props) {
             </>
           ) : (
             <>
-              <button onClick={accept} title="Accept" style={{ padding: 6, borderRadius: 'var(--gh-radius-md)', background: 'transparent', cursor: 'pointer', color: rec.status === 'accepted' ? 'var(--gh-success-fg)' : 'var(--gh-text-disabled)' }}>
+              <button onClick={accept} title="Accept" style={{ padding: 6, borderRadius: 'var(--gh-radius-md)', background: 'transparent', cursor: 'pointer', color: rec.status === 'accepted' ? 'var(--gh-success-fg)' : 'var(--gh-text-tertiary)' }}>
                 <CheckCircle size={16} />
               </button>
-              <button onClick={reject} title={rec.status === 'rejected' ? 'Undo' : 'Reject'} style={{ padding: 6, borderRadius: 'var(--gh-radius-md)', background: 'transparent', cursor: 'pointer', color: rec.status === 'rejected' ? 'var(--gh-danger-fg)' : 'var(--gh-text-disabled)' }}>
+              <button onClick={reject} title={rec.status === 'rejected' ? 'Undo' : 'Reject'} style={{ padding: 6, borderRadius: 'var(--gh-radius-md)', background: 'transparent', cursor: 'pointer', color: rec.status === 'rejected' ? 'var(--gh-danger-fg-strong)' : 'var(--gh-text-tertiary)' }}>
                 {rec.status === 'rejected' ? <RotateCcw size={16} /> : <XCircle size={16} />}
               </button>
               {rec.editable && (
-                <button onClick={() => setEditing(true)} title="Edit" style={{ padding: 6, borderRadius: 'var(--gh-radius-md)', background: 'transparent', cursor: 'pointer', color: 'var(--gh-text-disabled)' }}>
+                <button onClick={() => setEditing(true)} title="Edit" style={{ padding: 6, borderRadius: 'var(--gh-radius-md)', background: 'transparent', cursor: 'pointer', color: 'var(--gh-text-tertiary)' }}>
                   <Edit2 size={16} />
                 </button>
               )}
