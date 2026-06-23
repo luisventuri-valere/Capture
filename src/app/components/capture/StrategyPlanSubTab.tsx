@@ -76,7 +76,7 @@ function RecommendationsBand({ sectionKey, onAccept, onReject, onReset, localSta
                       {localTexts[rec.id] ?? rec.text}
                     </span>
                     {rec.id === 'TS-R1' && rejected && (
-                      <div style={{ marginTop: 4, fontSize: 11, color: 'var(--gh-danger-fg)' }}>
+                      <div style={{ marginTop: 4, fontSize: 11, color: 'var(--gh-danger-fg-strong)' }}>
                         Rejected by S. Chen — partner no longer bidding (2026-02-12)
                       </div>
                     )}
@@ -335,7 +335,7 @@ export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) 
       {/* Ask AI drawer */}
       {aiDrawerTitle && (
         <>
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} onClick={() => setAiDrawerTitle(null)} />
+          <div style={{ position: 'fixed', inset: 0, background: 'var(--gh-backdrop)', zIndex: 40 }} onClick={() => setAiDrawerTitle(null)} />
           <AskAIDrawer sectionTitle={aiDrawerTitle} chatSeed={CHAT_SEED} onClose={() => setAiDrawerTitle(null)} />
         </>
       )}
@@ -355,7 +355,7 @@ export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) 
             </span>
           </div>
           {/* Generated-by line */}
-          <p style={{ fontSize: 11, color: '#fff', margin: 0, fontFamily: F }}>
+          <p style={{ fontSize: 11, color: 'var(--gh-white)', margin: 0, fontFamily: F }}>
             Drafted by {ENVELOPE.generated_by} · Capture Manager: {data.captureManager}
           </p>
         </div>
@@ -369,15 +369,15 @@ export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) 
           title="Plans"
           filter={(
             <div style={{ padding: 8 }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: 4, borderRadius: 'var(--gh-radius-lg)', background: 'rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: 4, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-overlay-xs)' }}>
                 {(['all', 'needs_attention', 'confirmed'] as TriageFilter[]).map(f => {
                   const on = triageFilter === f;
                   return (
                     <button key={f} onClick={() => setTriageFilter(f)} style={{
                       display: 'inline-flex', alignItems: 'center', padding: '5px 10px', borderRadius: 'var(--gh-radius-md)',
                       border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 11, whiteSpace: 'nowrap',
-                      background: on ? 'rgba(255,255,255,0.14)' : 'transparent',
-                      color: on ? '#edf2f7' : '#94a3b8',
+                      background: on ? 'var(--gh-overlay-sm)' : 'transparent',
+                      color: on ? 'var(--gh-text)' : 'var(--gh-slate-400)',
                       fontWeight: on ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)',
                     }}>
                       {f === 'all' ? 'All' : f === 'needs_attention' ? 'Needs Attention' : 'Confirmed'}
@@ -473,7 +473,7 @@ export function StrategyPlanSubTab({ data, onChromeHide, chromeHidden }: Props) 
 
             {/* Version history (Figma 2141:339) */}
             <div style={{ padding: '20px 24px' }}>
-              <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginBottom: 4, fontFamily: F }}>
+              <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', marginBottom: 4, fontFamily: F }}>
                 Last reviewed {(selectedSection as {lastReviewed?: string})?.lastReviewed ?? '—'} · {(selectedSection as {reviewedBy?: string})?.reviewedBy ?? '—'}
               </div>
               <VersionHistoryFooter sectionKey={effectiveKey} vhOverride={effectiveVH} />

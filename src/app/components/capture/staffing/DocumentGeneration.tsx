@@ -11,7 +11,7 @@ const DOCS: { key: keyof LCAT['documents']; label: string }[] = [
   { key: 'handoffPackage', label: 'Handoff Package' },
 ];
 
-const TH: React.CSSProperties = { textAlign: 'left', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)' };
+const TH: React.CSSProperties = { textAlign: 'left', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)' };
 const TD: React.CSSProperties = { padding: '9px 10px', fontSize: 'var(--gh-font-size-xs)', verticalAlign: 'middle', borderBottom: '1px solid var(--gh-border)' };
 
 export function DocumentGeneration({ lcats, onGenerate, onOpenDocs }: {

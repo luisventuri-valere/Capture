@@ -7,7 +7,7 @@ import { dataCallsData } from '../../../../data/capture/datacalls-data';
 import type {
   DataCall, DataCallItem, AIRecommendation, QueuedAction, ActivityEvent, Partner, Priority, ItemStatus, DataCallStatus, AIScope,
 } from '../../../../types/dataCalls';
-import { F, ORANGE, orangeTone, TODAY, fmtDate, isOverdue, awaitingReview, itemAccepted, partnerAgg, callProgress } from './helpers';
+import { F, ORANGE, ORANGE_TINT, orangeTone, TODAY, fmtDate, isOverdue, awaitingReview, itemAccepted, partnerAgg, callProgress } from './helpers';
 import { Stat } from '../staffing/ui';
 import { SectionIndex, SectionIndexItem } from '../SectionIndex';
 import { Pill, Btn, PhaseBadge, StatusPill, QualityBadge } from './ui';
@@ -167,7 +167,7 @@ export function DataCallsScreen() {
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap', marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
         <div style={{ flex: 1, minWidth: 280 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-            <span style={{ width: 30, height: 30, borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, color: ORANGE, display: 'grid', placeItems: 'center', border: `1px solid ${orangeTone.bd}` }}><Inbox size={16} /></span>
+            <span style={{ width: 30, height: 30, borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, color: ORANGE_TINT, display: 'grid', placeItems: 'center', border: `1px solid ${orangeTone.bd}` }}><Inbox size={16} /></span>
             <h1 style={{ margin: 0, fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>{opportunity.title}</h1>
           </div>
           <div style={{ marginTop: 6, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)' }}>
@@ -245,7 +245,7 @@ function ModeToggle({ mode, setMode }: { mode: 'prime' | 'sub'; setMode: (m: 'pr
       {([['prime', 'Prime', <Crown size={14} />], ['sub', 'Sub', <Inbox size={14} />]] as const).map(([k, lab, ic]) => {
         const on = mode === k;
         return (
-          <button key={k} onClick={() => setMode(k)} title={k === 'prime' ? 'You send data calls' : 'You receive data calls'} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 15px', borderRadius: 'var(--gh-radius-md)', background: on ? ORANGE : 'transparent', color: on ? '#fff' : 'var(--gh-text-secondary)', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 'var(--gh-font-size-sm)', fontWeight: on ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)' }}>{ic}{lab} mode</button>
+          <button key={k} onClick={() => setMode(k)} title={k === 'prime' ? 'You send data calls' : 'You receive data calls'} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 15px', borderRadius: 'var(--gh-radius-md)', background: on ? ORANGE : 'transparent', color: on ? 'var(--gh-bg-canvas)' : 'var(--gh-text-secondary)', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 'var(--gh-font-size-sm)', fontWeight: on ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)' }}>{ic}{lab} mode</button>
         );
       })}
     </div>
@@ -257,7 +257,7 @@ function SubMode({ dataCalls, partnerName, onToast }: { dataCalls: DataCall[]; p
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '11px 14px', borderRadius: 'var(--gh-radius-lg)', background: orangeTone.bg, border: `1px solid ${orangeTone.bd}` }}>
-        <Inbox size={16} style={{ color: ORANGE }} />
+        <Inbox size={16} style={{ color: ORANGE_TINT }} />
         <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)' }}>
           <strong style={{ color: 'var(--gh-text)' }}>Sub mode</strong> — incoming requests from the prime. Respond by submitting each requested item.
         </span>

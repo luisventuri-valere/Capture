@@ -5,9 +5,9 @@ import {
 } from 'lucide-react';
 import type { LCAT, SalaryBenchmark, Incumbent, IncumbentPerson, TimelineData } from '../../../../types/staffing';
 import {
-  F, marketPosition, moneyFull, money, tone, flightTone, titleCase, priorityActions,
+  F, marketPosition, moneyFull, money, tone, priorityActions,
 } from './helpers';
-import { Pill, Dot, Btn } from './ui';
+import { Pill } from './ui';
 
 const fmtDate = (iso: string, year?: boolean) =>
   new Date(iso + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', ...(year ? { year: 'numeric' } : {}) });
@@ -65,7 +65,7 @@ export function SalaryIntelligence({ lcats, benchmarks }: { lcats: LCAT[]; bench
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <div style={{ fontSize: 10, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', marginBottom: 7 }}>{children}</div>;
+  return <div style={{ fontSize: 10, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-semibold)', marginBottom: 7 }}>{children}</div>;
 }
 function Source({ title, rows }: { title: string; rows: [string, number][] }) {
   return (
@@ -73,7 +73,7 @@ function Source({ title, rows }: { title: string; rows: [string, number][] }) {
       <Label>{title}</Label>
       <div style={{ display: 'flex', gap: 16 }}>
         {rows.map(([k, v]) => (
-          <div key={k}><div style={{ fontSize: 10, color: 'var(--gh-text-disabled)' }}>{k}</div><div style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)' }}>{money(v)}</div></div>
+          <div key={k}><div style={{ fontSize: 10, color: 'var(--gh-text-tertiary)' }}>{k}</div><div style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)' }}>{money(v)}</div></div>
         ))}
       </div>
     </div>
@@ -93,91 +93,81 @@ function RangeBar({ lcat, b }: { lcat: LCAT; b: SalaryBenchmark }) {
         <div title={`Our midpoint ${money(ourMid)}`} style={{ position: 'absolute', top: 8, left: `${pct(ourMid)}%`, transform: 'translateX(-50%)', width: 14, height: 14, borderRadius: '50%', background: 'var(--gh-accent-tint)', border: '2px solid var(--gh-bg-elevated)' }} />
         <div title={`GSA mid ${money(b.gsaCalc.mid)}`} style={{ position: 'absolute', top: 7, left: `${pct(b.gsaCalc.mid)}%`, transform: 'translateX(-50%) rotate(45deg)', width: 10, height: 10, background: 'var(--gh-text-tertiary)' }} />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--gh-text-disabled)' }}><span>{money(lo)}</span><span>{money(hi)}</span></div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--gh-text-tertiary)' }}><span>{money(lo)}</span><span>{money(hi)}</span></div>
     </div>
   );
 }
 
-// ─── Section 6 · Incumbent Intelligence ──────────────────────────────────────
+// ─── Company-level incumbent context card (Change 3) ──────────────────────────
+// Strategic, company-wide incumbent intel — informational only. Per-person
+// recruiting controls live in the LCAT rows (Change 2), not here. Collapsible so
+// it doesn't crowd the Matrix.
 const friIcon = { negative: AlertTriangle, neutral: MinusCircle, positive: CheckCircle2 } as const;
 const friTone = { negative: 'danger', neutral: 'neutral', positive: 'success' } as const;
-const incStatusTone = (s: string) => s === 'in_pipeline' ? 'success' : s === 'interested' ? 'info' : s === 'contacted' ? 'warning' : s === 'not_pursued' ? 'danger' : 'neutral';
 
-export function IncumbentIntelligence({ incumbent, people, onAddToPipeline }: {
-  incumbent: Incumbent; people: IncumbentPerson[]; onAddToPipeline: (id: string) => void;
-}) {
-  const [open, setOpen] = useState<string | null>(null);
+export function IncumbentContextCard({ incumbent, people }: { incumbent: Incumbent; people: IncumbentPerson[] }) {
+  const [open, setOpen] = useState(true);
+
+  // Recruitable departures: matched to an open LCAT, still actively in play
+  // (not already moved to the pipeline, not written off).
+  const recruitable = people.filter(p => p.lcatId && p.status !== 'in_pipeline' && p.status !== 'not_pursued');
+  const highRisk = recruitable.filter(p => p.flightRisk === 'high').length;
+  // One-line flight-risk summary, drawn from the highest-impact negative signal.
+  const topSignal = [...incumbent.flightRiskIndicators].sort((a, b) =>
+    (b.type === 'negative' ? 1 : 0) - (a.type === 'negative' ? 1 : 0) ||
+    ({ high: 2, medium: 1, low: 0 }[b.impact] - { high: 2, medium: 1, low: 0 }[a.impact]))[0];
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* contract overview */}
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)', padding: '14px 16px' }}>
-        <div style={{ width: 40, height: 40, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface-muted)', display: 'grid', placeItems: 'center', color: 'var(--gh-accent-tint)', flexShrink: 0 }}><Building2 size={20} /></div>
-        <div style={{ flex: 1, minWidth: 160 }}>
-          <div style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{incumbent.contractor}</div>
-          <div style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', marginTop: 2 }}>Incumbent contractor</div>
+    <div style={{ border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-xl)', background: 'var(--gh-bg-surface)', overflow: 'hidden', marginBottom: 18 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px' }}>
+        <div style={{ width: 38, height: 38, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface-muted)', display: 'grid', placeItems: 'center', color: 'var(--gh-accent-tint)', flexShrink: 0 }}><Building2 size={18} /></div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{incumbent.contractor}</span>
+            <Pill tone="neutral" soft style={{ fontSize: 9 }}>Incumbent</Pill>
+            <Pill tone="danger" style={{ fontSize: 9 }}><AlertTriangle size={9} /> Elevated flight risk</Pill>
+          </div>
+          {!open && (
+            <div style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {money(incumbent.contractValue)} · {incumbent.period} · {incumbent.staffCount} staff · {recruitable.length} recruitable
+            </div>
+          )}
         </div>
-        <Mini label="Contract Value" value={money(incumbent.contractValue)} />
-        <Mini label="Period" value={incumbent.period} />
-        <Mini label="Staff" value={String(incumbent.staffCount)} />
+        <button onClick={() => setOpen(o => !o)} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, background: 'transparent', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '5px 10px', cursor: 'pointer', color: 'var(--gh-text-tertiary)', fontSize: 'var(--gh-font-size-xs)', fontFamily: F, fontWeight: 'var(--gh-font-weight-medium)', whiteSpace: 'nowrap' }}>
+          {open ? <><ChevronDown size={13} /> Hide</> : <><ChevronRight size={13} /> Details</>}
+        </button>
       </div>
 
-      {/* flight risk indicators */}
-      <div>
-        <Label>Flight Risk Indicators</Label>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-          {incumbent.flightRiskIndicators.map((fr, i) => {
-            const FI = friIcon[fr.type]; const t = tone(friTone[fr.type]);
-            return (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: 'var(--gh-radius-md)', background: t.bg, border: `1px solid ${t.bd}` }}>
-                <FI size={15} style={{ color: t.fg, flexShrink: 0 }} />
-                <span style={{ flex: 1, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.5 }}>{fr.text}</span>
-                <Pill tone={fr.impact === 'high' ? 'danger' : fr.impact === 'medium' ? 'warning' : 'neutral'} style={{ fontSize: 9 }}>{fr.impact.toUpperCase()}</Pill>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {open && (
+        <div style={{ padding: '0 14px 14px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+            <Mini label="Contract Value" value={money(incumbent.contractValue)} />
+            <Mini label="Period of Performance" value={incumbent.period} />
+            <Mini label="Total Staff" value={String(incumbent.staffCount)} />
+            <Mini label="Recruitable" value={`${recruitable.length}`} tone="warning" />
+          </div>
 
-      {/* personnel table */}
-      <div>
-        <Label>Incumbent Personnel</Label>
-        <div style={{ border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)', overflow: 'hidden' }}>
-          {people.map((p, idx) => {
-            const isOpen = open === p.id;
-            return (
-              <div key={p.id} style={{ borderTop: idx ? '1px solid var(--gh-border)' : 'none' }}>
-                <button onClick={() => setOpen(isOpen ? null : p.id)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 14px', background: isOpen ? 'var(--gh-bg-surface)' : 'transparent', border: 'none', cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
-                  <Dot tone={flightTone(p.flightRisk)} />
-                  <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-medium)', color: 'var(--gh-text)', minWidth: 130 }}>{p.name}</span>
-                  <span style={{ flex: 1, fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)' }}>{p.role}</span>
-                  <span style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)' }}>{p.tenure}</span>
-                  <Pill tone={incStatusTone(p.status)} soft style={{ fontSize: 9 }}>{titleCase(p.status)}</Pill>
-                  {isOpen ? <ChevronDown size={14} style={{ color: 'var(--gh-text-tertiary)' }} /> : <ChevronRight size={14} style={{ color: 'var(--gh-text-tertiary)' }} />}
-                </button>
-                {isOpen && (
-                  <div style={{ padding: '4px 14px 14px 36px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 'var(--gh-font-size-xs)' }}>
-                      <span><span style={{ color: 'var(--gh-text-disabled)' }}>Flight risk: </span><span style={{ color: tone(flightTone(p.flightRisk)).fg, fontWeight: 'var(--gh-font-weight-semibold)' }}>{p.flightRisk.toUpperCase()}</span></span>
-                      <span><span style={{ color: 'var(--gh-text-disabled)' }}>Est. salary: </span><span style={{ color: 'var(--gh-text)' }}>{moneyFull(p.estimatedSalary)}</span></span>
-                    </div>
-                    {p.note && <p style={{ margin: 0, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.55 }}>{p.note}</p>}
-                    <div>
-                      {p.status === 'in_pipeline'
-                        ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: 'var(--gh-success-fg)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)' }}><CheckCircle2 size={14} /> In pipeline</span>
-                        : <Btn kind="primary" size="sm" icon={<ArrowRight size={13} />} onClick={() => onAddToPipeline(p.id)}>Add to Pipeline</Btn>}
-                    </div>
-                  </div>
-                )}
+          {topSignal && (
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start', padding: '10px 12px', borderRadius: 'var(--gh-radius-md)', background: tone(friTone[topSignal.type]).bg, border: `1px solid ${tone(friTone[topSignal.type]).bd}` }}>
+              {(() => { const FI = friIcon[topSignal.type]; return <FI size={15} style={{ color: tone(friTone[topSignal.type]).fg, flexShrink: 0, marginTop: 1 }} />; })()}
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>Flight risk: Elevated</div>
+                <p style={{ margin: '2px 0 0', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-secondary)', lineHeight: 1.5 }}>{topSignal.text}</p>
               </div>
-            );
-          })}
+            </div>
+          )}
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)' }}>
+            <ArrowRight size={14} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} />
+            <span><strong style={{ color: 'var(--gh-text)' }}>{recruitable.length} recruitable departure{recruitable.length === 1 ? '' : 's'}</strong>{highRisk > 0 ? ` (${highRisk} high-risk)` : ''} you could capture — expand a position below to court them.</span>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
-function Mini({ label, value }: { label: string; value: string }) {
-  return <div style={{ minWidth: 92 }}><div style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>{value}</div><div style={{ fontSize: 10, color: 'var(--gh-text-disabled)', marginTop: 2 }}>{label}</div></div>;
+function Mini({ label, value, tone: t }: { label: string; value: string; tone?: Parameters<typeof tone>[0] }) {
+  return <div style={{ minWidth: 92 }}><div style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: t ? tone(t).fg : 'var(--gh-text)' }}>{value}</div><div style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', marginTop: 2 }}>{label}</div></div>;
 }
 
 // ─── Section 7 · Timeline & Priority ─────────────────────────────────────────
@@ -230,7 +220,7 @@ export function TimelinePriority({ timeline, lcats, onScrollToLcat }: {
             </div>
           ))}
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, fontSize: 11, color: 'var(--gh-text-disabled)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 8, fontSize: 11, color: 'var(--gh-text-tertiary)' }}>
           <Clock size={11} /> TS/SCI investigations gate start dates — sequence sourcing accordingly.
         </div>
       </div>

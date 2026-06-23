@@ -8,9 +8,9 @@ export { tone };
 export type { Tone };
 
 // ─── Signature ORANGE accent (Data Calls differentiator) ─────────────────────
-export const ORANGE = '#f97316';
-export const ORANGE_TINT = '#fdba74';
-export const orangeTone = { bg: 'rgba(249,115,22,0.16)', fg: ORANGE_TINT, bd: 'rgba(249,115,22,0.55)' };
+export const ORANGE = 'var(--gh-orange-500)';
+export const ORANGE_TINT = 'var(--gh-orange-300)';
+export const orangeTone = { bg: 'var(--gh-orange-bg)', fg: 'var(--gh-orange-300)', bd: 'var(--gh-orange-bd)' };
 
 // ─── Demo clock (everything is relative to this) ─────────────────────────────
 export const TODAY = '2026-02-14';

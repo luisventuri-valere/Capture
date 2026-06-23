@@ -57,7 +57,7 @@ export function IconBtn({ icon, onClick, title, tone: t, count }: {
       {count !== undefined && count > 0 && (
         <span style={{
           position: 'absolute', top: -6, right: -6, minWidth: 15, height: 15, padding: '0 3px',
-          borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-accent)', color: '#fff',
+          borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-accent)', color: 'var(--gh-white)',
           fontSize: 9, fontWeight: 'var(--gh-font-weight-bold)', display: 'grid', placeItems: 'center', fontFamily: F,
         }}>{count}</span>
       )}
@@ -65,11 +65,24 @@ export function IconBtn({ icon, onClick, title, tone: t, count }: {
   );
 }
 
+// ─── Section header (title + one-line "what it is / why it matters") ─────────
+export function SectionHeader({ title, subtitle, right }: { title: string; subtitle: string; right?: React.ReactNode }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12, marginBottom: 16 }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <h2 style={{ margin: 0, fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)', letterSpacing: '-0.01em' }}>{title}</h2>
+        <p style={{ margin: '4px 0 0', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)', lineHeight: 1.5, maxWidth: 760 }}>{subtitle}</p>
+      </div>
+      {right && <div style={{ flexShrink: 0 }}>{right}</div>}
+    </div>
+  );
+}
+
 // ─── Stat card ───────────────────────────────────────────────────────────────
 export function Stat({ label, value, tone: t, icon }: { label: string; value: React.ReactNode; tone?: Tone; icon?: React.ReactNode }) {
   const fg = t ? tone(t).fg : 'var(--gh-text)';
   return (
-    <div style={{ flex: '1 1 0', minWidth: 130, background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)', padding: '12px 16px' }}>
+    <div style={{ flex: '0 0 auto', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)', padding: '12px 16px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
         {icon && <span style={{ color: fg, display: 'flex' }}>{icon}</span>}
         <div style={{ fontSize: 26, fontWeight: 'var(--gh-font-weight-bold)', color: fg, lineHeight: 1, letterSpacing: '-0.02em' }}>{value}</div>
@@ -102,7 +115,7 @@ export function Modal({ open, onClose, children, width = 760, human }: {
   if (!open) return null;
   return (
     <div onClick={onClose} style={{
-      position: 'fixed', inset: 0, zIndex: 90, background: 'rgba(2,6,23,0.62)',
+      position: 'fixed', inset: 0, zIndex: 90, background: 'var(--gh-backdrop-canvas)',
       display: 'flex', alignItems: 'flex-start', justifyContent: 'center', padding: '40px 16px', overflowY: 'auto',
     }}>
       <div onClick={e => e.stopPropagation()} style={{
@@ -139,5 +152,5 @@ export function ModalFooter({ children }: { children: React.ReactNode }) {
 
 // Small labeled field block used in modals
 export function FieldLabel({ children }: { children: React.ReactNode }) {
-  return <div style={{ fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-disabled)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 7 }}>{children}</div>;
+  return <div style={{ fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 7 }}>{children}</div>;
 }

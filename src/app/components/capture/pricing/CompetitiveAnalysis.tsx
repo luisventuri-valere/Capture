@@ -26,7 +26,7 @@ export function CompetitiveAnalysis({ benchmarks, scenario, incumbent, rollup, w
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: F }}>
       {/* win-probability overlay */}
-      <div style={{ borderRadius: 'var(--gh-radius-xl)', padding: '16px 20px', background: 'linear-gradient(135deg, rgba(37,99,235,0.14), rgba(14,165,233,0.06))', border: '1px solid var(--gh-accent)' }}>
+      <div style={{ borderRadius: 'var(--gh-radius-xl)', padding: '16px 20px', background: 'var(--gh-accent-glass-bg)', border: '1px solid var(--gh-accent)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
           <Sparkles size={15} style={{ color: 'var(--gh-accent-tint)' }} />
           <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-accent-tint)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Win-Probability Overlay · {scenario.label.split(' ')[0]}</span>
@@ -54,7 +54,7 @@ export function CompetitiveAnalysis({ benchmarks, scenario, incumbent, rollup, w
               <span style={{ width: 200, fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', flexShrink: 0 }}>{row.label}</span>
               <div style={{ flex: 1, height: 22, background: 'var(--gh-bg-surface-muted)', borderRadius: 'var(--gh-radius-md)', overflow: 'hidden' }}>
                 <div style={{ width: bar(row.v), height: '100%', background: tone(row.t).fg, borderRadius: 'var(--gh-radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 8, transition: 'width .4s' }}>
-                  <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-bold)', color: '#fff', fontVariantNumeric: 'tabular-nums' }}>{fmtM(row.v)}</span>
+                  <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-bg-canvas)', fontVariantNumeric: 'tabular-nums' }}>{fmtM(row.v)}</span>
                 </div>
               </div>
             </div>
@@ -82,7 +82,7 @@ export function CompetitiveAnalysis({ benchmarks, scenario, incumbent, rollup, w
                   )}
                 </div>
                 <RangeBar min={b.min} p25={b.p25} median={b.median} p75={b.p75} max={b.max} our={our} ourTone={mp.tone} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2, fontSize: 10, color: 'var(--gh-text-disabled)', fontVariantNumeric: 'tabular-nums' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2, fontSize: 10, color: 'var(--gh-text-tertiary)', fontVariantNumeric: 'tabular-nums' }}>
                   <span>{fmtRate(b.min)}</span><span>p25 {fmtRate(b.p25)}</span><span>med {fmtRate(b.median)}</span><span>p75 {fmtRate(b.p75)}</span><span>{fmtRate(b.max)}</span>
                 </div>
                 <p style={{ margin: '8px 0 0', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', lineHeight: 1.5 }}>{b.recommendation}</p>
@@ -111,10 +111,10 @@ function Quadrant() {
       <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1, background: 'var(--gh-border)' }} />
       {/* our dot: low price (left), low risk (bottom) → bottom-left */}
       <div style={{ position: 'absolute', left: '26%', top: '72%', transform: 'translate(-50%,-50%)', width: 18, height: 18, borderRadius: '50%', background: 'var(--gh-success-fg)', border: '3px solid var(--gh-bg-elevated)', boxShadow: '0 0 0 1px var(--gh-success-fg)' }} title="Our bid" />
-      <span style={{ position: 'absolute', top: 4, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--gh-text-disabled)' }}>HIGH RISK</span>
-      <span style={{ position: 'absolute', bottom: 4, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--gh-text-disabled)' }}>LOW RISK</span>
-      <span style={{ position: 'absolute', left: 4, top: '50%', transform: 'translateY(-50%) rotate(-90deg)', fontSize: 9, color: 'var(--gh-text-disabled)' }}>LOW $</span>
-      <span style={{ position: 'absolute', right: 4, top: '50%', transform: 'translateY(-50%) rotate(90deg)', fontSize: 9, color: 'var(--gh-text-disabled)' }}>HIGH $</span>
+      <span style={{ position: 'absolute', top: 4, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--gh-text-tertiary)' }}>HIGH RISK</span>
+      <span style={{ position: 'absolute', bottom: 4, left: 0, right: 0, textAlign: 'center', fontSize: 9, color: 'var(--gh-text-tertiary)' }}>LOW RISK</span>
+      <span style={{ position: 'absolute', left: 4, top: '50%', transform: 'translateY(-50%) rotate(-90deg)', fontSize: 9, color: 'var(--gh-text-tertiary)' }}>LOW $</span>
+      <span style={{ position: 'absolute', right: 4, top: '50%', transform: 'translateY(-50%) rotate(90deg)', fontSize: 9, color: 'var(--gh-text-tertiary)' }}>HIGH $</span>
     </div>
   );
 }

@@ -40,7 +40,7 @@ export function ActionsLog({ queuedActions, recommendations, onToggleDone, activ
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
           {[...open, ...done].map(a => (
             <div key={a.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '10px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', opacity: a.done ? 0.55 : 1 }}>
-              <button onClick={() => onToggleDone(a.id)} title={a.done ? 'Mark open' : 'Mark complete'} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: a.done ? 'var(--gh-success-fg)' : 'var(--gh-text-disabled)', padding: 0, marginTop: 1, flexShrink: 0 }}>
+              <button onClick={() => onToggleDone(a.id)} title={a.done ? 'Mark open' : 'Mark complete'} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: a.done ? 'var(--gh-success-fg)' : 'var(--gh-text-tertiary)', padding: 0, marginTop: 1, flexShrink: 0 }}>
                 {a.done ? <CheckCircle2 size={17} /> : <Circle size={17} />}
               </button>
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -48,7 +48,7 @@ export function ActionsLog({ queuedActions, recommendations, onToggleDone, activ
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 5 }}>
                   <Pill tone={priorityTone(a.priority)} soft>{a.priority}</Pill>
                   {a.source === 'ai_rec' ? (
-                    <span title={recTitle(a.sourceRecId)} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 'var(--gh-font-weight-semibold)', color: ORANGE, background: orangeTone.bg, border: `1px solid ${orangeTone.bd}`, padding: '1px 7px', borderRadius: 'var(--gh-radius-full)' }}>
+                    <span title={recTitle(a.sourceRecId)} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 10, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-orange-300)', background: orangeTone.bg, border: `1px solid ${orangeTone.bd}`, padding: '1px 7px', borderRadius: 'var(--gh-radius-full)' }}>
                       <Sparkles size={9} /> from AI rec <Link2 size={9} />
                     </span>
                   ) : (
@@ -58,7 +58,7 @@ export function ActionsLog({ queuedActions, recommendations, onToggleDone, activ
               </div>
             </div>
           ))}
-          {queuedActions.length === 0 && <div style={{ padding: '16px', textAlign: 'center', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-disabled)' }}>No actions queued.</div>}
+          {queuedActions.length === 0 && <div style={{ padding: '16px', textAlign: 'center', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)' }}>No actions queued.</div>}
         </div>
       </div>
 
@@ -75,7 +75,7 @@ export function ActionsLog({ queuedActions, recommendations, onToggleDone, activ
               <span style={{ flexShrink: 0, width: 25, height: 25, borderRadius: '50%', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', color: EVT_TONE[e.type] ?? 'var(--gh-text-tertiary)', display: 'grid', placeItems: 'center', zIndex: 1 }}>{EVT_ICON[e.type] ?? <Circle size={12} />}</span>
               <div style={{ flex: 1, minWidth: 0, paddingTop: 1 }}>
                 <div style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.45 }}>{e.description}</div>
-                <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginTop: 2 }}>{fmtDateTime(e.timestamp)}</div>
+                <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', marginTop: 2 }}>{fmtDateTime(e.timestamp)}</div>
               </div>
             </div>
           ))}

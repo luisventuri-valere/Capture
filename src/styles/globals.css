@@ -60,6 +60,7 @@
   /* Red */
   --gh-red-100: #fee2e2;
   --gh-red-200: #fecaca;
+  --gh-red-300: #fca5a5;
   --gh-red-400: #f87171;
   --gh-red-500: #ef4444;
   --gh-red-600: #dc2626;
@@ -113,6 +114,7 @@
 
   --gh-danger:          var(--gh-red-600);
   --gh-danger-fg:       var(--gh-red-400);
+  --gh-danger-fg-strong: var(--gh-red-300); /* Danger text on danger-bg — WCAG AA 5.28:1 for normal text #fca5a5 */
   --gh-danger-bg:       var(--gh-red-900);
   --gh-danger-border:   var(--gh-red-800);
 
@@ -165,6 +167,46 @@
   --gh-radius-xl:      12px;
   --gh-radius-2xl:     16px;
   --gh-radius-full:    9999px;
+
+  /* ─── Score / Confidence Indicators ─────────────────────── */
+
+  --gh-score-high-fg:  #00ffbc;
+  --gh-score-high-bg:  rgba(0, 255, 188, 0.05);
+  --gh-score-mid-fg:   #ffcf4b;
+  --gh-score-mid-bg:   rgba(255, 207, 75, 0.05);
+  --gh-score-low-fg:   #ff6363;
+  --gh-score-low-bg:   rgba(255, 99, 99, 0.05);
+
+  /* ─── Orange Accent (Data Calls) ────────────────────────── */
+
+  --gh-orange-500:  #f97316;
+  --gh-orange-300:  #fdba74;
+  --gh-orange-bg:   rgba(249, 115, 22, 0.16);
+  --gh-orange-bd:   rgba(249, 115, 22, 0.55);
+
+  /* ─── Overlay & Backdrop ─────────────────────────────────── */
+
+  --gh-overlay-xs:       rgba(255, 255, 255, 0.06);
+  --gh-overlay-sm:       rgba(255, 255, 255, 0.14);
+  --gh-backdrop:         rgba(0, 0, 0, 0.35);
+  --gh-backdrop-canvas:  rgba(2, 6, 23, 0.55);
+
+  /* ─── Accent Glass (Pricing) ─────────────────────────────── */
+
+  --gh-accent-glass:        rgba(37, 99, 235, 0.22);
+  --gh-accent-glass-bg:     linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(14, 165, 233, 0.06));
+  --gh-accent-glass-bg-md:  linear-gradient(135deg, rgba(37, 99, 235, 0.18), rgba(14, 165, 233, 0.10));
+
+  /* ─── Danger Glass ───────────────────────────────────────── */
+
+  --gh-danger-glass:  rgba(69, 10, 10, 0.4);
+
+  /* ─── Logo Brand Colors ──────────────────────────────────── */
+
+  --gh-brand-blue-1:  #3668c1;
+  --gh-brand-blue-2:  #20427e;
+  --gh-brand-blue-3:  #4682ee;
+  --gh-brand-blue-4:  #315698;
 
   /* ─── Chart Tokens ───────────────────────────────────────── */
 

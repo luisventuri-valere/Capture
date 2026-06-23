@@ -47,6 +47,7 @@ const incumbent = {
       flightRisk: 'high' as const,
       status: 'in_pipeline' as const,
       estimatedSalary: 185000,
+      lcatId: 'LCAT-04',
       note: 'Approached our recruiter independently; now committed under LCAT-04 (Security Engineer). Frustrated with Peraton management. Ethical wall protocols in place.',
     },
     {
@@ -57,6 +58,7 @@ const incumbent = {
       flightRisk: 'high' as const,
       status: 'contacted' as const,
       estimatedSalary: 205000,
+      lcatId: 'LCAT-02',
       note: 'Senior architect with deep DHS environment knowledge. Has signaled openness to a move; preliminary recruiter contact made.',
     },
     {
@@ -67,6 +69,7 @@ const incumbent = {
       flightRisk: 'medium' as const,
       status: 'not_contacted' as const,
       estimatedSalary: 198000,
+      lcatId: 'LCAT-01',
     },
     {
       id: 'INC-04',
@@ -76,6 +79,7 @@ const incumbent = {
       flightRisk: 'low' as const,
       status: 'not_pursued' as const,
       estimatedSalary: 152000,
+      lcatId: 'LCAT-06',
       note: 'Long-tenured operational lead; appears committed to Peraton. Not currently a recruiting target.',
     },
   ],

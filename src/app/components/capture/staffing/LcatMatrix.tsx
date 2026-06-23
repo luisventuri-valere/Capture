@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ChevronRight, ChevronDown, Brain, MessageCircle, Eye, Trash2, Plus, Lock,
-  FileSignature, Users,
+  FileSignature, Users, Building2, UserPlus, Undo2, Ban, Phone, Check, CheckCircle2, ArrowRight, RotateCcw,
 } from 'lucide-react';
-import type { LCAT, Candidate } from '../../../../types/staffing';
+import type { LCAT, Candidate, IncumbentPerson, IncumbentStatus, CandidateStatus } from '../../../../types/staffing';
 import {
-  F, calculateLcatStatus, committedCount, lcatStatusTone, classTone, candStatusTone,
-  tone, money, cap, titleCase,
+  F, calculateLcatStatus, committedCount, lcatStatusTone, classTone,
+  tone, money, cap, titleCase, flightTone, incStatusTone, courtshipAdvance,
+  candidateNext, candidatePrev,
 } from './helpers';
 import { Pill, Dot, IconBtn, Btn } from './ui';
 
@@ -26,7 +27,7 @@ function EditCell({ value, onChange, width, type = 'text' }: { value: string | n
 
 const TH: React.CSSProperties = {
   textAlign: 'left', padding: '8px 10px', fontSize: 10, letterSpacing: '0.06em', textTransform: 'uppercase',
-  color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap',
+  color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap',
   borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)',
 };
 const TD: React.CSSProperties = { padding: '9px 10px', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-secondary)', verticalAlign: 'middle', borderBottom: '1px solid var(--gh-border)' };
@@ -40,10 +41,17 @@ export interface MatrixCallbacks {
   onDeleteLcat: (lcatId: string) => void;
   onAddLcat: () => void;
   onToast: (m: string) => void;
+  // Candidate lifecycle transition (Nominate / Commit / Undo)
+  onSetCandidateStatus: (lcatId: string, candId: string, status: CandidateStatus) => void;
+  // Incumbent courtship + reversible move (Change 2)
+  onAdvanceCourtship: (personId: string) => void;
+  onSetCourtship: (personId: string, status: IncumbentStatus) => void;
+  onAddIncumbentToPipeline: (personId: string) => void;
+  onReturnCandidate: (lcatId: string, candId: string) => void;
 }
 
-export function LcatMatrix({ lcats, editMode, expanded, onToggle, cb, rowRefs }: {
-  lcats: LCAT[]; editMode: boolean; expanded: Set<string>; onToggle: (id: string) => void;
+export function LcatMatrix({ lcats, people, editMode, expanded, onToggle, cb, rowRefs }: {
+  lcats: LCAT[]; people: IncumbentPerson[]; editMode: boolean; expanded: Set<string>; onToggle: (id: string) => void;
   cb: MatrixCallbacks; rowRefs: React.MutableRefObject<Record<string, HTMLTableRowElement | null>>;
 }) {
   const COLSPAN = editMode ? 11 : 10;
@@ -124,6 +132,11 @@ export function LcatMatrix({ lcats, editMode, expanded, onToggle, cb, rowRefs }:
                   <tr>
                     <td colSpan={COLSPAN} style={{ padding: 0, borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-canvas)' }}>
                       <CandidateTable lcat={lcat} cb={cb} />
+                      <IncumbentSubList
+                        lcat={lcat}
+                        people={people.filter(p => p.lcatId === lcat.id && p.status !== 'in_pipeline')}
+                        cb={cb}
+                      />
                     </td>
                   </tr>
                 )}
@@ -142,7 +155,7 @@ export function LcatMatrix({ lcats, editMode, expanded, onToggle, cb, rowRefs }:
   );
 }
 
-const CTH: React.CSSProperties = { textAlign: 'left', padding: '6px 10px', fontSize: 9, letterSpacing: '0.06em', textTransform: 'uppercase', color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', background: 'var(--gh-bg-surface)' };
+const CTH: React.CSSProperties = { textAlign: 'left', padding: '6px 10px', fontSize: 9, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', background: 'var(--gh-bg-surface)' };
 const CTD: React.CSSProperties = { padding: '8px 10px', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-secondary)', verticalAlign: 'middle', borderTop: '1px solid var(--gh-border)' };
 
 function CandidateTable({ lcat, cb }: { lcat: LCAT; cb: MatrixCallbacks }) {
@@ -158,7 +171,7 @@ function CandidateTable({ lcat, cb }: { lcat: LCAT; cb: MatrixCallbacks }) {
         <thead><tr>
           <th style={{ ...CTH, width: 26 }}>#</th><th style={CTH}>Candidate</th><th style={CTH}>Education</th>
           <th style={CTH}>Yrs</th><th style={CTH}>Certs</th><th style={CTH}>Clearance</th><th style={CTH}>Salary Exp</th>
-          <th style={CTH}>LOI</th><th style={CTH}>Status</th><th style={{ ...CTH, textAlign: 'right' }}>Actions</th>
+          <th style={CTH}>LOI</th><th style={{ ...CTH, textAlign: 'right' }}>Actions</th>
         </tr></thead>
         <tbody>
           {cands.map(c => <CandidateRow key={c.id} c={c} lcat={lcat} cb={cb} />)}
@@ -171,8 +184,6 @@ function CandidateTable({ lcat, cb }: { lcat: LCAT; cb: MatrixCallbacks }) {
 function CandidateRow({ c, lcat, cb }: { c: Candidate; lcat: LCAT; cb: MatrixCallbacks }) {
   const yrsOk = c.yearsExp >= lcat.requirements.yearsExp;
   const overBudget = c.salaryExpectation > lcat.salaryRange.max;
-  const cst = tone(candStatusTone(c.status));
-  const clr = tone(clearTone(c.clearanceStatus));
   return (
     <tr>
       <td style={CTD}><span style={{ width: 18, height: 18, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-tertiary)', fontSize: 10, fontWeight: 'var(--gh-font-weight-bold)', display: 'inline-grid', placeItems: 'center' }}>{c.rank}</span></td>
@@ -192,14 +203,132 @@ function CandidateRow({ c, lcat, cb }: { c: Candidate; lcat: LCAT; cb: MatrixCal
           <FileSignature size={11} />{c.loiStatus === 'not_sent' ? 'LOI' : titleCase(c.loiStatus)}
         </button>
       </td>
-      <td style={CTD}><span style={{ padding: '2px 8px', borderRadius: 'var(--gh-radius-full)', fontSize: 9, fontWeight: 'var(--gh-font-weight-semibold)', background: cst.bg, color: cst.fg, textTransform: 'capitalize' }}>{c.status}</span></td>
       <td style={{ ...CTD, textAlign: 'right' }}>
-        <div style={{ display: 'inline-flex', gap: 6 }}>
+        <div style={{ display: 'inline-flex', gap: 8, alignItems: 'center' }}>
+          <LifecycleAction c={c} lcatId={lcat.id} cb={cb} />
+          <span style={{ width: 1, height: 18, background: 'var(--gh-border)', flexShrink: 0 }} />
+          {c.incumbentPersonId && (
+            <IconBtn icon={<Undo2 size={14} />} tone="warning" title="Return to incumbent list" onClick={() => cb.onReturnCandidate(lcat.id, c.id)} />
+          )}
           <IconBtn icon={<Brain size={14} />} tone="accent" title="AI Analysis" onClick={() => cb.openAi(lcat.id, c.id)} />
           <IconBtn icon={<MessageCircle size={14} />} title="Notes" count={c.notes.length} onClick={() => cb.openNotes(lcat.id, c.id)} />
           <IconBtn icon={<Eye size={14} />} title="View resume" onClick={() => cb.onToast(`Opening ${c.name}'s resume…`)} />
         </div>
       </td>
     </tr>
+  );
+}
+
+// State-dependent primary action — the SOLE carrier of candidate status now that
+// the Status column is gone. Label + color together encode state unambiguously:
+//   sourcing  → slate "Nominate" button   (advance to submitted)
+//   submitted → blue/cyan "Commit" button (advance to committed) + Undo
+//   committed → emerald "Committed" chip — reads as secured, not disabled — + Undo
+// Each forward step reverses by exactly one via the subtle Undo link.
+function LifecycleAction({ c, lcatId, cb }: { c: Candidate; lcatId: string; cb: MatrixCallbacks }) {
+  const next = candidateNext[c.status];
+  const prev = candidatePrev[c.status];
+  const undo = prev && (
+    <button
+      onClick={() => cb.onSetCandidateStatus(lcatId, c.id, prev)}
+      title={`Step back to ${prev}`}
+      style={{ display: 'inline-flex', alignItems: 'center', gap: 3, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', fontSize: 11, fontFamily: F, padding: '2px 4px', whiteSpace: 'nowrap' }}
+    >
+      <RotateCcw size={11} /> Undo
+    </button>
+  );
+  // sourcing → slate (neutral); submitted → blue/cyan (info). Filled so the action
+  // still reads as the row's primary affordance while its tint carries the state.
+  const btnStyle: React.CSSProperties = c.status === 'sourcing'
+    ? { background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text)', border: '1px solid var(--gh-border-strong)' }
+    : { background: 'var(--gh-info-bg)', color: 'var(--gh-info-fg)', border: '1px solid var(--gh-info-border)' };
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+      {c.status === 'committed' ? (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '4px 11px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-success-bg)', color: 'var(--gh-success-fg)', border: '1px solid var(--gh-success-border)', fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap' }}>
+          <CheckCircle2 size={14} /> Committed
+        </span>
+      ) : next ? (
+        <Btn
+          size="sm"
+          style={btnStyle}
+          icon={next.to === 'committed' ? <Check size={13} /> : <ArrowRight size={13} />}
+          onClick={() => cb.onSetCandidateStatus(lcatId, c.id, next.to)}
+        >
+          {next.label}
+        </Btn>
+      ) : null}
+      {undo}
+    </span>
+  );
+}
+
+// ─── Incumbent sourcing — scoped to THIS LCAT (Change 2) ──────────────────────
+// Recruiting always happens in the context of one position, so the destination is
+// implicit. A subtle accented band lists incumbents matching this LCAT; each runs
+// a courtship state machine and can be moved into the pipeline once 'interested'.
+function IncumbentSubList({ lcat, people, cb }: { lcat: LCAT; people: IncumbentPerson[]; cb: MatrixCallbacks }) {
+  const [open, setOpen] = useState(false);
+  if (people.length === 0) return null;
+  const n = people.length;
+  return (
+    <div style={{ padding: '0 18px 14px 38px' }}>
+      <div style={{ borderRadius: 'var(--gh-radius-lg)', border: '1px solid var(--gh-warning-border)', borderLeft: '3px solid var(--gh-warning-fg)', background: 'var(--gh-warning-bg)', overflow: 'hidden' }}>
+        <button onClick={() => setOpen(o => !o)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
+          {open ? <ChevronDown size={14} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} /> : <ChevronRight size={14} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} />}
+          <Building2 size={14} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} />
+          <span style={{ flex: 1, fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>
+            {n} incumbent{n === 1 ? '' : 's'} from Peraton match this position
+          </span>
+          <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>potential recruits</span>
+        </button>
+        {open && (
+          <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--gh-warning-border)' }}>
+            {people.map((p, i) => <IncumbentRow key={p.id} p={p} lcat={lcat} cb={cb} first={i === 0} />)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function IncumbentRow({ p, lcat, cb, first }: { p: IncumbentPerson; lcat: LCAT; cb: MatrixCallbacks; first: boolean }) {
+  const interested = p.status === 'interested';
+  const notPursued = p.status === 'not_pursued';
+  const advance = courtshipAdvance[p.status];
+  const st = tone(incStatusTone(p.status));
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px 9px 14px', borderTop: first ? 'none' : '1px solid var(--gh-warning-border)', flexWrap: 'wrap' }}>
+      <Dot tone={flightTone(p.flightRisk)} />
+      <div style={{ minWidth: 130 }}>
+        <div style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-medium)', color: 'var(--gh-text)' }}>{p.name}</div>
+        <div style={{ fontSize: 10, color: 'var(--gh-text-tertiary)' }}>{p.flightRisk.toUpperCase()} flight risk</div>
+      </div>
+      <span style={{ flex: 1, minWidth: 150, fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)' }}>{p.role}</span>
+      <span style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', whiteSpace: 'nowrap' }}>{p.tenure}</span>
+      <span style={{ padding: '2px 9px', borderRadius: 'var(--gh-radius-full)', fontSize: 9, fontWeight: 'var(--gh-font-weight-semibold)', background: st.bg, color: st.fg, whiteSpace: 'nowrap' }}>{titleCase(p.status)}</span>
+
+      {/* courtship controls */}
+      <div style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
+        {advance && (
+          <Btn size="sm" icon={<Phone size={12} />} onClick={() => cb.onAdvanceCourtship(p.id)}>{advance.label}</Btn>
+        )}
+        {notPursued ? (
+          <Btn size="sm" kind="ghost" onClick={() => cb.onSetCourtship(p.id, 'not_contacted')}>Reconsider</Btn>
+        ) : (
+          <IconBtn icon={<Ban size={13} />} tone="danger" title="Not pursued" onClick={() => cb.onSetCourtship(p.id, 'not_pursued')} />
+        )}
+        <Btn
+          size="sm"
+          kind="primary"
+          icon={<UserPlus size={12} />}
+          disabled={!interested}
+          title={interested ? `Add ${p.name} to the ${lcat.title} pipeline` : 'Available once the candidate is interested'}
+          onClick={() => cb.onAddIncumbentToPipeline(p.id)}
+        >
+          Add to Pipeline
+        </Btn>
+      </div>
+    </div>
   );
 }

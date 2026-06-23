@@ -59,7 +59,7 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
   if (selectedIds.length === 0) {
     return (
       <div style={{ display: 'grid', placeItems: 'center', minHeight: 240, textAlign: 'center', gap: 10 }}>
-        <FileText size={34} style={{ color: 'var(--gh-text-disabled)' }} />
+        <FileText size={34} style={{ color: 'var(--gh-text-tertiary)' }} />
         <div style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)', maxWidth: 360 }}>No references selected yet. Select references in <strong style={{ color: 'var(--gh-text-secondary)' }}>Opportunity Match</strong> to draft their narratives here.</div>
       </div>
     );
@@ -75,13 +75,13 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap', padding: '11px 14px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)' }}>
         <ListChecks size={16} style={{ color: 'var(--gh-accent-tint)' }} />
         <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)' }}>{genIds.length} of {selectedIds.length} narratives drafted</span>
-        {genIds.length > 0 && <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>Avg quality</span><span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(relevanceTone(avgQ)).fg }}>{avgQ}</span></span>}
+        {genIds.length > 0 && <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Avg quality</span><span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(relevanceTone(avgQ)).fg }}>{avgQ}</span></span>}
       </div>
 
       {selectedIds.map(id => {
         const n = narrOf(id); const lib = libOf(id);
         if (!n || !lib) return (
-          <div key={id} style={{ padding: '12px 14px', borderRadius: 'var(--gh-radius-lg)', border: '1px solid var(--gh-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-disabled)' }}>No pre-written narrative on file for {id}.</div>
+          <div key={id} style={{ padding: '12px 14px', borderRadius: 'var(--gh-radius-lg)', border: '1px solid var(--gh-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)' }}>No pre-written narrative on file for {id}.</div>
         );
         const isGen = gen[id]; const t = text[id];
         return (
@@ -91,7 +91,7 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
               <Pill tone={cparsTone(lib.cparsRating)} style={{ fontSize: 9 }}>{lib.cparsRating}</Pill>
               {!isGen
                 ? <Btn kind="primary" size="sm" icon={generating.has(id) ? <Loader2 size={13} className="gh-spin" /> : <Sparkles size={13} />} onClick={() => generate(id)} disabled={generating.has(id)}>{generating.has(id) ? 'Drafting…' : 'Generate Narrative'}</Btn>
-                : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>Quality</span><span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(relevanceTone(n.qualityScore)).fg }}>{n.qualityScore}</span></span>}
+                : <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}><span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Quality</span><span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(relevanceTone(n.qualityScore)).fg }}>{n.qualityScore}</span></span>}
             </div>
 
             {isGen && t && (
@@ -107,7 +107,7 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
                     return (
                       <div key={sec.key}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                          <span style={{ fontSize: 10, color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{sec.label}</span>
+                          <span style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{sec.label}</span>
                           <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 9, color: qt.fg, fontWeight: 'var(--gh-font-weight-semibold)' }}><span style={{ width: 6, height: 6, borderRadius: '50%', background: qt.fg }} />{q === 'strong' ? 'Strong' : q === 'moderate' ? 'Could add metrics' : 'Weak — generic'}</span>
                           <div style={{ marginLeft: 'auto', display: 'flex', gap: 6 }}>
                             <button onClick={() => addMetric(id, sec.key)} style={miniBtn}><Plus size={11} /> Metric</button>
@@ -129,8 +129,8 @@ export function Narratives({ selectedIds, narratives, library, requirements, onT
                       {(Object.keys(QUALITY_LABELS) as QualityKey[]).map(k => {
                         const ok = n.qualityChecklist[k];
                         return (
-                          <div key={k} style={{ display: 'flex', alignItems: 'flex-start', gap: 7, fontSize: 11, color: ok ? 'var(--gh-text-secondary)' : 'var(--gh-text-disabled)' }}>
-                            {ok ? <CheckCircle2 size={13} style={{ color: 'var(--gh-success-fg)', flexShrink: 0, marginTop: 1 }} /> : <Circle size={13} style={{ color: 'var(--gh-text-disabled)', flexShrink: 0, marginTop: 1 }} />}
+                          <div key={k} style={{ display: 'flex', alignItems: 'flex-start', gap: 7, fontSize: 11, color: ok ? 'var(--gh-text-secondary)' : 'var(--gh-text-tertiary)' }}>
+                            {ok ? <CheckCircle2 size={13} style={{ color: 'var(--gh-success-fg)', flexShrink: 0, marginTop: 1 }} /> : <Circle size={13} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, marginTop: 1 }} />}
                             {QUALITY_LABELS[k]}
                           </div>
                         );
@@ -172,5 +172,5 @@ function DisplayBlock({ label, text }: { label: string; text: string }) {
   );
 }
 function Label({ children }: { children: React.ReactNode }) {
-  return <div style={{ fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', marginBottom: 7 }}>{children}</div>;
+  return <div style={{ fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-semibold)', marginBottom: 7 }}>{children}</div>;
 }

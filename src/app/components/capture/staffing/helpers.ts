@@ -1,5 +1,6 @@
 import type {
-  Candidate, LcatStatus, LCAT, Recommendation, SalaryBenchmark, LcatClassification,
+  Candidate, CandidateStatus, LcatStatus, LCAT, Recommendation, SalaryBenchmark, LcatClassification,
+  IncumbentPerson, IncumbentStatus,
 } from '../../../../types/staffing';
 
 export const F = 'var(--gh-font)';
@@ -64,7 +65,7 @@ export function tone(t: Tone) {
   switch (t) {
     case 'success': return { bg: 'var(--gh-success-bg)', fg: 'var(--gh-success-fg)', bd: 'var(--gh-success-border)' };
     case 'warning': return { bg: 'var(--gh-warning-bg)', fg: 'var(--gh-warning-fg)', bd: 'var(--gh-warning-border)' };
-    case 'danger':  return { bg: 'var(--gh-danger-bg)',  fg: 'var(--gh-danger-fg)',  bd: 'var(--gh-danger-border)' };
+    case 'danger':  return { bg: 'var(--gh-danger-bg)',  fg: 'var(--gh-danger-fg-strong)',  bd: 'var(--gh-danger-border)' };
     case 'info':    return { bg: 'var(--gh-info-bg)',    fg: 'var(--gh-info-fg)',    bd: 'var(--gh-info-border)' };
     case 'accent':  return { bg: 'rgba(37,99,235,0.16)', fg: 'var(--gh-accent-tint)', bd: 'var(--gh-accent)' };
     default:        return { bg: 'var(--gh-bg-surface-muted)', fg: 'var(--gh-text-tertiary)', bd: 'var(--gh-border)' };
@@ -76,11 +77,70 @@ export const lcatStatusTone: Record<LcatStatus, Tone> = {
 };
 export const candStatusTone = (s: string): Tone =>
   s === 'committed' ? 'success' : s === 'submitted' ? 'info' : s === 'reviewing' ? 'warning' : s === 'rejected' ? 'danger' : 'neutral';
+
+// ─── Candidate lifecycle (Requirements Matrix row action) ─────────────────────
+// sourcing → submitted (NOMINATE) → committed (COMMIT). Each forward step is
+// reversible by exactly one step; nothing skips a state in either direction.
+export const candidateNext: Partial<Record<CandidateStatus, { to: CandidateStatus; label: string }>> = {
+  sourcing: { to: 'submitted', label: 'Nominate' },
+  submitted: { to: 'committed', label: 'Commit' },
+};
+export const candidatePrev: Partial<Record<CandidateStatus, CandidateStatus>> = {
+  committed: 'submitted',
+  submitted: 'sourcing',
+};
 export const recTone = (r: Recommendation): Tone =>
   r === 'STRONG RECOMMEND' ? 'success' : r === 'RECOMMEND' ? 'accent' : r === 'CONDITIONAL' ? 'warning' : 'danger';
 export const docTone = (s: string): Tone => (s === 'complete' ? 'success' : s === 'draft' ? 'warning' : 'neutral');
 export const flightTone = (r: string): Tone => (r === 'high' ? 'danger' : r === 'medium' ? 'warning' : 'success');
 export const classTone = (c: LcatClassification): Tone => (c === 'discriminator' ? 'accent' : c === 'critical' ? 'warning' : 'neutral');
+
+// ─── Incumbent courtship state machine (Change 2) ─────────────────────────────
+// not_contacted → contacted → interested  (exit at any point: not_pursued)
+// 'in_pipeline' means the person has been moved into the candidate pipeline.
+
+export const incStatusTone = (s: IncumbentStatus): Tone =>
+  s === 'in_pipeline' ? 'success' : s === 'interested' ? 'info' : s === 'contacted' ? 'warning' : s === 'not_pursued' ? 'danger' : 'neutral';
+
+// The forward step in the courtship, plus its button label. null → no advance available.
+export const courtshipAdvance: Partial<Record<IncumbentStatus, { next: IncumbentStatus; label: string }>> = {
+  not_contacted: { next: 'contacted', label: 'Mark contacted' },
+  contacted: { next: 'interested', label: 'Mark interested' },
+};
+
+// Build a pipeline Candidate from an incumbent person, scoped to the LCAT they match.
+// The destination LCAT IS the position — no picker. Tagged so the move can be reversed.
+export function personToCandidate(p: IncumbentPerson, lcat: LCAT): Candidate {
+  const yrs = parseInt(p.tenure, 10) || lcat.requirements.yearsExp;
+  const matchScore = p.flightRisk === 'high' ? 80 : p.flightRisk === 'medium' ? 72 : 65;
+  return {
+    id: `C-INC-${p.id}`,
+    lcatId: lcat.id,
+    name: p.name,
+    rank: lcat.candidates.length + 1,
+    source: 'incumbent',
+    status: 'sourcing',
+    education: `Incumbent (${lcat.requirements.education.split(',')[0]})`,
+    yearsExp: yrs,
+    certifications: [],
+    clearance: 'TS/SCI (active)',
+    clearanceStatus: 'active',
+    salaryExpectation: p.estimatedSalary,
+    matchScore,
+    aiAnalysis: {
+      recommendation: recommendationFromScore(matchScore),
+      recommendationDetail: `Sourced from the incumbent (${p.role}, ${p.tenure}). Brings working knowledge of the current environment; pending full evaluation against the ${lcat.title} requirement.`,
+      competitiveAdvantage: 'Incumbent-level familiarity with the live program — evaluators recognize current performers on the contract.',
+      strengths: ['Direct knowledge of the incumbent environment and stakeholders', `Flight risk: ${p.flightRisk.toUpperCase()} — genuinely recruitable`],
+      concerns: ['Recruiting from the incumbent requires ethical-wall handling', 'Full resume, certifications, and references still to be verified'],
+      interviewQuestions: [],
+      resumeClarifications: [],
+    },
+    loiStatus: 'not_sent',
+    notes: [],
+    incumbentPersonId: p.id,
+  };
+}
 
 // ─── Misc ────────────────────────────────────────────────────────────────────
 

@@ -133,7 +133,7 @@ export function PricingScreen() {
             )),
             !narrow && (
               <div key="active-scenario" style={{ margin: '6px 8px 12px', padding: '10px 11px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-elevated)', border: '1px solid var(--gh-border)' }}>
-                <div style={{ fontSize: 10, color: 'var(--gh-text-disabled)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600, marginBottom: 6 }}>Active Scenario</div>
+                <div style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600, marginBottom: 6 }}>Active Scenario</div>
                 <Pill tone="accent">{active.label.split(' ')[0]}</Pill>
                 <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', marginTop: 8, lineHeight: 1.4 }}>{scenarioWinNotes[winKey]}</div>
               </div>

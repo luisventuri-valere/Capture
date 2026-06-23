@@ -1,31 +1,50 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
-  Users, DollarSign, Building2, CalendarClock, Pencil, Check, Sparkles,
-  FileText, Loader2, ListChecks, AlertTriangle, ChevronRight,
+  DollarSign, CalendarClock, Pencil, Check,
+  FileText, Loader2, ListChecks,
 } from 'lucide-react';
 import { staffingData } from '../../../../data/capture/staffing-data';
-import type { LCAT, IncumbentPerson } from '../../../../types/staffing';
+import type { LCAT, IncumbentPerson, IncumbentStatus, CandidateStatus } from '../../../../types/staffing';
 import {
   F, calculateLcatStatus, committedCount, marketPosition, priorityActions, tone, type Tone,
+  courtshipAdvance, personToCandidate,
 } from './helpers';
-import { Stat, Btn } from './ui';
+import { Btn, SectionHeader } from './ui';
 import { SectionIndex, SectionIndexItem } from '../SectionIndex';
 import { DetailPanel } from '../DetailPanel';
 import { LcatMatrix, type MatrixCallbacks } from './LcatMatrix';
 import { AiAnalysisModal, NotesModal, DocumentsModal, LoiModal } from './modals';
-import { SalaryIntelligence, IncumbentIntelligence, TimelinePriority } from './sections';
+import { SalaryIntelligence, TimelinePriority, IncumbentContextCard } from './sections';
 import { DocumentGeneration } from './DocumentGeneration';
 
 type ModalState = { kind: 'ai' | 'notes' | 'docs' | 'loi' | null; lcatId?: string; candId?: string };
-type SectionKey = 'matrix' | 'docs' | 'salary' | 'incumbent' | 'timeline';
+type SectionKey = 'matrix' | 'docs' | 'salary' | 'timeline';
 
-const SECTIONS: { key: SectionKey; n: number; title: string; icon: React.ReactNode }[] = [
-  { key: 'matrix', n: 1, title: 'Requirements Matrix', icon: <ListChecks size={15} /> },
-  { key: 'docs', n: 2, title: 'Document Generation', icon: <FileText size={15} /> },
-  { key: 'salary', n: 3, title: 'Salary Intelligence', icon: <DollarSign size={15} /> },
-  { key: 'incumbent', n: 4, title: 'Incumbent Intelligence', icon: <Building2 size={15} /> },
-  { key: 'timeline', n: 5, title: 'Timeline & Priority', icon: <CalendarClock size={15} /> },
-];
+// The hub (Requirements Matrix) anchors the nav; the rest are support tools that
+// serve it (Change 1). Each section carries a one-line self-description (Change 4).
+const SECTION_META: Record<SectionKey, { title: string; subtitle: string; icon: React.ReactNode }> = {
+  matrix: {
+    title: 'Requirements Matrix',
+    subtitle: "The positions the RFP requires and the candidates you've aligned to each one.",
+    icon: <ListChecks size={15} />,
+  },
+  docs: {
+    title: 'Document Generation',
+    subtitle: "Status of each position's staffing documents: requisition, interview guide, evaluation criteria, and handoff package.",
+    icon: <FileText size={15} />,
+  },
+  salary: {
+    title: 'Salary Intelligence',
+    subtitle: "How your salary offers compare to the market, so you're neither overpaying nor underbidding.",
+    icon: <DollarSign size={15} />,
+  },
+  timeline: {
+    title: 'Timeline & Priority',
+    subtitle: 'Which positions to work first, based on proposal deadlines and clearance lead times.',
+    icon: <CalendarClock size={15} />,
+  },
+};
+const SUPPORT_KEYS: SectionKey[] = ['docs', 'salary', 'timeline'];
 
 export function StaffingScreen() {
   const { opportunity, incumbent, salaryBenchmarks, timeline } = staffingData;
@@ -46,9 +65,9 @@ export function StaffingScreen() {
   const setToast = (m: string) => { setToastState(m); window.clearTimeout(toastTimer.current); toastTimer.current = window.setTimeout(() => setToastState(null), 2600); };
 
   const stats = useMemo(() => {
-    let filled = 0, gaps = 0, pipeline = 0;
-    lcats.forEach(l => { filled += committedCount(l.candidates); pipeline += l.candidates.length; if (calculateLcatStatus(l.candidates, l.quantity) === 'gap') gaps++; });
-    return { total: lcats.length, filled, gaps, pipeline };
+    let filled = 0, gaps = 0;
+    lcats.forEach(l => { filled += committedCount(l.candidates); if (calculateLcatStatus(l.candidates, l.quantity) === 'gap') gaps++; });
+    return { total: lcats.length, filled, gaps };
   }, [lcats]);
 
   const nav = useMemo(() => {
@@ -56,22 +75,52 @@ export function StaffingScreen() {
     const docTotal = lcats.length * 4;
     const docComplete = lcats.reduce((s, l) => s + Object.values(l.documents).filter(d => d === 'complete').length, 0);
     const off = lcats.reduce((n, l) => n + (marketPosition(l, salaryBenchmarks.find(x => x.lcatId === l.id)).label !== 'At Market' ? 1 : 0), 0);
-    const highRisk = people.filter(p => p.flightRisk === 'high').length;
     const pact = priorityActions(lcats);
     const out: Record<SectionKey, { hint: string; dot: Tone }> = {
       matrix: { hint: `${lcats.length} LCATs · ${stats.gaps ? `${stats.gaps} gap${stats.gaps === 1 ? '' : 's'}` : reviewing ? `${reviewing} reviewing` : 'on track'}`, dot: stats.gaps ? 'danger' : reviewing ? 'warning' : 'success' },
       docs: { hint: `${docComplete}/${docTotal} docs ready`, dot: docComplete === docTotal ? 'success' : docComplete > 0 ? 'warning' : 'neutral' },
       salary: { hint: off ? `${off} off-market` : 'all at market', dot: off ? 'warning' : 'success' },
-      incumbent: { hint: `${incumbent.contractor} · ${highRisk} high-risk`, dot: highRisk ? 'danger' : 'warning' },
       timeline: { hint: `${pact.length} priority action${pact.length === 1 ? '' : 's'}`, dot: pact.some(a => a.priority === 'P1') ? 'danger' : pact.length ? 'warning' : 'success' },
     };
     return out;
-  }, [lcats, people, salaryBenchmarks, incumbent.contractor, stats.gaps]);
+  }, [lcats, salaryBenchmarks, stats.gaps]);
 
   // ── mutators ──
   const patchLcat = (lcatId: string, patch: Partial<LCAT>) => setLcats(prev => prev.map(l => l.id === lcatId ? { ...l, ...patch } : l));
   const patchCandidate = (lcatId: string, candId: string, fn: (c: LCAT['candidates'][number]) => LCAT['candidates'][number]) =>
     setLcats(prev => prev.map(l => l.id !== lcatId ? l : { ...l, candidates: l.candidates.map(c => c.id === candId ? fn(c) : c) }));
+
+  // Candidate lifecycle transition — LCAT status + header stats are derived from
+  // `lcats`, so they recompute automatically (forward and on Undo).
+  const setCandidateStatus = (lcatId: string, candId: string, status: CandidateStatus) =>
+    patchCandidate(lcatId, candId, c => ({ ...c, status }));
+
+  // ── incumbent courtship + reversible move (Change 2) ──
+  const setCourtship = (personId: string, status: IncumbentStatus) =>
+    setPeople(prev => prev.map(p => p.id === personId ? { ...p, status } : p));
+  const advanceCourtship = (personId: string) =>
+    setPeople(prev => prev.map(p => {
+      const next = courtshipAdvance[p.status]?.next;
+      return p.id === personId && next ? { ...p, status: next } : p;
+    }));
+  const addIncumbentToPipeline = (personId: string) => {
+    const person = people.find(p => p.id === personId);
+    if (!person || person.status !== 'interested' || !person.lcatId) return;
+    const lcat = lcats.find(l => l.id === person.lcatId);
+    if (!lcat) return;
+    const cand = personToCandidate(person, lcat);
+    setLcats(prev => prev.map(l => l.id === lcat.id ? { ...l, candidates: [...l.candidates, cand] } : l));
+    setPeople(prev => prev.map(p => p.id === personId ? { ...p, status: 'in_pipeline' } : p));
+    setExpanded(s => new Set(s).add(lcat.id));
+    setToast(`${person.name} → ${lcat.title} pipeline`);
+  };
+  const returnCandidateToIncumbent = (lcatId: string, candId: string) => {
+    const cand = lcats.find(l => l.id === lcatId)?.candidates.find(c => c.id === candId);
+    if (!cand?.incumbentPersonId) return;
+    setLcats(prev => prev.map(l => l.id === lcatId ? { ...l, candidates: l.candidates.filter(c => c.id !== candId) } : l));
+    setPeople(prev => prev.map(p => p.id === cand.incumbentPersonId ? { ...p, status: 'interested' } : p));
+    setToast(`${cand.name} returned to incumbent list`);
+  };
 
   const cb: MatrixCallbacks = {
     openAi: (lcatId, candId) => setModal({ kind: 'ai', lcatId, candId }),
@@ -92,6 +141,11 @@ export function StaffingScreen() {
       setExpanded(p => new Set(p).add(id));
     },
     onToast: setToast,
+    onSetCandidateStatus: setCandidateStatus,
+    onAdvanceCourtship: advanceCourtship,
+    onSetCourtship: setCourtship,
+    onAddIncumbentToPipeline: addIncumbentToPipeline,
+    onReturnCandidate: returnCandidateToIncumbent,
   };
 
   const toggleExpand = (id: string) => setExpanded(p => { const n = new Set(p); n.has(id) ? n.delete(id) : n.add(id); return n; });
@@ -107,7 +161,6 @@ export function StaffingScreen() {
   const generateLoi = (lcatId: string, candId: string) => patchCandidate(lcatId, candId, c => ({ ...c, loiStatus: c.loiStatus === 'sent' ? 'signed' : 'sent' }));
   const postNote = (lcatId: string, candId: string, text: string) =>
     patchCandidate(lcatId, candId, c => ({ ...c, notes: [...c.notes, { id: `n-${Date.now()}`, userName: 'You', userRole: 'BD', text, date: new Date().toISOString().slice(0, 10) }] }));
-  const addToPipeline = (id: string) => { setPeople(prev => prev.map(p => p.id === id ? { ...p, status: 'in_pipeline' } : p)); setToast('Added to candidate pipeline'); };
 
   const scrollToLcat = (id: string) => {
     setSelected('matrix');
@@ -119,48 +172,69 @@ export function StaffingScreen() {
   const activeLcat = modal.lcatId ? lcats.find(l => l.id === modal.lcatId) : undefined;
   const activeCand = activeLcat && modal.candId ? activeLcat.candidates.find(c => c.id === modal.candId) : undefined;
 
+  const meta = SECTION_META[selected];
+
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'var(--gh-bg-canvas)', fontFamily: F, padding: 'var(--gh-space-8) 0', boxSizing: 'border-box' }}>
       <style>{`@keyframes gh-spin{to{transform:rotate(360deg)}}.gh-spin{animation:gh-spin .8s linear infinite}@keyframes gh-pulse{0%,100%{opacity:1}50%{opacity:.25}}.gh-pulse{animation:gh-pulse 1.4s ease-in-out infinite}`}</style>
 
-      {/* ── Context header (compact) ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
-        <Stat label="Total LCATs" value={stats.total} icon={<Users size={15} />} />
-        <Stat label="Positions Filled" value={stats.filled} tone="success" icon={<Check size={15} />} />
-        <Stat label="Open Gaps" value={stats.gaps} tone={stats.gaps > 0 ? 'danger' : 'success'} icon={<AlertTriangle size={15} />} />
-        <Stat label="Candidates in Pipeline" value={stats.pipeline} tone="accent" icon={<Sparkles size={15} />} />
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, marginLeft: 'auto' }}>
-          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 12px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap' }}>
-            <CalendarClock size={14} /> Days to Proposal: {opportunity.daysToProposal}
+      {/* ── Context header (Strategy-style compact bar) ── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '0 var(--gh-space-12) 12px', flexShrink: 0 }}>
+        <button onClick={() => setEditMode(e => !e)} style={{
+          display: 'inline-flex', alignItems: 'center', gap: 7, padding: '6px 14px', borderRadius: 'var(--gh-radius-lg)',
+          background: editMode ? 'var(--gh-accent)' : 'transparent', color: editMode ? 'var(--gh-accent-fg)' : 'var(--gh-text-secondary)',
+          border: `1px solid ${editMode ? 'var(--gh-accent)' : 'var(--gh-border)'}`, fontSize: 'var(--gh-font-size-sm)',
+          fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer', fontFamily: F, flexShrink: 0,
+        }}>
+          {editMode ? <span className="gh-pulse" style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--gh-accent-fg)' }} /> : <Pencil size={13} />}
+          {editMode ? 'Done Editing' : 'Edit'}
+        </button>
+        <span style={{ width: 1, height: 20, background: 'var(--gh-border)', flexShrink: 0 }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>
+            {stats.filled} of {stats.total} covered · {stats.gaps} {stats.gaps === 1 ? 'gap' : 'gaps'}
           </span>
-          <button onClick={() => setEditMode(e => !e)} style={{
-            display: 'inline-flex', alignItems: 'center', gap: 7, padding: '6px 14px', borderRadius: 'var(--gh-radius-lg)',
-            background: editMode ? 'var(--gh-accent)' : 'transparent', color: editMode ? 'var(--gh-accent-fg)' : 'var(--gh-text-secondary)',
-            border: `1px solid ${editMode ? 'var(--gh-accent)' : 'var(--gh-border)'}`, fontSize: 'var(--gh-font-size-sm)',
-            fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer', fontFamily: F,
-          }}>
-            {editMode ? <span className="gh-pulse" style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--gh-accent-fg)' }} /> : <Pencil size={13} />}
-            {editMode ? 'Done Editing' : 'Edit'}
-          </button>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', whiteSpace: 'nowrap' }}>
+            <CalendarClock size={13} /> Days to Proposal: {opportunity.daysToProposal}
+          </span>
         </div>
       </div>
 
       {/* ── Master / detail — shared shell ── */}
       <div style={{ flex: 1, minHeight: 0, display: 'flex', overflow: 'hidden' }}>
-        {/* Shared collapsible/resizable section index */}
+        {/* Shared collapsible/resizable section index — hub + Support tools group */}
         <SectionIndex
           title="Sections"
-          renderItems={(narrow) => SECTIONS.map(s => (
-            <SectionIndexItem
-              key={s.key}
-              title={s.title}
-              subtitle={nav[s.key].hint}
-              subtitleDot={tone(nav[s.key].dot).fg}
-              selected={selected === s.key}
-              narrow={narrow}
-              onSelect={() => setSelected(s.key)}
-            />
-          ))}
+          renderItems={(narrow) => (
+            <>
+              <SectionIndexItem
+                title={SECTION_META.matrix.title}
+                subtitle={nav.matrix.hint}
+                subtitleDot={tone(nav.matrix.dot).fg}
+                selected={selected === 'matrix'}
+                narrow={narrow}
+                emphasis
+                onSelect={() => setSelected('matrix')}
+              />
+              {!narrow && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '14px 10px 6px' }}>
+                  <span style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-semibold)', letterSpacing: '0.07em', textTransform: 'uppercase', color: 'var(--gh-text-tertiary)' }}>Support tools</span>
+                  <span style={{ flex: 1, height: 1, background: 'var(--gh-border)' }} />
+                </div>
+              )}
+              {SUPPORT_KEYS.map(k => (
+                <SectionIndexItem
+                  key={k}
+                  title={SECTION_META[k].title}
+                  subtitle={nav[k].hint}
+                  subtitleDot={tone(nav[k].dot).fg}
+                  selected={selected === k}
+                  narrow={narrow}
+                  onSelect={() => setSelected(k)}
+                />
+              ))}
+            </>
+          )}
         />
 
         {/* detail */}
@@ -169,18 +243,18 @@ export function StaffingScreen() {
             scrollKey={selected}
             background="var(--gh-bg-canvas)"
             progressBar={false}
-            leftActions={selected === 'incumbent' ? (
-              <span style={{ padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-tertiary)', fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)' }}>{incumbent.contractor}</span>
-            ) : undefined}
             actions={selected === 'docs' ? () => (
               <Btn kind="secondary" size="sm" icon={genAll ? <Loader2 size={13} className="gh-spin" /> : <FileText size={13} />} onClick={generateAllDocs} disabled={genAll}>{genAll ? 'Generating…' : 'Generate All Docs'}</Btn>
             ) : undefined}
           >
             <div style={{ padding: '16px 20px' }}>
-              {selected === 'matrix' && <LcatMatrix lcats={lcats} editMode={editMode} expanded={expanded} onToggle={toggleExpand} cb={cb} rowRefs={rowRefs} />}
+              <SectionHeader title={meta.title} subtitle={meta.subtitle} />
+              {selected === 'matrix' && <>
+                <IncumbentContextCard incumbent={incumbent} people={people} />
+                <LcatMatrix lcats={lcats} people={people} editMode={editMode} expanded={expanded} onToggle={toggleExpand} cb={cb} rowRefs={rowRefs} />
+              </>}
               {selected === 'docs' && <DocumentGeneration lcats={lcats} onGenerate={generateDoc} onOpenDocs={(id) => setModal({ kind: 'docs', lcatId: id })} />}
               {selected === 'salary' && <SalaryIntelligence lcats={lcats} benchmarks={salaryBenchmarks} />}
-              {selected === 'incumbent' && <IncumbentIntelligence incumbent={incumbent} people={people} onAddToPipeline={addToPipeline} />}
               {selected === 'timeline' && <TimelinePriority timeline={timeline} lcats={lcats} onScrollToLcat={scrollToLcat} />}
             </div>
           </DetailPanel>
@@ -202,4 +276,3 @@ export function StaffingScreen() {
     </div>
   );
 }
-

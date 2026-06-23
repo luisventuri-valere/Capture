@@ -132,7 +132,7 @@ function StatusPill({ status }: { status: string }) {
 
 function RiskScorePill({ score }: { score: number }) {
   const bg = score >= 12 ? 'var(--gh-danger-bg)' : score >= 8 ? 'var(--gh-warning-bg)' : 'var(--gh-success-bg)';
-  const color = score >= 12 ? 'var(--gh-danger-fg)' : score >= 8 ? 'var(--gh-warning-fg)' : 'var(--gh-success-fg)';
+  const color = score >= 12 ? 'var(--gh-danger-fg-strong)' : score >= 8 ? 'var(--gh-warning-fg)' : 'var(--gh-success-fg)';
   // Risk scores are always attention-relevant — never quieted
   return <Pill bg={bg} color={color}>Score {score}</Pill>;
 }
@@ -344,7 +344,7 @@ function TeamStrategyContent({ data, sources }: { data: TeamStrategySection; sou
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
               <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{g.id}</span>
               <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{g.gap}</span>
-              <Pill bg={g.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={g.severity === 'HIGH' ? 'var(--gh-danger-fg)' : 'var(--gh-warning-fg)'}>{g.severity}</Pill>
+              <Pill bg={g.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={g.severity === 'HIGH' ? 'var(--gh-danger-fg-strong)' : 'var(--gh-warning-fg)'}>{g.severity}</Pill>
               <StatusPill status={g.status} />
             </div>
             <p style={{ fontSize: 'var(--gh-font-size-base)', color: 'var(--gh-text-secondary)', marginBottom: 6 }}>{g.description}</p>
@@ -388,7 +388,7 @@ function TeamStrategyContent({ data, sources }: { data: TeamStrategySection; sou
 function CustomerEngagementContent({ data, sources }: { data: CustomerEngagementSection; sources?: Array<{label: string}> }) {
   const strengthStyle = (s: string): [string, string] => {
     if (s === 'WARM') return ['var(--gh-bg-surface-muted)', 'var(--gh-success-fg)'];
-    if (s === 'COLD') return ['var(--gh-bg-surface-muted)', 'var(--gh-danger-fg)'];
+    if (s === 'COLD') return ['var(--gh-danger-bg)', 'var(--gh-danger-fg-strong)'];
     return ['var(--gh-bg-surface-muted)', 'var(--gh-text-tertiary)'];
   };
 
@@ -438,7 +438,7 @@ function CustomerEngagementContent({ data, sources }: { data: CustomerEngagement
             </div>
             <div style={{ flexShrink: 0, fontSize: 11, color: 'var(--gh-text-tertiary)', textAlign: 'right' }}>
               {r.nextActionDate ?? 'No date'}<br />
-              <span style={{ color: 'var(--gh-text-disabled)' }}>{r.owner}</span>
+              <span style={{ color: 'var(--gh-text-tertiary)' }}>{r.owner}</span>
             </div>
           </div>
         ))}
@@ -462,7 +462,7 @@ function StaffingStrategyContent({ data, sources }: { data: StaffingStrategySect
             <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{pos.lcat}</span>,
             <Pill bg="var(--gh-bg-surface-muted)" color="var(--gh-info-fg)" quiet>{pos.designation}</Pill>,
             pos.clearance,
-            pos.candidate ?? <span style={{ color: 'var(--gh-text-disabled)' }}>TBD</span>,
+            pos.candidate ?? <span style={{ color: 'var(--gh-text-tertiary)' }}>TBD</span>,
             pos.source,
             pos.startDate,
             <StatusPill status={pos.status} />,
@@ -531,7 +531,7 @@ function PastPerformanceContent({ data, sources }: { data: PastPerformanceSectio
                 <KV label="Relevance" value={
                   <Pill
                     bg={ref.relevance === 'CRITICAL' ? 'var(--gh-danger-bg)' : ref.relevance === 'HIGH' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface)'}
-                    color={ref.relevance === 'CRITICAL' ? 'var(--gh-danger-fg)' : ref.relevance === 'HIGH' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'}
+                    color={ref.relevance === 'CRITICAL' ? 'var(--gh-danger-fg-strong)' : ref.relevance === 'HIGH' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'}
                   >{ref.relevance}</Pill>
                 } />
               </div>
@@ -709,8 +709,8 @@ function RiskRegisterContent({ data, sources }: { data: RiskRegisterSection; sou
             <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{r.id}</span>,
             <span style={{ fontWeight: 'var(--gh-font-weight-medium)', color: 'var(--gh-text)' }}>{r.risk}</span>,
             r.category,
-            <Pill bg={r.likelihoodScore >= 4 ? 'var(--gh-danger-bg)' : r.likelihoodScore >= 3 ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.likelihoodScore >= 4 ? 'var(--gh-danger-fg)' : r.likelihoodScore >= 3 ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'} quiet={r.likelihoodScore < 3}>{r.likelihood}</Pill>,
-            <Pill bg={r.impactScore >= 5 ? 'var(--gh-danger-bg)' : r.impactScore >= 4 ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.impactScore >= 5 ? 'var(--gh-danger-fg)' : r.impactScore >= 4 ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'} quiet={r.impactScore < 4}>{r.impact}</Pill>,
+            <Pill bg={r.likelihoodScore >= 4 ? 'var(--gh-danger-bg)' : r.likelihoodScore >= 3 ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.likelihoodScore >= 4 ? 'var(--gh-danger-fg-strong)' : r.likelihoodScore >= 3 ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'} quiet={r.likelihoodScore < 3}>{r.likelihood}</Pill>,
+            <Pill bg={r.impactScore >= 5 ? 'var(--gh-danger-bg)' : r.impactScore >= 4 ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.impactScore >= 5 ? 'var(--gh-danger-fg-strong)' : r.impactScore >= 4 ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'} quiet={r.impactScore < 4}>{r.impact}</Pill>,
             <RiskScorePill score={r.riskScore} />,
             <StatusPill status={r.status} />,
           ])}
@@ -732,7 +732,7 @@ function RiskRegisterContent({ data, sources }: { data: RiskRegisterSection; sou
                   <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text)' }}>{r.risk}</span>
                   <RiskScorePill score={r.riskScore} />
                   <StatusPill status={r.status} />
-                  <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--gh-text-disabled)' }}>Updated {r.lastUpdated} · {r.owner}</span>
+                  <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Updated {r.lastUpdated} · {r.owner}</span>
                 </div>
                 <KV label="Mitigation"  value={r.mitigation} />
                 <KV label="Contingency" value={r.contingency} />

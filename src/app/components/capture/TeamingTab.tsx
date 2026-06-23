@@ -63,7 +63,7 @@ function Band({ icon, label, children, defaultOpen = true }: { icon?: string; la
         <ChevronDown size={16} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, transform: open ? 'none' : 'rotate(-90deg)', transition: 'transform .15s' }} />
       </button>
       {open && (
-        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-elevated)', color: 'var(--gh-text)' }}>
+        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-surface)', color: 'var(--gh-text)' }}>
           {children}
         </div>
       )}
@@ -275,7 +275,7 @@ function CapabilityGapsContent({ data, demo }: { data: TD; demo: boolean }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
                 <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{g.id}</span>
                 <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{g.capability}</span>
-                <Pill bg={g.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={g.severity === 'HIGH' ? 'var(--gh-danger-fg)' : 'var(--gh-warning-fg)'}>{g.severity}</Pill>
+                <Pill bg={g.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={g.severity === 'HIGH' ? 'var(--gh-danger-fg-strong)' : 'var(--gh-warning-fg)'}>{g.severity}</Pill>
                 <Pill bg={g.status === 'FILLING' ? 'var(--gh-info-bg)' : 'var(--gh-warning-bg)'} color={g.status === 'FILLING' ? 'var(--gh-info-fg)' : 'var(--gh-warning-fg)'} quiet>{g.status}</Pill>
                 {isReopened && <Pill bg="var(--gh-warning-bg)" color="var(--gh-warning-fg)">Reopened</Pill>}
               </div>
@@ -350,9 +350,9 @@ function PartnerPipelineContent({ data, demo }: { data: TD; demo: boolean }) {
             { label: 'Evaluating', count: evaluating, bg: 'var(--gh-info-bg)',         color: 'var(--gh-info-fg)' },
             { label: 'Contacted',  count: contacted,  bg: 'var(--gh-bg-surface)',      color: 'var(--gh-text-secondary)' },
             { label: 'Identified', count: identified, bg: 'var(--gh-bg-surface)',      color: 'var(--gh-text-tertiary)' },
-            { label: 'Declined',   count: declined,   bg: 'var(--gh-danger-bg)',       color: 'var(--gh-danger-fg)' },
+            { label: 'Declined',   count: declined,   bg: 'var(--gh-danger-bg)',       color: 'var(--gh-danger-fg-strong)' },
           ].map(item => (
-            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', borderRadius: 'var(--gh-radius-lg)', background: item.bg, border: `1px solid ${item.color === 'var(--gh-success-fg)' ? 'var(--gh-success-border)' : item.color === 'var(--gh-danger-fg)' ? 'var(--gh-danger-border)' : 'var(--gh-border)'}` }}>
+            <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '5px 12px', borderRadius: 'var(--gh-radius-lg)', background: item.bg, border: `1px solid ${item.color === 'var(--gh-success-fg)' ? 'var(--gh-success-border)' : item.color === 'var(--gh-danger-fg-strong)' ? 'var(--gh-danger-border)' : 'var(--gh-border)'}` }}>
               <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: item.color }}>{item.count}</span>
               <span style={{ fontSize: 'var(--gh-font-size-sm)', color: item.color }}>{item.label}</span>
             </div>
@@ -379,7 +379,7 @@ function PartnerPipelineContent({ data, demo }: { data: TD; demo: boolean }) {
             {p.risks.map((r, i) => (
               <div key={i} style={{ padding: '7px 10px', borderRadius: 'var(--gh-radius-md)', marginBottom: 4, background: r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)', border: `1px solid ${r.severity === 'HIGH' ? 'var(--gh-danger-border)' : 'var(--gh-warning-border)'}`, fontSize: 'var(--gh-font-size-base)' }}>
                 <div style={{ display: 'flex', gap: 6, marginBottom: 3 }}>
-                  <Pill bg={r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={r.severity === 'HIGH' ? 'var(--gh-danger-fg)' : 'var(--gh-warning-fg)'}>{r.severity}</Pill>
+                  <Pill bg={r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : 'var(--gh-warning-bg)'} color={r.severity === 'HIGH' ? 'var(--gh-danger-fg-strong)' : 'var(--gh-warning-fg)'}>{r.severity}</Pill>
                   <span style={{ color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-medium)' }}>{r.risk}</span>
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--gh-text-secondary)' }}>Mitigation: {r.mitigation}</div>
@@ -436,7 +436,7 @@ function WorkshareContent({ data, demo }: { data: TD; demo: boolean }) {
     <>
       <Band icon="facts" label="Facts — Workshare Allocation">
         {belowPlan && (
-          <div style={{ marginBottom: 12, padding: '8px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-danger-bg)', border: '1px solid var(--gh-danger-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-danger-fg)' }}>
+          <div style={{ marginBottom: 12, padding: '8px 12px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-danger-bg)', border: '1px solid var(--gh-danger-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-danger-fg-strong)' }}>
             20% / $9.0M hole — DataBridge workshare unallocated. Total drops to {totalWorkshare}%. Below 45% sub-target.
           </div>
         )}
@@ -462,7 +462,7 @@ function WorkshareContent({ data, demo }: { data: TD; demo: boolean }) {
                     <td style={{ padding: '8px 12px 8px 0', color: 'var(--gh-text)', whiteSpace: 'nowrap' }}>{isHole ? '—' : Money(r.estimatedValue)}</td>
                     <td style={{ padding: '8px 12px 8px 0', color: 'var(--gh-text-tertiary)' }}>{isHole ? '—' : r.fte}</td>
                     <td style={{ padding: '8px 12px 8px 0' }}>
-                      <Pill bg="var(--gh-bg-surface-muted)" color="var(--gh-info-fg)" quiet>{r.sbCategory}</Pill>
+                      <Pill bg="var(--gh-info-bg)" color="var(--gh-info-fg)" quiet>{r.sbCategory}</Pill>
                     </td>
                     <td style={{ padding: '8px 12px 8px 0', color: 'var(--gh-text-secondary)', fontSize: 11 }}>
                       {r.scope.slice(0, 2).join(' · ')}{r.scope.length > 2 ? ` +${r.scope.length - 2}` : ''}
@@ -624,7 +624,7 @@ function SectionDetail(props: SectionDetailProps) {
 
       {/* Footer */}
       <div style={{ padding: '12px 24px', borderTop: '1px solid var(--gh-border)' }}>
-        <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginBottom: 4, fontFamily: F }}>
+        <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', marginBottom: 4, fontFamily: F }}>
           Last reviewed 2026-02-10 · Teaming Intelligence Agent v3
         </div>
         <VersionHistoryFooter env={env} vhExtra={vhExtra} />
@@ -722,7 +722,7 @@ export function TeamingTab({ chromeHidden = false }: { chromeHidden?: boolean })
       {/* Ask AI drawer */}
       {aiSection && (
         <>
-          <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 40 }} onClick={() => setAiSection(null)} />
+          <div style={{ position: 'fixed', inset: 0, background: 'var(--gh-backdrop)', zIndex: 40 }} onClick={() => setAiSection(null)} />
           <AskAIDrawer sectionTitle={aiSection} chatSeed={CHAT_SEED} onClose={() => setAiSection(null)} />
         </>
       )}
@@ -739,7 +739,7 @@ export function TeamingTab({ chromeHidden = false }: { chromeHidden?: boolean })
               <Info size={13} />
             </span>
           </div>
-          <p style={{ fontSize: 11, color: '#fff', margin: 0, fontFamily: F }}>
+          <p style={{ fontSize: 11, color: 'var(--gh-white)', margin: 0, fontFamily: F }}>
             {TEAMING_ENVELOPE.generated_by}
           </p>
         </div>

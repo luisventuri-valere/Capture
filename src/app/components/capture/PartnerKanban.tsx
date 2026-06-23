@@ -28,7 +28,7 @@ function stageBg(stage: string) {
 function stageColor(stage: string) {
   if (stage === 'Committed') return 'var(--gh-success-fg)';
   if (stage === 'Negotiating' || stage === 'NDA_Signed' || stage === 'TA_Signed') return 'var(--gh-info-fg)';
-  if (stage === 'Declined') return 'var(--gh-danger-fg)';
+  if (stage === 'Declined') return 'var(--gh-danger-fg-strong)';
   return 'var(--gh-text-tertiary)';
 }
 
@@ -79,19 +79,19 @@ function PartnerDetailDrawer({ partner, onClose, demo }: { partner: Partner; onC
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', pointerEvents: 'auto' }}>
-      <div style={{ flex: 1, background: 'rgba(0,0,0,0.35)' }} onClick={onClose} />
+      <div style={{ flex: 1, background: 'var(--gh-backdrop)' }} onClick={onClose} />
       <div style={{ width: 520, height: '100%', background: 'var(--gh-bg-elevated)', borderLeft: '1px solid var(--gh-border)', display: 'flex', flexDirection: 'column', fontFamily: F }}>
         {/* Header */}
         <div style={{ padding: '14px 20px 10px', borderBottom: '1px solid var(--gh-border)', flexShrink: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 3 }}>
-                <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-semibold)', color: isWithdrawn ? 'var(--gh-text-disabled)' : 'var(--gh-text)', textDecoration: isWithdrawn ? 'line-through' : 'none' }}>
+                <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-semibold)', color: isWithdrawn ? 'var(--gh-text-tertiary)' : 'var(--gh-text)', textDecoration: isWithdrawn ? 'line-through' : 'none' }}>
                   {partner.name}
                 </span>
                 <Pill bg={stageBg(partner.stage)} color={stageColor(partner.stage)}>{partner.stage}</Pill>
                 {partner.onHold && <Pill bg="var(--gh-warning-bg)" color="var(--gh-warning-fg)">On Hold</Pill>}
-                {isWithdrawn && <Pill bg="var(--gh-danger-bg)" color="var(--gh-danger-fg)">Withdrawn</Pill>}
+                {isWithdrawn && <Pill bg="var(--gh-danger-bg)" color="var(--gh-danger-fg-strong)">Withdrawn</Pill>}
               </div>
               <div style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)' }}>{partner.coreCapability}</div>
             </div>
@@ -100,14 +100,14 @@ function PartnerDetailDrawer({ partner, onClose, demo }: { partner: Partner; onC
             </button>
           </div>
           {isWithdrawn && (
-            <div style={{ marginBottom: 8, padding: '6px 12px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-danger-bg)', border: '1px solid var(--gh-danger-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-danger-fg)' }}>
+            <div style={{ marginBottom: 8, padding: '6px 12px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-danger-bg)', border: '1px solid var(--gh-danger-border)', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-danger-fg-strong)' }}>
               Withdrawn — confirmed no longer bidding (2026-02-12)
             </div>
           )}
           {/* Tab bar */}
           <div style={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
             {tabs.map(t => (
-              <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: '5px 12px', fontSize: 'var(--gh-font-size-sm)', fontWeight: tab === t.id ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-normal)', color: tab === t.id ? 'var(--gh-accent)' : 'var(--gh-text-tertiary)', background: 'transparent', cursor: 'pointer', borderRadius: 'var(--gh-radius-md)', fontFamily: F, borderBottom: tab === t.id ? '2px solid var(--gh-accent)' : '2px solid transparent' }}>
+              <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: '5px 12px', fontSize: 'var(--gh-font-size-sm)', fontWeight: tab === t.id ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-normal)', color: tab === t.id ? 'var(--gh-accent-tint)' : 'var(--gh-text-tertiary)', background: 'transparent', cursor: 'pointer', borderRadius: 'var(--gh-radius-md)', fontFamily: F, borderBottom: tab === t.id ? '2px solid var(--gh-accent)' : '2px solid transparent' }}>
                 {t.label}
               </button>
             ))}
@@ -174,7 +174,7 @@ function FactsTab({ partner }: { partner: Partner }) {
         {partner.certifications.length > 0 && (
           <KV label="Certifications" value={
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-              {partner.certifications.map((c, i) => <Pill key={i} bg="var(--gh-bg-surface-muted)" color="var(--gh-info-fg)" quiet>{c}</Pill>)}
+              {partner.certifications.map((c, i) => <Pill key={i} bg="var(--gh-info-bg)" color="var(--gh-info-fg)" quiet>{c}</Pill>)}
             </div>
           } />
         )}
@@ -252,7 +252,7 @@ function PeopleTab({ partner }: { partner: Partner }) {
             <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{p.role}</div>
           </div>
           <Pill bg="var(--gh-bg-surface-muted)" color="var(--gh-text-tertiary)" quiet>{p.clearance}</Pill>
-          <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)', whiteSpace: 'nowrap' }}>{p.yearsExperience}y</span>
+          <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', whiteSpace: 'nowrap' }}>{p.yearsExperience}y</span>
           {p.available === true && <Pill bg="var(--gh-success-bg)" color="var(--gh-success-fg)" quiet>Available</Pill>}
         </div>
       ))}
@@ -272,7 +272,7 @@ function PerformanceTab({ partner }: { partner: Partner }) {
           <div key={i} style={{ padding: '10px 12px', borderRadius: 'var(--gh-radius-lg)', marginBottom: 8, background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
               <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)', flex: 1, marginRight: 8 }}>{pp.contract}</span>
-              <Pill bg="var(--gh-bg-surface-muted)" color={ratingColor} quiet>{pp.cpars}</Pill>
+              <Pill bg={pp.cpars === 'Very Good' ? 'var(--gh-info-bg)' : 'var(--gh-bg-surface-muted)'} color={ratingColor} quiet>{pp.cpars}</Pill>
             </div>
             <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>
               {pp.agency} · {Money(pp.value)}
@@ -299,7 +299,7 @@ function IntelligenceTab({ partner }: { partner: Partner }) {
           {partner.risks.map((r, i) => (
             <div key={i} style={{ padding: '8px 12px', borderRadius: 'var(--gh-radius-md)', marginBottom: 6, background: r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : r.severity === 'MEDIUM' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface)', border: `1px solid ${r.severity === 'HIGH' ? 'var(--gh-danger-border)' : r.severity === 'MEDIUM' ? 'var(--gh-warning-border)' : 'var(--gh-border)'}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-                <Pill bg={r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : r.severity === 'MEDIUM' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.severity === 'HIGH' ? 'var(--gh-danger-fg)' : r.severity === 'MEDIUM' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'}>{r.severity}</Pill>
+                <Pill bg={r.severity === 'HIGH' ? 'var(--gh-danger-bg)' : r.severity === 'MEDIUM' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-surface-muted)'} color={r.severity === 'HIGH' ? 'var(--gh-danger-fg-strong)' : r.severity === 'MEDIUM' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)'}>{r.severity}</Pill>
                 <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{r.risk}</span>
               </div>
               <div style={{ fontSize: 11, color: 'var(--gh-text-secondary)' }}>Mitigation: {r.mitigation}</div>
@@ -338,12 +338,12 @@ function PartnerCard({ partner, demo, onOpen }: { partner: Partner; demo: boolea
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 4, marginBottom: 3 }}>
-        <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: isWithdrawn ? 'var(--gh-text-disabled)' : 'var(--gh-text)', textDecoration: isWithdrawn ? 'line-through' : 'none', lineHeight: 1.3 }}>
+        <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: isWithdrawn ? 'var(--gh-text-secondary)' : 'var(--gh-text)', textDecoration: isWithdrawn ? 'line-through' : 'none', lineHeight: 1.3 }}>
           {partner.name}
         </span>
         <div style={{ display: 'flex', gap: 3, flexShrink: 0, marginTop: 1 }}>
           {partner.onHold && <AlertTriangle size={12} style={{ color: 'var(--gh-warning-fg)' }} />}
-          <ChevronRight size={12} style={{ color: 'var(--gh-text-disabled)' }} />
+          <ChevronRight size={12} style={{ color: 'var(--gh-text-tertiary)' }} />
         </div>
       </div>
       <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', marginBottom: partner.workshare > 0 ? 4 : 6, lineHeight: 1.3 }}>
@@ -355,7 +355,7 @@ function PartnerCard({ partner, demo, onOpen }: { partner: Partner; demo: boolea
         </div>
       )}
       {partner.workshare === 0 && partner.id !== 'TP-05' && (
-        <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginBottom: 6 }}>advisory · 0%</div>
+        <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', marginBottom: 6 }}>advisory · 0%</div>
       )}
       {partner.id === 'TP-05' && (
         <div style={{ fontSize: 10, color: 'var(--gh-warning-fg)', marginBottom: 4, lineHeight: 1.3 }}>
@@ -375,7 +375,7 @@ function PartnerCard({ partner, demo, onOpen }: { partner: Partner; demo: boolea
         )}
         {partner.competitorInterest && <Pill bg="var(--gh-warning-bg)" color="var(--gh-warning-fg)" quiet><Lock size={9} /></Pill>}
         {partner.onHold && <Pill bg="var(--gh-warning-bg)" color="var(--gh-warning-fg)" quiet>OCI hold</Pill>}
-        {isWithdrawn && <Pill bg="var(--gh-danger-bg)" color="var(--gh-danger-fg)" quiet>Withdrawn</Pill>}
+        {isWithdrawn && <Pill bg="var(--gh-danger-bg)" color="var(--gh-danger-fg-strong)" quiet>Withdrawn</Pill>}
       </div>
     </div>
   );
@@ -432,18 +432,18 @@ export function PartnerKanban({ partners, demo }: PartnerKanbanProps) {
                 onDragOver={e => handleDragOver(e, stage)}
                 onDragLeave={() => setDragOverStage(null)}
                 onDrop={() => handleDrop(stage)}
-                style={{ borderRadius: 'var(--gh-radius-lg)', background: isDeclined ? 'rgba(69,10,10,0.4)' : isDragTarget ? 'var(--gh-bg-surface-muted)' : 'var(--gh-bg-surface)', border: `1px solid ${isDragTarget ? 'var(--gh-accent)' : isDeclined ? 'var(--gh-danger-border)' : 'var(--gh-border)'}`, padding: '8px 7px', minHeight: 160, display: 'flex', flexDirection: 'column', transition: 'border-color 0.12s, background 0.12s', fontFamily: F }}
+                style={{ borderRadius: 'var(--gh-radius-lg)', background: isDeclined ? 'var(--gh-danger-glass)' : isDragTarget ? 'var(--gh-bg-surface-muted)' : 'var(--gh-bg-surface)', border: `1px solid ${isDragTarget ? 'var(--gh-accent)' : isDeclined ? 'var(--gh-danger-border)' : 'var(--gh-border)'}`, padding: '8px 7px', minHeight: 160, display: 'flex', flexDirection: 'column', transition: 'border-color 0.12s, background 0.12s', fontFamily: F }}
               >
                 <div style={{ marginBottom: 10, padding: '0 2px' }}>
                   <div style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-semibold)', color: isDeclined ? 'var(--gh-danger-fg)' : 'var(--gh-text-tertiary)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 2 }}>{STAGE_LABELS[stage]}</div>
-                  <div style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', color: stagePartners.length > 0 ? 'var(--gh-text-secondary)' : 'var(--gh-text-disabled)' }}>{stagePartners.length > 0 ? stagePartners.length : '—'}</div>
+                  <div style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-semibold)', color: stagePartners.length > 0 ? 'var(--gh-text-secondary)' : 'var(--gh-text-tertiary)' }}>{stagePartners.length > 0 ? stagePartners.length : '—'}</div>
                 </div>
                 <div style={{ flex: 1 }}>
                   {stagePartners.map(partner => (
                     <PartnerCard key={partner.id} partner={partner} demo={demo} onOpen={() => setOpenPartner(partner)} />
                   ))}
                   {stagePartners.length === 0 && (
-                    <div style={{ border: '1px dashed var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '14px 8px', textAlign: 'center', fontSize: 10, color: 'var(--gh-text-disabled)' }}>Drop here</div>
+                    <div style={{ border: '1px dashed var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '14px 8px', textAlign: 'center', fontSize: 10, color: 'var(--gh-text-tertiary)' }}>Drop here</div>
                   )}
                 </div>
               </div>
@@ -454,18 +454,18 @@ export function PartnerKanban({ partners, demo }: PartnerKanbanProps) {
       {/* Workshare rail */}
       <div style={{ marginTop: 14, padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)', background: belowPlan ? 'var(--gh-danger-bg)' : 'var(--gh-bg-surface)', border: `1px solid ${belowPlan ? 'var(--gh-danger-border)' : 'var(--gh-border)'}`, fontFamily: F }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 'var(--gh-font-size-sm)' }}>
-          <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', color: belowPlan ? 'var(--gh-danger-fg)' : 'var(--gh-text)' }}>
+          <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', color: belowPlan ? 'var(--gh-danger-fg-strong)' : 'var(--gh-text)' }}>
             Committed subcontract workshare
             {belowPlan && <span style={{ marginLeft: 8 }}> 20% / $9.0M hole — DataBridge withdrawn</span>}
           </span>
-          <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', color: belowPlan ? 'var(--gh-danger-fg)' : 'var(--gh-text-tertiary)' }}>
+          <span style={{ fontWeight: 'var(--gh-font-weight-semibold)', color: belowPlan ? 'var(--gh-danger-fg-strong)' : 'var(--gh-text-tertiary)' }}>
             {demo ? '0%' : `${committedWorkshare}%`} of {subTarget}% sub-target
           </span>
         </div>
         <div style={{ height: 8, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)' }}>
           <div style={{ height: 8, borderRadius: 'var(--gh-radius-full)', width: `${demo ? 0 : railPct}%`, background: belowPlan ? 'var(--gh-danger)' : 'var(--gh-accent)', transition: 'width 0.3s' }} />
         </div>
-        <div style={{ marginTop: 5, fontSize: 11, color: 'var(--gh-text-disabled)' }}>
+        <div style={{ marginTop: 5, fontSize: 11, color: 'var(--gh-text-tertiary)' }}>
           {demo ? 'No committed partners — DataBridge withdrawal pending replacement' : 'DataBridge Analytics — verbal commit, TA in Legal Review (est. 2026-02-15)'}
         </div>
       </div>

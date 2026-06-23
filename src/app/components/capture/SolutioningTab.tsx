@@ -55,7 +55,7 @@ type TriageFilter = 'All' | 'Passed' | 'Conditional' | 'Failed';
 function verdictFg(v: string): string {
   if (v === 'PASSED' || v === 'PASS') return 'var(--gh-success-fg)';
   if (v === 'CONDITIONAL') return 'var(--gh-warning-fg)';
-  return 'var(--gh-danger-fg)';
+  return 'var(--gh-danger-fg-strong)';
 }
 function verdictBg(v: string): string {
   if (v === 'PASSED' || v === 'PASS') return 'var(--gh-success-bg)';
@@ -63,7 +63,7 @@ function verdictBg(v: string): string {
   return 'var(--gh-danger-bg)';
 }
 function confidenceFg(c: number): string {
-  return c >= 75 ? 'var(--gh-success-fg)' : c >= 50 ? 'var(--gh-warning-fg)' : 'var(--gh-danger-fg)';
+  return c >= 75 ? 'var(--gh-success-fg)' : c >= 50 ? 'var(--gh-warning-fg)' : 'var(--gh-danger-fg-strong)';
 }
 function confidenceBg(c: number): string {
   return c >= 75 ? 'var(--gh-success-bg)' : c >= 50 ? 'var(--gh-warning-bg)' : 'var(--gh-danger-bg)';
@@ -139,7 +139,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
     <div style={{
       fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
       fontWeight: 'var(--gh-font-weight-semibold)',
-      color: 'var(--gh-text-disabled)', textTransform: 'uppercase' as const,
+      color: 'var(--gh-text-tertiary)', textTransform: 'uppercase' as const,
       letterSpacing: '0.06em', marginBottom: 'var(--gh-space-2)',
     }}>
       {children}
@@ -203,7 +203,7 @@ function Band({ icon, title, verdict, children, defaultOpen = true }: {
         </span>
       </button>
       {open && (
-        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-elevated)', color: 'var(--gh-text)' }}>
+        <div style={{ padding: '32px 24px', background: 'var(--gh-bg-surface)', color: 'var(--gh-text)' }}>
           {children}
         </div>
       )}
@@ -262,7 +262,7 @@ function WinThemesPanel({ collapsed, onToggle }: { collapsed: boolean; onToggle:
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)', marginBottom: 'var(--gh-space-3)' }}>
                   <Chip bg="var(--gh-info-bg)" fg="var(--gh-info-fg)">{wt.id}</Chip>
-                  <Chip bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-disabled)">
+                  <Chip bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-tertiary)">
                     <Paperclip size={9} /> {wt.source}
                   </Chip>
                 </div>
@@ -365,7 +365,7 @@ function renderRailGroups({ selected, onSelect, filter, cascade, narrow }: {
             padding: 'var(--gh-space-2) var(--gh-space-6)',
             fontSize: 9, fontFamily: 'var(--gh-font)',
             fontWeight: 'var(--gh-font-weight-semibold)', letterSpacing: '0.04em',
-            color: group.id === 'NO_THEME' ? 'var(--gh-warning-fg)' : 'var(--gh-text-disabled)',
+            color: group.id === 'NO_THEME' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)',
             borderBottom: '1px solid var(--gh-border)',
             background: group.id === 'NO_THEME' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-canvas)',
             textTransform: 'none' as const,
@@ -398,7 +398,7 @@ function renderRailGroups({ selected, onSelect, filter, cascade, narrow }: {
                 <DotIcon size={12} color={verdictFg(v)} style={{ marginTop: 2, flexShrink: 0 }} />
                 <span style={{
                   fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.35,
-                  color: isSelected ? 'var(--gh-text)' : '#94a3b8',
+                  color: isSelected ? 'var(--gh-text)' : 'var(--gh-slate-400)',
                   overflow: 'hidden', display: '-webkit-box',
                   WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const,
                 }}>
@@ -436,7 +436,7 @@ function renderRailGroups({ selected, onSelect, filter, cascade, narrow }: {
                   {el.title}
                 </div>
                 <div style={{ display: 'flex', gap: 'var(--gh-space-2)', flexWrap: 'wrap' as const }}>
-                  <Chip bg="var(--gh-bg-surface)" fg="var(--gh-text-disabled)" style={{ fontSize: 9 }}>
+                  <Chip bg="var(--gh-bg-surface)" fg="var(--gh-text-tertiary)" style={{ fontSize: 9 }}>
                     {el.howRatio}% HOW
                   </Chip>
                   <Chip bg={confidenceBg(conf)} fg={confidenceFg(conf)} style={{ fontSize: 9 }}>
@@ -693,11 +693,11 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
           borderRadius: 'var(--gh-radius-default)', marginBottom: 'var(--gh-space-6)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)', marginBottom: 'var(--gh-space-3)' }}>
-            <Lock size={11} color="var(--gh-text-disabled)" />
+            <Lock size={11} color="var(--gh-text-tertiary)" />
             <span style={{
               fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
               fontWeight: 'var(--gh-font-weight-semibold)',
-              color: 'var(--gh-text-disabled)', textTransform: 'uppercase' as const, letterSpacing: '0.06em',
+              color: 'var(--gh-text-tertiary)', textTransform: 'uppercase' as const, letterSpacing: '0.06em',
             }}>
               Internal only — competitive intelligence
             </span>
@@ -721,7 +721,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
                   background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)',
                   borderRadius: 'var(--gh-radius-default)',
                 }}>
-                  <Paperclip size={10} color="var(--gh-text-disabled)" style={{ flexShrink: 0 }} />
+                  <Paperclip size={10} color="var(--gh-text-tertiary)" style={{ flexShrink: 0 }} />
                   <span style={{
                     flex: 1, fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
                     color: 'var(--gh-text-secondary)',
@@ -764,7 +764,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
               </Chip>
               <span style={{
                 fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-                color: 'var(--gh-text-disabled)',
+                color: 'var(--gh-text-secondary)',
               }}>
                 threshold: {sol.overview.howThreshold}%
               </span>
@@ -845,7 +845,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
         }}>
           <span style={{
             fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)',
-            color: 'var(--gh-text-disabled)',
+            color: 'var(--gh-text-tertiary)',
           }}>
             Last generated {el.envelope.versionHistory[0]?.changedAt} · SOL-001/STV-001
           </span>
@@ -887,7 +887,7 @@ function Toast({ message, onClose }: { message: string; onClose: () => void }) {
       </span>
       <button onClick={onClose} style={{
         background: 'none', border: 'none', cursor: 'pointer',
-        color: 'var(--gh-text-disabled)', padding: 0, flexShrink: 0,
+        color: 'var(--gh-text-tertiary)', padding: 0, flexShrink: 0,
       }}>
         <X size={12} />
       </button>
@@ -942,7 +942,7 @@ export function SolutioningTab({ chromeHidden = false }: { chromeHidden?: boolea
               <Info size={13} />
             </span>
           </div>
-          <p style={{ fontSize: 11, color: '#fff', margin: 0, fontFamily: 'var(--gh-font)' }}>
+          <p style={{ fontSize: 11, color: 'var(--gh-white)', margin: 0, fontFamily: 'var(--gh-font)' }}>
             Drafted by Solutioning Agent (SOL-001) · validated by Strength Validator (STV-001) · v3 · 2026-02-10
           </p>
         </div>
@@ -962,11 +962,11 @@ export function SolutioningTab({ chromeHidden = false }: { chromeHidden?: boolea
           title={`Solution Elements · ${sol.solutionElements.length}`}
           filter={(
             <div style={{ padding: 8 }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: 4, borderRadius: 'var(--gh-radius-lg)', background: 'rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: 4, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-overlay-xs)' }}>
                 {FILTERS.map(f => {
                   const on = filter === f;
                   return (
-                    <button key={f} onClick={() => setFilter(f)} style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 10px', borderRadius: 'var(--gh-radius-md)', border: 'none', cursor: 'pointer', fontFamily: 'var(--gh-font)', fontSize: 11, whiteSpace: 'nowrap' as const, background: on ? 'rgba(255,255,255,0.14)' : 'transparent', color: on ? '#edf2f7' : '#94a3b8', fontWeight: on ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)' }}>
+                    <button key={f} onClick={() => setFilter(f)} style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 10px', borderRadius: 'var(--gh-radius-md)', border: 'none', cursor: 'pointer', fontFamily: 'var(--gh-font)', fontSize: 11, whiteSpace: 'nowrap' as const, background: on ? 'var(--gh-overlay-sm)' : 'transparent', color: on ? 'var(--gh-text)' : 'var(--gh-slate-400)', fontWeight: on ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)' }}>
                       {f}
                     </button>
                   );

@@ -18,7 +18,7 @@ const SUBS: { key: Sub; label: string; icon: React.ReactNode }[] = [
   { key: 'summary', label: 'Summary', icon: <Calculator size={14} /> },
 ];
 
-const th: React.CSSProperties = { textAlign: 'left', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--gh-text-disabled)', fontWeight: 600, padding: '0 10px 9px', whiteSpace: 'nowrap' };
+const th: React.CSSProperties = { textAlign: 'left', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--gh-text-tertiary)', fontWeight: 600, padding: '0 10px 9px', whiteSpace: 'nowrap' };
 const td: React.CSSProperties = { padding: '8px 10px', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text)', verticalAlign: 'middle' };
 
 export function RomBuilder({
@@ -94,7 +94,7 @@ export function RomBuilder({
                   <tr key={l.id} style={{ borderTop: '1px solid var(--gh-border)' }}>
                     <td style={td}>
                       <div style={{ fontWeight: 'var(--gh-font-weight-semibold)' }}>{l.lcat}</div>
-                      <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>{laborTotalHours(l).toLocaleString()} hrs total</div>
+                      <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{laborTotalHours(l).toLocaleString()} hrs total</div>
                     </td>
                     <td style={{ ...td, textAlign: 'center' }}><NumCell value={l.qty} onChange={v => onLaborChange(l.id, 'qty', v)} width={36} align="left" /></td>
                     <td style={{ ...td, textAlign: 'center' }}><NumCell value={l.hoursPerYear} onChange={v => onLaborChange(l.id, 'hoursPerYear', v)} width={52} step={20} align="left" /></td>
@@ -152,7 +152,7 @@ export function RomBuilder({
                       </select>
                     </td>
                     <td style={{ ...td, textAlign: 'right', fontWeight: 'var(--gh-font-weight-semibold)', fontVariantNumeric: 'tabular-nums' }}>{fmtUSD(odcTotal(o))}</td>
-                    <td style={{ ...td, textAlign: 'right' }}><button onClick={() => onRemoveOdc(o.id)} title="Remove" style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-disabled)', padding: 3 }}><Trash2 size={14} /></button></td>
+                    <td style={{ ...td, textAlign: 'right' }}><button onClick={() => onRemoveOdc(o.id)} title="Remove" style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', padding: 3 }}><Trash2 size={14} /></button></td>
                   </tr>
                 ))}
               </tbody>
@@ -173,7 +173,7 @@ export function RomBuilder({
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <Pill tone="neutral" soft>{scenario.subs.length} subcontractors · {scenario.subs.reduce((s, x) => s + x.workshare, 0)}% workshare</Pill>
-            <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--gh-text-disabled)' }}>Subs are burdened by the sub; the prime applies G&A (and fee) only.</span>
+            <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Subs are burdened by the sub; the prime applies G&A (and fee) only.</span>
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse' }}>
@@ -224,7 +224,7 @@ function Summary({ scenario, rollup, ind, opportunity, ptw, onIndirectChange }: 
   const vsPtw = rollup.totalPrice - ptw.target;
   const ratePill = (label: string, field: keyof IndirectRates, step = 0.5) => (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-      <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>{label}</span>
+      <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{label}</span>
       <NumCell value={ind[field]} onChange={v => onIndirectChange(field, v)} pct width={38} step={step} align="left" />
     </span>
   );
@@ -237,12 +237,12 @@ function Summary({ scenario, rollup, ind, opportunity, ptw, onIndirectChange }: 
         background: over ? 'var(--gh-danger-bg)' : 'var(--gh-bg-surface-muted)',
         border: `1px solid ${over ? 'var(--gh-danger-border)' : 'var(--gh-border)'}`,
       }}>
-        <span style={{ width: 34, height: 34, borderRadius: 'var(--gh-radius-lg)', background: over ? 'var(--gh-danger-fg)' : 'var(--gh-accent)', color: '#fff', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
+        <span style={{ width: 34, height: 34, borderRadius: 'var(--gh-radius-lg)', background: over ? 'var(--gh-danger-fg)' : 'var(--gh-accent)', color: over ? 'var(--gh-bg-canvas)' : 'var(--gh-white)', display: 'grid', placeItems: 'center', flexShrink: 0 }}>
           {over ? <AlertTriangle size={17} /> : <Calculator size={17} />}
         </span>
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{scenario.label} · Total Evaluated Price</div>
-          <div style={{ fontSize: 30, fontWeight: 'var(--gh-font-weight-bold)', color: over ? 'var(--gh-danger-fg)' : 'var(--gh-text)', lineHeight: 1.05, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>{fmtUSD(rollup.totalPrice)}</div>
+          <div style={{ fontSize: 30, fontWeight: 'var(--gh-font-weight-bold)', color: over ? 'var(--gh-danger-fg-strong)' : 'var(--gh-text)', lineHeight: 1.05, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums' }}>{fmtUSD(rollup.totalPrice)}</div>
         </div>
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
           <KV label="vs PTW Target" value={`${vsPtw >= 0 ? '+' : ''}${fmtM(vsPtw)}`} tone={Math.abs(vsPtw) <= 1_000_000 ? 'success' : vsPtw > 0 ? 'warning' : 'accent'} />

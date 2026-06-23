@@ -43,7 +43,7 @@ export function ActiveDataCalls({ dataCalls, partners, h, v }: { dataCalls: Data
         {([['teammate', 'By Teammate', <Users2 size={14} />], ['call', 'By Data Call', <ListChecks size={14} />]] as const).map(([k, lab, ic]) => {
           const on = v.viewMode === k;
           return (
-            <button key={k} onClick={() => v.setViewMode(k)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 13px', borderRadius: 'var(--gh-radius-md)', background: on ? ORANGE : 'transparent', color: on ? '#fff' : 'var(--gh-text-secondary)', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 'var(--gh-font-size-sm)', fontWeight: on ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)' }}>{ic}{lab}</button>
+            <button key={k} onClick={() => v.setViewMode(k)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 13px', borderRadius: 'var(--gh-radius-md)', background: on ? ORANGE : 'transparent', color: on ? 'var(--gh-bg-canvas)' : 'var(--gh-text-secondary)', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 'var(--gh-font-size-sm)', fontWeight: on ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)' }}>{ic}{lab}</button>
           );
         })}
       </div>
@@ -162,7 +162,7 @@ function ItemRow({ item, h }: { item: DataCallItem; h: Handlers }) {
   return (
     <div style={{ padding: '10px 12px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-surface)', border: `1px solid ${accepted ? 'var(--gh-success-border)' : 'var(--gh-border)'}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9 }}>
-        <span style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text-disabled)', flexShrink: 0, marginTop: 2, fontVariantNumeric: 'tabular-nums' }}>{item.id.split('-').pop()}</span>
+        <span style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text-tertiary)', flexShrink: 0, marginTop: 2, fontVariantNumeric: 'tabular-nums' }}>{item.id.split('-').pop()}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text)' }}>{item.description}</span>

@@ -14,7 +14,7 @@ export function CollectionStrategy({ strategy, onConfirm }: { strategy: TStrateg
 
       {/* priorities */}
       <div>
-        <div style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text-disabled)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Collection Priorities</div>
+        <div style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>Collection Priorities</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
           {strategy.priorities.map((p, i) => {
             const due = dueLabel(p.deadline);

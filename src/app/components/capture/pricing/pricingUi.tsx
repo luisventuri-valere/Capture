@@ -38,7 +38,7 @@ export function NumCell({ value, onChange, prefix, suffix, width = 78, step = 1,
       display: 'inline-flex', alignItems: 'center', gap: 2, padding: '3px 7px', borderRadius: 'var(--gh-radius-md)',
       background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', fontFamily: F,
     }}>
-      {prefix && <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>{prefix}</span>}
+      {prefix && <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{prefix}</span>}
       <input
         type="number" value={display} step={step}
         onChange={e => { const v = e.target.value === '' ? 0 : parseFloat(e.target.value); onChange(pct ? v / 100 : v); }}
@@ -47,7 +47,7 @@ export function NumCell({ value, onChange, prefix, suffix, width = 78, step = 1,
           color: 'var(--gh-text)', fontFamily: F, fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-medium)',
         }}
       />
-      {(suffix || pct) && <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>{suffix ?? '%'}</span>}
+      {(suffix || pct) && <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{suffix ?? '%'}</span>}
     </span>
   );
 }
@@ -63,7 +63,7 @@ export function RangeBar({ min, p25, median, p75, max, our, ourTone = 'accent' }
   return (
     <div style={{ position: 'relative', height: 30, width: '100%' }}>
       <div style={{ position: 'absolute', top: 14, left: 0, right: 0, height: 4, borderRadius: 2, background: 'var(--gh-bg-surface-muted)' }} />
-      <div style={{ position: 'absolute', top: 12, left: `${pos(p25)}%`, width: `${pos(p75) - pos(p25)}%`, height: 8, borderRadius: 4, background: 'rgba(37,99,235,0.22)', border: '1px solid var(--gh-accent)' }} />
+      <div style={{ position: 'absolute', top: 12, left: `${pos(p25)}%`, width: `${pos(p75) - pos(p25)}%`, height: 8, borderRadius: 4, background: 'var(--gh-accent-glass)', border: '1px solid var(--gh-accent)' }} />
       <div style={{ position: 'absolute', top: 8, left: `${pos(median)}%`, width: 2, height: 16, background: 'var(--gh-text-tertiary)', transform: 'translateX(-50%)' }} title="GSA median" />
       <div style={{ position: 'absolute', top: 5, left: `${pos(our)}%`, transform: 'translateX(-50%) rotate(45deg)', width: 12, height: 12, background: c.fg, border: '1.5px solid var(--gh-bg-elevated)', borderRadius: 2 }} title="Our loaded rate" />
     </div>
@@ -100,7 +100,7 @@ export function WaterRow({ label, amount, sub, strong, accent, note }: {
 export function KV({ label, value, tone: t }: { label: string; value: React.ReactNode; tone?: Tone }) {
   return (
     <div>
-      <div style={{ fontSize: 10, color: 'var(--gh-text-disabled)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 'var(--gh-font-weight-semibold)' }}>{label}</div>
+      <div style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 'var(--gh-font-weight-semibold)' }}>{label}</div>
       <div style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: t ? tone(t).fg : 'var(--gh-text)', fontVariantNumeric: 'tabular-nums', marginTop: 2 }}>{value}</div>
     </div>
   );

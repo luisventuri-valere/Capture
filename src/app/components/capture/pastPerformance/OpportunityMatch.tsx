@@ -116,7 +116,7 @@ export function OpportunityMatch({
                         const v = s[k] as number;
                         return (
                           <div key={String(k)}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--gh-text-disabled)', marginBottom: 3 }}><span>{lbl}</span><span style={{ color: 'var(--gh-text-tertiary)' }}>{v}</span></div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 10, color: 'var(--gh-text-tertiary)', marginBottom: 3 }}><span>{lbl}</span><span style={{ color: 'var(--gh-text-tertiary)' }}>{v}</span></div>
                             <div style={{ height: 4, borderRadius: 4, background: 'var(--gh-bg-surface-muted)', overflow: 'hidden' }}><div style={{ width: `${v}%`, height: '100%', background: tone(relevanceTone(v)).fg }} /></div>
                           </div>
                         );
@@ -124,7 +124,7 @@ export function OpportunityMatch({
                     </div>
                     {s.requirementsCovered.length > 0 && (
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                        <span style={{ fontSize: 10, color: 'var(--gh-text-disabled)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Covers</span>
+                        <span style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Covers</span>
                         {s.requirementsCovered.map(rid => <Pill key={rid} tone="success" style={{ fontSize: 9 }}>{rid}</Pill>)}
                       </div>
                     )}
@@ -156,7 +156,7 @@ export function OpportunityMatch({
                   <tr key={row.requirementId} style={{ background: isGap ? 'var(--gh-danger-bg)' : 'transparent' }}>
                     <td style={{ ...MTD, textAlign: 'left' }}>
                       <span style={{ color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-medium)' }}>{row.requirementId}</span> <span style={{ color: 'var(--gh-text-tertiary)' }}>{row.requirement}</span>
-                      {isGap && <button onClick={() => onSuggestPartner(row.requirement)} style={{ marginLeft: 8, fontSize: 10, color: 'var(--gh-danger-fg)', background: 'transparent', border: '1px solid var(--gh-danger-border)', borderRadius: 'var(--gh-radius-sm)', padding: '2px 7px', cursor: 'pointer', fontFamily: F }}>Suggest Partner</button>}
+                      {isGap && <button onClick={() => onSuggestPartner(row.requirement)} style={{ marginLeft: 8, fontSize: 10, color: 'var(--gh-danger-fg-strong)', background: 'transparent', border: '1px solid var(--gh-danger-border)', borderRadius: 'var(--gh-radius-sm)', padding: '2px 7px', cursor: 'pointer', fontFamily: F }}>Suggest Partner</button>}
                     </td>
                     {refsInMatrix.map(id => {
                       const strength: CoverageStrength = row.perReference[id] ?? 'none';
@@ -164,8 +164,8 @@ export function OpportunityMatch({
                       const ev = row.evidence[id];
                       return (
                         <td key={id} style={{ ...MTD, cursor: dots ? 'pointer' : 'default' }} onClick={() => dots && ev && setEvidence({ req: row.requirement, refId: id, text: ev })} title={ev || ''}>
-                          {dots === 0 ? <span style={{ color: 'var(--gh-text-disabled)' }}>–</span>
-                            : <span style={{ color: strength === 'strong' ? 'var(--gh-success-fg)' : strength === 'moderate' ? 'var(--gh-accent-tint)' : 'var(--gh-warning-fg)', letterSpacing: 1 }}>{'●'.repeat(dots)}</span>}
+                          {dots === 0 ? <span style={{ color: 'var(--gh-text-tertiary)' }}>–</span>
+                            : <span style={{ color: strength === 'strong' ? 'var(--gh-success-fg)' : strength === 'moderate' ? 'var(--gh-blue-300)' : 'var(--gh-warning-fg)', letterSpacing: 1 }}>{'●'.repeat(dots)}</span>}
                         </td>
                       );
                     })}
@@ -176,7 +176,7 @@ export function OpportunityMatch({
             </tbody>
           </table>
         </div>
-        <div style={{ display: 'flex', gap: 14, marginTop: 8, fontSize: 10, color: 'var(--gh-text-disabled)', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 14, marginTop: 8, fontSize: 10, color: 'var(--gh-text-tertiary)', flexWrap: 'wrap' }}>
           <span style={{ color: 'var(--gh-success-fg)' }}>●●● strong</span>
           <span style={{ color: 'var(--gh-accent-tint)' }}>●● moderate</span>
           <span style={{ color: 'var(--gh-warning-fg)' }}>● partial</span>
@@ -186,7 +186,7 @@ export function OpportunityMatch({
         {evidence && (
           <div style={{ marginTop: 10, display: 'flex', gap: 8, padding: '10px 13px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border-strong)' }}>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 10, color: 'var(--gh-text-disabled)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{evidence.refId} · {evidence.req}</div>
+              <div style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 4 }}>{evidence.refId} · {evidence.req}</div>
               <p style={{ margin: 0, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.55 }}>{evidence.text}</p>
             </div>
             <button onClick={() => setEvidence(null)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', alignSelf: 'flex-start' }}><X size={14} /></button>
@@ -197,12 +197,12 @@ export function OpportunityMatch({
   );
 }
 
-const MTH: React.CSSProperties = { textAlign: 'center', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)' };
+const MTH: React.CSSProperties = { textAlign: 'center', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)' };
 const MTD: React.CSSProperties = { textAlign: 'center', padding: '9px 10px', fontSize: 'var(--gh-font-size-xs)', verticalAlign: 'middle', borderBottom: '1px solid var(--gh-border)' };
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <div style={{ fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', marginBottom: 9 }}>{children}</div>;
+  return <div style={{ fontSize: 11, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-semibold)', marginBottom: 9 }}>{children}</div>;
 }
 function Mini({ label, value, tone: t }: { label: string; value: string; tone: Tone }) {
-  return <div><span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(t).fg }}>{value}</span> <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>{label}</span></div>;
+  return <div><span style={{ fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-bold)', color: tone(t).fg }}>{value}</span> <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{label}</span></div>;
 }

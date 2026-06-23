@@ -18,7 +18,7 @@ const TYPE_BY_TPL: Record<string, DataCallType> = {
 };
 const addDays = (iso: string, days: number) => new Date(new Date(iso).getTime() + days * 86_400_000).toISOString().slice(0, 10);
 const sel: React.CSSProperties = { padding: '8px 11px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', color: 'var(--gh-text)', fontFamily: F, fontSize: 'var(--gh-font-size-sm)', cursor: 'pointer' };
-const lbl: React.CSSProperties = { fontSize: 10, fontWeight: 700, color: 'var(--gh-text-disabled)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6, display: 'block' };
+const lbl: React.CSSProperties = { fontSize: 10, fontWeight: 700, color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6, display: 'block' };
 
 export function CreateDataCall({ templates, partners, presetTemplateId, presetPartnerId, onSend, onLogOverride, onToast }: {
   templates: DataCallTemplate[]; partners: Partner[]; presetTemplateId: string | null; presetPartnerId: string | null;
@@ -105,9 +105,9 @@ export function CreateDataCall({ templates, partners, presetTemplateId, presetPa
       {blocked && (
         <div style={{ padding: '13px 15px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-danger-bg)', border: '1px solid var(--gh-danger-border)' }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
-            <ShieldAlert size={18} style={{ color: 'var(--gh-danger-fg)', flexShrink: 0, marginTop: 1 }} />
+            <ShieldAlert size={18} style={{ color: 'var(--gh-danger-fg-strong)', flexShrink: 0, marginTop: 1 }} />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-danger-fg)' }}>Trust-tier violation — Post-TA template to an NDA-only partner</div>
+              <div style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-danger-fg-strong)' }}>Trust-tier violation — Post-TA template to an NDA-only partner</div>
               <p style={{ margin: '4px 0 0', fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.5 }}>
                 {partner!.name} only has an NDA. Post-TA templates ({tpl!.name}) request detailed rates / named personnel and require a signed Teaming Agreement.
               </p>
@@ -146,7 +146,7 @@ export function CreateDataCall({ templates, partners, presetTemplateId, presetPa
               <input value={it.description} placeholder="Item description…" onChange={e => setItems(p => p.map(x => x.key === it.key ? { ...x, description: e.target.value } : x))} style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'var(--gh-text)', fontFamily: F, fontSize: 'var(--gh-font-size-sm)' }} />
               <FormatChip format={it.format} />
               {it.required && <span style={{ fontSize: 9, color: ORANGE, fontWeight: 700 }}>REQ</span>}
-              <button onClick={() => setItems(p => p.filter(x => x.key !== it.key))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-disabled)', padding: 2 }}><Trash2 size={13} /></button>
+              <button onClick={() => setItems(p => p.filter(x => x.key !== it.key))} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', padding: 2 }}><Trash2 size={13} /></button>
             </div>
           ))}
         </div>
@@ -157,7 +157,7 @@ export function CreateDataCall({ templates, partners, presetTemplateId, presetPa
         <Btn kind={blocked && override ? 'danger' : 'orange'} icon={blocked && override ? <Lock size={14} /> : <Send size={14} />} onClick={send} disabled={!canSend}>
           {blocked && override ? 'Override & Send' : 'Send Data Call'}
         </Btn>
-        {!partnerId && <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>Select a recipient to continue.</span>}
+        {!partnerId && <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Select a recipient to continue.</span>}
         {blocked && !override && <span style={{ fontSize: 11, color: 'var(--gh-danger-fg)' }}>Blocked by trust-tier policy — check override to proceed.</span>}
       </div>
     </div>

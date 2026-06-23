@@ -30,39 +30,41 @@ interface SectionIndexItemProps {
   selected: boolean;
   flagged?: boolean;     // amber "update" dot
   narrow?: boolean;      // title-only rail rendering
+  emphasis?: boolean;    // hub/anchor item — taller, bolder, accent rail when selected
   onSelect: () => void;
 }
 
-export function SectionIndexItem({ title, subtitle, subtitleDot, confidence, confirmed, selected, flagged, narrow, onSelect }: SectionIndexItemProps) {
+export function SectionIndexItem({ title, subtitle, subtitleDot, confidence, confirmed, selected, flagged, narrow, emphasis, onSelect }: SectionIndexItemProps) {
   // Narrow rail: title only (wrapped), selected highlighted (Figma 2185:17230)
   if (narrow) {
     return (
       <button onClick={onSelect} style={{ display: 'flex', alignItems: 'flex-start', width: '100%', minHeight: 58, boxSizing: 'border-box', padding: '12px 10px', textAlign: 'left', cursor: 'pointer', border: 'none', background: selected ? 'var(--gh-blue-900)' : 'transparent', fontFamily: F }}>
-        <span style={{ fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.4, color: selected ? 'var(--gh-text)' : '#94a3b8' }}>{title}</span>
+        <span style={{ fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.4, color: selected ? 'var(--gh-text)' : 'var(--gh-slate-400)' }}>{title}</span>
       </button>
     );
   }
 
   // Score pill (Figma StrategyRow/Score Pill): ≥80 teal · 50–79 amber · <50 red
   const [pillBg, pillColor] =
-    (confidence ?? 0) >= 80 ? ['rgba(0,255,188,0.05)', '#00ffbc'] :
-    (confidence ?? 0) >= 50 ? ['rgba(255,207,75,0.05)', '#ffcf4b'] :
-    ['rgba(255,99,99,0.05)', '#ff6363'];
+    (confidence ?? 0) >= 80 ? ['var(--gh-score-high-bg)', 'var(--gh-score-high-fg)'] :
+    (confidence ?? 0) >= 50 ? ['var(--gh-score-mid-bg)',  'var(--gh-score-mid-fg)']  :
+    ['var(--gh-red-950)', 'var(--gh-score-low-fg)'];
 
   return (
     <button
       onClick={onSelect}
       style={{
-        display: 'flex', alignItems: 'flex-start', gap: 9, width: '100%', height: 60, boxSizing: 'border-box',
-        padding: '12px 10px', textAlign: 'left', cursor: 'pointer', border: 'none',
-        background: selected ? 'var(--gh-blue-900)' : 'transparent', fontFamily: F,
+        display: 'flex', alignItems: 'flex-start', gap: 9, width: '100%', height: emphasis ? 66 : 60, boxSizing: 'border-box',
+        padding: emphasis ? '12px 10px 12px 13px' : '12px 10px', textAlign: 'left', cursor: 'pointer', border: 'none',
+        borderLeft: emphasis ? `3px solid ${selected ? 'var(--gh-accent)' : 'transparent'}` : undefined,
+        background: selected ? 'var(--gh-blue-900)' : emphasis ? 'var(--gh-bg-surface)' : 'transparent', fontFamily: F,
       }}
     >
       <span style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, width: '100%' }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 5, minWidth: 0 }}>
             {flagged && <span style={{ flexShrink: 0, width: 6, height: 6, borderRadius: '50%', background: 'var(--gh-warning-fg)' }} />}
-            <span style={{ fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)', lineHeight: 1.4, color: 'var(--gh-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: emphasis ? 13 : 12, fontWeight: emphasis ? 'var(--gh-font-weight-bold)' : 'var(--gh-font-weight-semibold)', lineHeight: 1.4, color: 'var(--gh-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {title}
             </span>
           </span>
@@ -73,7 +75,7 @@ export function SectionIndexItem({ title, subtitle, subtitleDot, confidence, con
           )}
         </span>
         {subtitle && (
-          <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 'var(--gh-font-weight-normal)', lineHeight: 1.4, color: '#94a3b8', minWidth: 0 }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 'var(--gh-font-weight-normal)', lineHeight: 1.4, color: 'var(--gh-slate-400)', minWidth: 0 }}>
             {subtitleDot && <span style={{ flexShrink: 0, width: 6, height: 6, borderRadius: '50%', background: subtitleDot }} />}
             <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{subtitle}</span>
           </span>
@@ -131,7 +133,7 @@ export function SectionIndex({ title, filter, renderItems }: SectionIndexProps) 
       <div style={{ width: indexCollapsed ? INDEX_W_RAIL : indexWidth, flexShrink: 0, overflowX: 'hidden', overflowY: 'auto', background: 'var(--gh-bg-canvas)' }}>
         {/* Header: title + collapse toggle — frozen/sticky (Figma 2185:17088) */}
         <div style={{ position: 'sticky', top: 0, zIndex: 2, background: 'var(--gh-bg-canvas)', display: 'flex', alignItems: 'center', justifyContent: indexCollapsed || narrow ? 'flex-end' : 'space-between', padding: '8px 12px' }}>
-          {!indexCollapsed && !narrow && <span style={{ fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', color: '#f8fafc', fontFamily: F }}>{title}</span>}
+          {!indexCollapsed && !narrow && <span style={{ fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)', fontFamily: F }}>{title}</span>}
           <button onClick={() => setIndexCollapsed(c => !c)} title={indexCollapsed ? 'Expandir panel' : 'Colapsar panel'} style={{ display: 'grid', placeItems: 'center', width: 20, height: 20, borderRadius: 'var(--gh-radius-md)', background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)' }}>
             <PanelToggleIcon size={15} />
           </button>

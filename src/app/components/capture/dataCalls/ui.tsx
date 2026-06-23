@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronRight, Sparkles, Lock, FileCheck2 } from 'lucide-react';
-import { F, tone, type Tone, orangeTone, ORANGE, phaseLabel, phaseSub, itemStatusTone, isRevision, itemStatusLabel, qualityBand, severityTone } from './helpers';
+import { F, tone, type Tone, orangeTone, ORANGE, ORANGE_TINT, phaseLabel, phaseSub, itemStatusTone, isRevision, itemStatusLabel, qualityBand, severityTone } from './helpers';
 import type { Phase, ItemStatus, Severity } from '../../../../types/dataCalls';
 
 // low-level styled chip
@@ -24,7 +24,7 @@ export function PhaseBadge({ phase, withSub }: { phase: Phase; withSub?: boolean
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
       <Chip colors={c}>{phase === 'pre-ta' ? <Lock size={11} /> : <FileCheck2 size={11} />}{phaseLabel(phase)}</Chip>
-      {withSub && <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>{phaseSub(phase)}</span>}
+      {withSub && <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{phaseSub(phase)}</span>}
     </span>
   );
 }
@@ -52,7 +52,7 @@ export function Btn({ children, onClick, kind = 'secondary', size = 'md', icon, 
   const fs = size === 'sm' ? 'var(--gh-font-size-xs)' : 'var(--gh-font-size-sm)';
   let bg = 'transparent', fg = 'var(--gh-text-secondary)', bd = '1px solid var(--gh-border)';
   if (kind === 'primary') { bg = 'var(--gh-accent)'; fg = 'var(--gh-accent-fg)'; bd = '1px solid var(--gh-accent)'; }
-  else if (kind === 'orange') { bg = ORANGE; fg = '#fff'; bd = `1px solid ${ORANGE}`; }
+  else if (kind === 'orange') { bg = ORANGE; fg = 'var(--gh-bg-canvas)'; bd = `1px solid ${ORANGE}`; }
   else if (kind === 'ghost') { bd = '1px solid transparent'; fg = 'var(--gh-text-tertiary)'; }
   else if (kind === 'danger') { fg = 'var(--gh-danger-fg)'; bd = '1px solid var(--gh-danger-border)'; }
   return (
@@ -69,7 +69,7 @@ export function AskAi({ onClick, size = 'sm' }: { onClick: () => void; size?: 's
   return (
     <button onClick={onClick} title="Ask AI about this (context-aware)" style={{
       display: 'inline-flex', alignItems: 'center', gap: 5, padding: size === 'sm' ? '5px 10px' : '7px 12px',
-      borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, color: ORANGE, border: `1px solid ${orangeTone.bd}`,
+      borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, color: ORANGE_TINT, border: `1px solid ${orangeTone.bd}`,
       fontSize: size === 'sm' ? 'var(--gh-font-size-xs)' : 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)',
       cursor: 'pointer', fontFamily: F, whiteSpace: 'nowrap',
     }}><Sparkles size={13} /> Ask AI</button>
@@ -81,7 +81,7 @@ export type BarAction = { label: string; icon?: React.ReactNode; onClick: () => 
 export function ActionBar({ actions, onAskAi, label }: { actions: BarAction[]; onAskAi: () => void; label?: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', padding: '8px 10px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)' }}>
-      {label && <span style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text-disabled)', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: 2 }}>{label}</span>}
+      {label && <span style={{ fontSize: 10, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text-tertiary)', textTransform: 'uppercase', letterSpacing: '0.06em', marginRight: 2 }}>{label}</span>}
       {actions.map((a, i) => <Btn key={i} size="sm" kind={a.kind ?? 'secondary'} icon={a.icon} onClick={a.onClick} disabled={a.disabled}>{a.label}</Btn>)}
       <div style={{ marginLeft: 'auto' }}><AskAi onClick={onAskAi} /></div>
     </div>
@@ -104,7 +104,7 @@ export function SectionShell({ n, title, subtitle, icon, right, collapsible, def
         onClick={collapsible ? toggle : undefined}
         style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '13px 18px', borderBottom: showBody ? '1px solid var(--gh-border)' : 'none', background: 'var(--gh-bg-surface-muted)', cursor: collapsible ? 'pointer' : 'default' }}
       >
-        <span style={{ flexShrink: 0, width: 26, height: 26, borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, color: ORANGE, fontSize: 12, fontWeight: 'var(--gh-font-weight-bold)', display: 'grid', placeItems: 'center', border: `1px solid ${orangeTone.bd}` }}>{n}</span>
+        <span style={{ flexShrink: 0, width: 26, height: 26, borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, color: ORANGE_TINT, fontSize: 12, fontWeight: 'var(--gh-font-weight-bold)', display: 'grid', placeItems: 'center', border: `1px solid ${orangeTone.bd}` }}>{n}</span>
         {icon && <span style={{ color: ORANGE, display: 'flex', flexShrink: 0 }}>{icon}</span>}
         <div style={{ flex: 1, minWidth: 0 }}>
           <h3 style={{ margin: 0, fontSize: 'var(--gh-font-size-md)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{title}</h3>

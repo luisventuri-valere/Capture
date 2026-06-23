@@ -5,7 +5,7 @@ import { F, tone, money, type Tone } from '../staffing/helpers';
 import { Pill, Btn, Modal, ModalHeader, ModalFooter } from '../staffing/ui';
 import { cparsTone, recencyContext, yr } from './ppHelpers';
 
-const TH: React.CSSProperties = { textAlign: 'left', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: '#f8fafc', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)' };
+const TH: React.CSSProperties = { textAlign: 'left', padding: '8px 10px', fontSize: 10, letterSpacing: '0.05em', textTransform: 'uppercase', color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap', borderBottom: '1px solid var(--gh-border)', background: 'var(--gh-bg-surface)' };
 const TD: React.CSSProperties = { padding: '10px', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-secondary)', verticalAlign: 'middle', borderBottom: '1px solid var(--gh-border)' };
 
 const selStyle: React.CSSProperties = { background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '6px 9px', color: 'var(--gh-text-secondary)', fontSize: 'var(--gh-font-size-xs)', fontFamily: F };
@@ -53,7 +53,7 @@ export function PPLibrary({ library, aiPrefill, onAdd }: {
       {/* controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '6px 10px', flex: '1 1 220px', minWidth: 180 }}>
-          <Search size={13} style={{ color: 'var(--gh-text-disabled)' }} />
+          <Search size={13} style={{ color: 'var(--gh-text-tertiary)' }} />
           <input value={q} onChange={e => setQ(e.target.value)} placeholder="Search references, agencies, tags…" style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', color: 'var(--gh-text)', fontSize: 'var(--gh-font-size-xs)', fontFamily: F }} />
         </div>
         <select value={fAgency} onChange={e => setFAgency(e.target.value)} style={selStyle}><option value="all">All agencies</option>{agencies.map(a => <option key={a} value={a}>{a}</option>)}</select>
@@ -76,22 +76,22 @@ export function PPLibrary({ library, aiPrefill, onAdd }: {
               const rc = recencyContext(l.endDate);
               return (
                 <tr key={l.id}>
-                  <td style={{ ...TD, color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)', maxWidth: 230 }}>{l.projectTitle}<div style={{ fontSize: 10, color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-normal)', marginTop: 2 }}>{l.clientOffice} · {l.contractNumber}</div></td>
+                  <td style={{ ...TD, color: 'var(--gh-text)', fontWeight: 'var(--gh-font-weight-semibold)', maxWidth: 230 }}>{l.projectTitle}<div style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-normal)', marginTop: 2 }}>{l.clientOffice} · {l.contractNumber}</div></td>
                   <td style={{ ...TD, maxWidth: 150 }}>{l.clientAgency}</td>
                   <td style={{ ...TD, color: 'var(--gh-text)', whiteSpace: 'nowrap' }}>{money(l.contractValue)}</td>
                   <td style={TD}><Pill tone="neutral" style={{ fontSize: 9 }}>{l.contractType}</Pill></td>
                   <td style={TD}><Pill tone={cparsTone(l.cparsRating)} style={{ fontSize: 9 }}>{l.cparsRating}</Pill></td>
                   <td style={{ ...TD, whiteSpace: 'nowrap' }}><span style={{ color: 'var(--gh-text)' }}>{yr(l.endDate)}</span> <span title={rc.label} style={{ color: tone(rc.tone).fg }}>●</span></td>
                   <td style={TD}><Pill tone={l.source === 'teammate' ? 'accent' : 'neutral'} style={{ fontSize: 9 }}>{l.source === 'teammate' ? l.sourceCompanyName : 'Company'}</Pill></td>
-                  <td style={{ ...TD, maxWidth: 200 }}><div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>{l.technicalSimilarityTags.slice(0, 3).map((t, i) => <span key={i} style={{ fontSize: 9, padding: '1px 6px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-tertiary)' }}>{t}</span>)}{l.technicalSimilarityTags.length > 3 && <span style={{ fontSize: 9, color: 'var(--gh-text-disabled)' }}>+{l.technicalSimilarityTags.length - 3}</span>}</div></td>
+                  <td style={{ ...TD, maxWidth: 200 }}><div style={{ display: 'flex', gap: 4, flexWrap: 'wrap' }}>{l.technicalSimilarityTags.slice(0, 3).map((t, i) => <span key={i} style={{ fontSize: 9, padding: '1px 6px', borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text-tertiary)' }}>{t}</span>)}{l.technicalSimilarityTags.length > 3 && <span style={{ fontSize: 9, color: 'var(--gh-text-tertiary)' }}>+{l.technicalSimilarityTags.length - 3}</span>}</div></td>
                 </tr>
               );
             })}
-            {rows.length === 0 && <tr><td colSpan={8} style={{ ...TD, textAlign: 'center', color: 'var(--gh-text-disabled)' }}>No references match the filters.</td></tr>}
+            {rows.length === 0 && <tr><td colSpan={8} style={{ ...TD, textAlign: 'center', color: 'var(--gh-text-tertiary)' }}>No references match the filters.</td></tr>}
           </tbody>
         </table>
       </div>
-      <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>{rows.length} of {library.length} references</div>
+      <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{rows.length} of {library.length} references</div>
 
       {addOpen && <AddReferenceModal aiPrefill={aiPrefill} onClose={() => setAddOpen(false)} onAdd={(e) => { onAdd(e); setAddOpen(false); }} />}
     </div>
@@ -213,7 +213,7 @@ function AddReferenceModal({ aiPrefill, onClose, onAdd }: { aiPrefill: Partial<P
         </div>
       </div>
       <ModalFooter>
-        <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>Appends to the in-memory library</span>
+        <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Appends to the in-memory library</span>
         <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
           <Btn kind="ghost" size="sm" onClick={onClose}>Cancel</Btn>
           <Btn kind="primary" size="sm" icon={<Check size={13} />} onClick={submit}>Add Reference</Btn>
@@ -227,7 +227,7 @@ function Field({ label, v, on, type = 'text', wide, area }: { label: string; v: 
   const inp: React.CSSProperties = { width: '100%', boxSizing: 'border-box', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-sm)', padding: '6px 8px', color: 'var(--gh-text)', fontSize: 'var(--gh-font-size-xs)', fontFamily: F };
   return (
     <label style={{ gridColumn: wide ? '1 / -1' : 'auto', display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <span style={{ fontSize: 10, color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
+      <span style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
       {area ? <textarea value={v} onChange={e => on(e.target.value)} rows={2} style={{ ...inp, resize: 'vertical' }} /> : <input value={v} type={type} onChange={e => on(e.target.value)} style={inp} />}
     </label>
   );
@@ -235,7 +235,7 @@ function Field({ label, v, on, type = 'text', wide, area }: { label: string; v: 
 function SelectField({ label, v, on, opts }: { label: string; v: string; on: (v: string) => void; opts: string[] }) {
   return (
     <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <span style={{ fontSize: 10, color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
+      <span style={{ fontSize: 10, color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-semibold)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</span>
       <select value={v} onChange={e => on(e.target.value)} style={{ width: '100%', boxSizing: 'border-box', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-sm)', padding: '6px 8px', color: 'var(--gh-text)', fontSize: 'var(--gh-font-size-xs)', fontFamily: F }}>
         {opts.map(o => <option key={o} value={o}>{o}</option>)}
       </select>

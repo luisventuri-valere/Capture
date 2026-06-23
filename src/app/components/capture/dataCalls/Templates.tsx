@@ -43,7 +43,7 @@ export function Templates({ templates, onUseTemplate }: { templates: DataCallTem
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, fontWeight: 'var(--gh-font-weight-bold)', color: ORANGE }}><Sparkles size={11} /> {t.matchScore}</span>
-                    <span style={{ fontSize: 10, color: 'var(--gh-text-disabled)' }}>match</span>
+                    <span style={{ fontSize: 10, color: 'var(--gh-text-tertiary)' }}>match</span>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
@@ -55,14 +55,14 @@ export function Templates({ templates, onUseTemplate }: { templates: DataCallTem
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 2, paddingTop: 8, borderTop: '1px solid var(--gh-border)' }}>
                     {t.items.map(it => (
                       <div key={it.id} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-                        <span style={{ flexShrink: 0, width: 5, height: 5, borderRadius: '50%', background: it.required ? ORANGE : 'var(--gh-text-disabled)', marginTop: 6 }} />
+                        <span style={{ flexShrink: 0, width: 5, height: 5, borderRadius: '50%', background: it.required ? ORANGE : 'var(--gh-text-tertiary)', marginTop: 6 }} />
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                             <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)' }}>{it.description}</span>
                             <FormatChip format={it.format} />
                             {it.required && <span style={{ fontSize: 9, color: ORANGE, fontWeight: 'var(--gh-font-weight-bold)' }}>REQ</span>}
                           </div>
-                          {it.guidanceNotes && <div style={{ fontSize: 11, color: 'var(--gh-text-disabled)', marginTop: 2, fontStyle: 'italic' }}>{it.guidanceNotes}</div>}
+                          {it.guidanceNotes && <div style={{ fontSize: 11, color: 'var(--gh-text-tertiary)', marginTop: 2, fontStyle: 'italic' }}>{it.guidanceNotes}</div>}
                         </div>
                       </div>
                     ))}

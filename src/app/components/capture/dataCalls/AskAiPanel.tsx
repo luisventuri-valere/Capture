@@ -18,7 +18,7 @@ export function AskAiPanel({ data, onClose }: { data: AskAiData | null; onClose:
 
   return (
     <>
-      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 80, background: 'rgba(2,6,23,0.45)' }} />
+      <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 80, background: 'var(--gh-backdrop-canvas)' }} />
       <aside style={{
         position: 'fixed', top: 0, right: 0, bottom: 0, width: 'min(440px, 92vw)', zIndex: 81, display: 'flex', flexDirection: 'column',
         background: 'var(--gh-bg-elevated)', borderLeft: `1px solid ${orangeTone.bd}`, boxShadow: '-12px 0 48px rgba(0,0,0,0.5)', fontFamily: F,
@@ -56,7 +56,7 @@ export function AskAiPanel({ data, onClose }: { data: AskAiData | null; onClose:
 
         <div style={{ padding: '12px 18px', borderTop: '1px solid var(--gh-border)', display: 'flex', alignItems: 'center', gap: 8 }}>
           <input disabled placeholder="Ask a follow-up… (demo)" style={{ flex: 1, padding: '9px 12px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', color: 'var(--gh-text-disabled)', fontFamily: F, fontSize: 'var(--gh-font-size-sm)' }} />
-          <span style={{ fontSize: 10, color: 'var(--gh-text-disabled)' }}>scope-aware</span>
+          <span style={{ fontSize: 10, color: 'var(--gh-text-tertiary)' }}>scope-aware</span>
         </div>
       </aside>
     </>

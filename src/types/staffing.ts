@@ -63,6 +63,9 @@ export interface Candidate {
   aiAnalysis: AiAnalysis;
   loiStatus: LoiStatus;
   notes: CandidateNote[];
+  // Set when this candidate was moved in from the incumbent sub-list (Change 2).
+  // Lets the move be reversed — returning the person to their LCAT's incumbent list.
+  incumbentPersonId?: string;
 }
 
 // ─── LCAT (labor category) ───────────────────────────────────────────────────
@@ -122,6 +125,9 @@ export interface IncumbentPerson {
   status: IncumbentStatus;
   estimatedSalary: number;
   note?: string;
+  // The LCAT this incumbent matches — recruiting is always scoped to that position
+  // (Change 2). People with no matching open LCAT are omitted from the UI.
+  lcatId?: string;
 }
 
 export interface FlightRiskIndicator {

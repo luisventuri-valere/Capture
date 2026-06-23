@@ -17,7 +17,7 @@ export function PricingStrategy({ strategy, opportunity, incumbent, romTotal, re
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: F }}>
         <div style={{
           position: 'relative', overflow: 'hidden', borderRadius: 'var(--gh-radius-xl)', padding: '28px 26px',
-          background: 'linear-gradient(135deg, rgba(37,99,235,0.18), rgba(14,165,233,0.10))', border: '1px solid var(--gh-accent)',
+          background: 'var(--gh-accent-glass-bg-md)', border: '1px solid var(--gh-accent)',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
             <span style={{ width: 34, height: 34, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-accent)', color: 'var(--gh-accent-fg)', display: 'grid', placeItems: 'center' }}><Sparkles size={18} /></span>
@@ -49,7 +49,7 @@ export function PricingStrategy({ strategy, opportunity, incumbent, romTotal, re
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 16, fontFamily: F }}>
       {/* approach / positioning / rationale */}
-      <div style={{ borderRadius: 'var(--gh-radius-xl)', padding: '18px 20px', background: 'linear-gradient(135deg, rgba(37,99,235,0.14), rgba(14,165,233,0.06))', border: '1px solid var(--gh-accent)' }}>
+      <div style={{ borderRadius: 'var(--gh-radius-xl)', padding: '18px 20px', background: 'var(--gh-accent-glass-bg)', border: '1px solid var(--gh-accent)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <Sparkles size={15} style={{ color: 'var(--gh-accent-tint)' }} />
           <span style={{ fontSize: 11, fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-accent-tint)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Recommended Approach</span>
@@ -120,7 +120,7 @@ export function PricingStrategy({ strategy, opportunity, incumbent, romTotal, re
           <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: F }}>
             <thead>
               <tr>{['Source', 'Data Type', 'Value', 'Date', 'Confidence'].map(h => (
-                <th key={h} style={{ textAlign: h === 'Value' ? 'right' : 'left', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--gh-text-disabled)', fontWeight: 'var(--gh-font-weight-semibold)', padding: '0 10px 8px' }}>{h}</th>
+                <th key={h} style={{ textAlign: h === 'Value' ? 'right' : 'left', fontSize: 10, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--gh-text-tertiary)', fontWeight: 'var(--gh-font-weight-semibold)', padding: '0 10px 8px' }}>{h}</th>
               ))}</tr>
             </thead>
             <tbody>
@@ -162,7 +162,7 @@ function PtwGauge({ low, target, high, our, ceiling }: { low: number; target: nu
     <div style={{ position: 'relative', height: 46, width: '100%', marginTop: 6 }}>
       <div style={{ position: 'absolute', top: 20, left: 0, right: 0, height: 6, borderRadius: 3, background: 'var(--gh-bg-surface-muted)' }} />
       {/* PTW window */}
-      <div style={{ position: 'absolute', top: 18, left: `${pos(low)}%`, width: `${pos(high) - pos(low)}%`, height: 10, borderRadius: 5, background: 'rgba(37,99,235,0.22)', border: '1px solid var(--gh-accent)' }} />
+      <div style={{ position: 'absolute', top: 18, left: `${pos(low)}%`, width: `${pos(high) - pos(low)}%`, height: 10, borderRadius: 5, background: 'var(--gh-accent-glass)', border: '1px solid var(--gh-accent)' }} />
       {/* target */}
       <div style={{ position: 'absolute', top: 12, left: `${pos(target)}%`, transform: 'translateX(-50%)', width: 2, height: 22, background: 'var(--gh-accent-tint)' }} />
       <div style={{ position: 'absolute', top: 0, left: `${pos(target)}%`, transform: 'translateX(-50%)', fontSize: 10, color: 'var(--gh-accent-tint)', fontWeight: 'var(--gh-font-weight-semibold)', whiteSpace: 'nowrap' }}>TARGET</div>

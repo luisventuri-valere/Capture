@@ -28,7 +28,7 @@ export function AiAnalysisModal({ candidate, totalInLcat, onClose, onToast }: {
       />
       <div style={{ position: 'relative' }}>
         {regen && (
-          <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'rgba(2,6,23,0.55)', display: 'grid', placeItems: 'center', backdropFilter: 'blur(1px)' }}>
+          <div style={{ position: 'absolute', inset: 0, zIndex: 5, background: 'var(--gh-backdrop-canvas)', display: 'grid', placeItems: 'center', backdropFilter: 'blur(1px)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--gh-accent-tint)', fontSize: 'var(--gh-font-size-sm)', fontFamily: F }}>
               <Loader2 size={16} className="gh-spin" /> Regenerating analysis…
             </div>
@@ -85,7 +85,7 @@ export function AiAnalysisModal({ candidate, totalInLcat, onClose, onToast }: {
             <ol style={{ margin: 0, paddingLeft: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8, counterReset: 'q' }}>
               {a.interviewQuestions.map((q, i) => (
                 <li key={i} style={{ display: 'flex', gap: 10, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.5 }}>
-                  <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-accent-tint)', fontSize: 11, fontWeight: 'var(--gh-font-weight-bold)', display: 'grid', placeItems: 'center' }}>{i + 1}</span>
+                  <span style={{ flexShrink: 0, width: 20, height: 20, borderRadius: 'var(--gh-radius-full)', background: 'var(--gh-bg-surface-muted)', color: 'var(--gh-text)', fontSize: 11, fontWeight: 'var(--gh-font-weight-bold)', display: 'grid', placeItems: 'center' }}>{i + 1}</span>
                   {q}
                 </li>
               ))}
@@ -98,7 +98,7 @@ export function AiAnalysisModal({ candidate, totalInLcat, onClose, onToast }: {
             <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 8 }}>
               {a.resumeClarifications.map((s, i) => (
                 <li key={i} style={{ display: 'flex', gap: 8, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.5 }}>
-                  <Pencil size={14} style={{ color: 'var(--gh-text-disabled)', flexShrink: 0, marginTop: 2 }} />{s}
+                  <Pencil size={14} style={{ color: 'var(--gh-text-tertiary)', flexShrink: 0, marginTop: 2 }} />{s}
                 </li>
               ))}
             </ul>
@@ -128,7 +128,7 @@ export function NotesModal({ candidate, onClose, onPost }: {
       <ModalHeader tone="neutral" icon={<MessageCircle size={18} />} title={`Review Notes: ${candidate.name}`} subtitle="Team review thread" onClose={onClose} />
       <div style={{ padding: '18px 20px', display: 'flex', flexDirection: 'column', gap: 12, maxHeight: 360, overflowY: 'auto' }}>
         {candidate.notes.length === 0 && (
-          <div style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-disabled)', textAlign: 'center', padding: '16px 0' }}>No notes yet. Start the thread below.</div>
+          <div style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)', textAlign: 'center', padding: '16px 0' }}>No notes yet. Start the thread below.</div>
         )}
         {candidate.notes.map(n => (
           <div key={n.id} style={{ background: 'var(--gh-bg-surface)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-lg)', padding: '11px 14px' }}>
@@ -138,7 +138,7 @@ export function NotesModal({ candidate, onClose, onPost }: {
               </span>
               <span style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)' }}>{n.userName}</span>
               <Pill tone="neutral" style={{ fontSize: 10 }}>{n.userRole}</Pill>
-              <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--gh-text-disabled)' }}>{n.date}</span>
+              <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{n.date}</span>
             </div>
             <p style={{ margin: 0, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.55 }}>{n.text}</p>
           </div>
@@ -150,7 +150,7 @@ export function NotesModal({ candidate, onClose, onPost }: {
           style={{ width: '100%', resize: 'vertical', boxSizing: 'border-box', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', padding: '9px 11px', color: 'var(--gh-text)', fontSize: 'var(--gh-font-size-sm)', fontFamily: F }}
         />
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 9 }}>
-          <span style={{ fontSize: 11, color: 'var(--gh-text-disabled)' }}>Notes visible to BD and Recruiting teams</span>
+          <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Notes visible to BD and Recruiting teams</span>
           <Btn kind="primary" size="sm" style={{ marginLeft: 'auto' }} onClick={post}>Post Note</Btn>
         </div>
       </div>

@@ -28,7 +28,7 @@ function GovHubLogoMark() {
           <path d={svgPaths.p1e771000} fill="url(#logo_g1)" />
           <defs>
             <linearGradient gradientUnits="userSpaceOnUse" id="logo_g1" x1="15.3528" x2="15.3528" y1="24.0674" y2="-0.366797">
-              <stop stopColor="#3668C1" /><stop offset="1" stopColor="#20427E" />
+              <stop style={{ stopColor: 'var(--gh-brand-blue-1)' }} /><stop offset="1" style={{ stopColor: 'var(--gh-brand-blue-2)' }} />
             </linearGradient>
           </defs>
         </svg>
@@ -37,7 +37,7 @@ function GovHubLogoMark() {
         <path d={svgPaths.p1bc5c300} fill="url(#logo_g2)" />
         <defs>
           <linearGradient gradientUnits="userSpaceOnUse" id="logo_g2" x1="0" x2="32.0008" y1="15.001" y2="15.001">
-            <stop stopColor="#3668C1" /><stop offset="1" stopColor="#20427E" />
+            <stop style={{ stopColor: 'var(--gh-brand-blue-1)' }} /><stop offset="1" style={{ stopColor: 'var(--gh-brand-blue-2)' }} />
           </linearGradient>
         </defs>
       </svg>
@@ -58,7 +58,7 @@ function GovHubWordmark() {
         <defs>
           {[0,1,2,3,4,5].map(i => (
             <linearGradient key={i} gradientUnits="userSpaceOnUse" id={`wm${i}`} x1="6.99" x2="6.99" y1="-1.64" y2="10.5">
-              <stop stopColor="#4682EE" /><stop offset="1" stopColor="#315698" />
+              <stop style={{ stopColor: 'var(--gh-brand-blue-3)' }} /><stop offset="1" style={{ stopColor: 'var(--gh-brand-blue-4)' }} />
             </linearGradient>
           ))}
         </defs>
@@ -185,7 +185,7 @@ function NavDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
         </div>
         {/* Version footer */}
         <div className="shrink-0" style={{ padding: '12px 16px', borderTop: '1px solid rgba(71,85,105,0.3)' }}>
-          <span style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-disabled)' }}>v2.0 Demo</span>
+          <span style={{ fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)' }}>v2.0 Demo</span>
         </div>
       </aside>
     </>
@@ -272,7 +272,7 @@ function CaptureSubnav({ active, onChange }: SubNavProps) {
             <span style={{
               width: 26, height: 26, flexShrink: 0, borderRadius: 'var(--gh-radius-full)', display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontSize: 12, fontWeight: 'var(--gh-font-weight-semibold)',
-              background: isActive ? 'var(--gh-blue-500)' : 'transparent',
+              background: isActive ? 'var(--gh-accent)' : 'transparent',
               border: isActive ? 'none' : '1.5px solid var(--gh-border-strong)',
               color: isActive ? 'var(--gh-white)' : 'var(--gh-text-tertiary)',
             }}>{i + 1}</span>
@@ -368,10 +368,10 @@ function MainContent({ data }: { data: StrategyData }) {
           ) : (
             <div className="flex items-center justify-center h-full overflow-y-auto">
               <div className="text-center">
-                <p style={{ fontSize: 'var(--gh-font-size-md)', color: 'var(--gh-text-disabled)' }}>
+                <p style={{ fontSize: 'var(--gh-font-size-md)', color: 'var(--gh-text-tertiary)' }}>
                   {activeTab} — coming soon
                 </p>
-                <p style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-border)', marginTop: 'var(--gh-space-2)' }}>
+                <p style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)', marginTop: 'var(--gh-space-2)' }}>
                   Confirm sections in Strategy &amp; Plan to seed this tab
                 </p>
               </div>

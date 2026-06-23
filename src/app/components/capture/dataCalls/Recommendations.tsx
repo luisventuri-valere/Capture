@@ -52,7 +52,7 @@ export function Recommendations({ recommendations, analyzing, onReAnalyze, onAct
                     </div>
                     <div style={{ fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-text)', lineHeight: 1.4 }}>{r.title}</div>
                   </div>
-                  {!acted && <button onClick={() => onDismiss(r)} title="Dismiss" style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-disabled)', padding: 2, flexShrink: 0 }}><X size={14} /></button>}
+                  {!acted && <button onClick={() => onDismiss(r)} title="Dismiss" style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', padding: 2, flexShrink: 0 }}><X size={14} /></button>}
                 </div>
                 <p style={{ margin: 0, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-tertiary)', lineHeight: 1.5 }}>{r.detail}</p>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7, padding: '8px 10px', borderRadius: 'var(--gh-radius-md)', background: orangeTone.bg, border: `1px solid ${orangeTone.bd}` }}>
