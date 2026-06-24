@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Sparkles, CheckCircle2, Lock, FileCheck2, ArrowRight, ChevronDown } from 'lucide-react';
+import { Lock, FileCheck2, ArrowRight, ChevronDown } from 'lucide-react';
 import type { CollectionStrategy as TStrategy } from '../../../../types/dataCalls';
 import { F, fmtDate, dueLabel, phaseLabel } from './helpers';
-import { Pill, Btn, PhaseBadge } from './ui';
+import { Pill, PhaseBadge } from './ui';
 
 export function CollectionStrategy({ strategy, onConfirm }: { strategy: TStrategy; onConfirm: () => void }) {
   const confirmed = strategy.provenance === 'User Confirmed';
@@ -53,9 +53,24 @@ export function CollectionStrategy({ strategy, onConfirm }: { strategy: TStrateg
       </div>
 
       {!confirmed && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 2 }}>
-          <Btn kind="orange" icon={<CheckCircle2 size={14} />} onClick={onConfirm}>Confirm Strategy</Btn>
-          <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Confirming flips provenance from AI Generated to User Confirmed.</span>
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+          margin: '0 -24px -24px',
+          padding: '16px 24px',
+          background: '#0f172a',
+        }}>
+          <button
+            onClick={onConfirm}
+            style={{
+              background: 'var(--gh-accent)', color: '#fff',
+              padding: '12px 20px', borderRadius: 'var(--gh-radius-lg)',
+              minHeight: 44, border: 'none', cursor: 'pointer',
+              fontFamily: F, fontSize: 16, fontWeight: 600,
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Confirm Strategy
+          </button>
         </div>
       )}
     </div>
