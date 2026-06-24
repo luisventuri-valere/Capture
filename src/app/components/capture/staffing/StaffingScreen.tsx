@@ -188,7 +188,7 @@ export function StaffingScreen() {
         <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>
           {stats.covered} of {stats.total} covered · {stats.gaps} {stats.gaps === 1 ? 'gap' : 'gaps'}
         </span>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', whiteSpace: 'nowrap' }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-subtle)', color: 'var(--gh-warning-fg)', whiteSpace: 'nowrap' }}>
           <CalendarClock size={13} /> Days to Proposal: {opportunity.daysToProposal}
         </span>
       </div>

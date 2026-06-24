@@ -24,7 +24,7 @@ export function Templates({ templates, onUseTemplate }: { templates: DataCallTem
       </div>
 
       {/* guidance callout */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9, padding: '10px 13px', borderRadius: 'var(--gh-radius-md)', background: amber ? 'var(--gh-warning-bg)' : 'var(--gh-info-bg)', border: `1px solid ${amber ? 'var(--gh-warning-border)' : 'var(--gh-info-border)'}` }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9, padding: '10px 13px', borderRadius: 'var(--gh-radius-md)', background: amber ? 'var(--gh-warning-subtle)' : 'var(--gh-info-bg)', border: `1px solid ${amber ? 'var(--gh-warning-border)' : 'var(--gh-info-border)'}` }}>
         <AlertCircle size={15} style={{ color: amber ? 'var(--gh-warning-fg)' : 'var(--gh-info-fg)', flexShrink: 0, marginTop: 1 }} />
         <span style={{ fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text-secondary)', lineHeight: 1.5 }}>{GUIDANCE[phase]}</span>
       </div>
@@ -73,7 +73,7 @@ export function Templates({ templates, onUseTemplate }: { templates: DataCallTem
                 <button onClick={() => setExpanded(p => { const n = new Set(p); n.has(t.id) ? n.delete(t.id) : n.add(t.id); return n; })} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gh-text-tertiary)', fontFamily: F, fontSize: 11 }}>
                   {open ? <ChevronDown size={13} /> : <ChevronRight size={13} />}{t.items.length} items
                 </button>
-                <div style={{ marginLeft: 'auto' }}><Btn size="sm" kind="orange" icon={<ArrowRightCircle size={13} />} onClick={() => onUseTemplate(t)}>Use Template</Btn></div>
+                <div style={{ marginLeft: 'auto' }}><Btn size="sm" kind="primary" icon={<ArrowRightCircle size={13} />} onClick={() => onUseTemplate(t)}>Use Template</Btn></div>
               </div>
             </div>
           );
@@ -86,7 +86,7 @@ export function Templates({ templates, onUseTemplate }: { templates: DataCallTem
 function PhaseToggleBtn({ active, phase, onClick, title, sub, count }: { active: boolean; phase: Phase; onClick: () => void; title: string; sub: string; count: number }) {
   const amber = phase === 'pre-ta';
   const accent = amber ? 'var(--gh-warning-fg)' : 'var(--gh-info-fg)';
-  const bg = amber ? 'var(--gh-warning-bg)' : 'var(--gh-info-bg)';
+  const bg = amber ? 'var(--gh-warning-subtle)' : 'var(--gh-info-bg)';
   const bd = amber ? 'var(--gh-warning-border)' : 'var(--gh-info-border)';
   return (
     <button onClick={onClick} style={{

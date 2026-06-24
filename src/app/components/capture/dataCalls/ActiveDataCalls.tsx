@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Users2, ListChecks, ChevronDown, ChevronRight, Phone, Mail, BellRing, FilePlus2, Download, FileDown,
+  ChevronDown, ChevronRight, Phone, Mail, BellRing, FilePlus2, Download, FileDown,
   Pencil, CalendarClock, Flag, Check, X, RotateCcw, Eye, AlertTriangle, FileBarChart, Building2, User,
 } from 'lucide-react';
 import type { DataCall, DataCallItem, Partner } from '../../../../types/dataCalls';
@@ -26,28 +26,30 @@ export function ActiveDataCalls({ dataCalls, partners, h, v }: { dataCalls: Data
   const partnerName = (id: string) => partners.find(p => p.id === id)?.name ?? id;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14, fontFamily: F }}>
-      {/* ALL-level action bar */}
-      <ActionBar
-        label="ALL"
-        actions={[
-          { label: 'Remind All Overdue', icon: <BellRing size={13} />, onClick: () => h.onToast('Reminders sent for all overdue items'), kind: 'orange' },
-          { label: 'Export All', icon: <Download size={13} />, onClick: () => h.onToast('Exported the full data-call portfolio (CSV)') },
-          { label: 'Status Report', icon: <FileBarChart size={13} />, onClick: () => h.onToast('Generated a portfolio status report') },
-        ]}
-        onAskAi={() => h.onAskAi('all', 'portfolio', 'Whole portfolio')}
-      />
-
-      {/* view toggle */}
-      <div style={{ display: 'inline-flex', gap: 3, padding: 3, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)', alignSelf: 'flex-start' }}>
-        {([['teammate', 'By Teammate', <Users2 size={14} />], ['call', 'By Data Call', <ListChecks size={14} />]] as const).map(([k, lab, ic]) => {
+    <div style={{ display: 'flex', flexDirection: 'column', fontFamily: F }}>
+      {/* ── Tabs — flush to panel edges ── */}
+      <div style={{ display: 'flex', alignItems: 'flex-end', borderBottom: '1px solid var(--gh-border)', margin: '-16px -20px 0', padding: '0 20px', gap: 0 }}>
+        {([['teammate', 'By Teammate'], ['call', 'By Data Call']] as const).map(([k, lab]) => {
           const on = v.viewMode === k;
           return (
-            <button key={k} onClick={() => v.setViewMode(k)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '6px 13px', borderRadius: 'var(--gh-radius-md)', background: on ? ORANGE : 'transparent', color: on ? 'var(--gh-bg-canvas)' : 'var(--gh-text-secondary)', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 'var(--gh-font-size-sm)', fontWeight: on ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)' }}>{ic}{lab}</button>
+            <button key={k} onClick={() => v.setViewMode(k)} style={{
+              display: 'inline-flex', alignItems: 'center', padding: '10px 16px', cursor: 'pointer', fontFamily: F,
+              background: 'transparent', border: 'none', borderBottom: `2px solid ${on ? 'var(--gh-accent)' : 'transparent'}`,
+              fontSize: 'var(--gh-font-size-sm)', fontWeight: on ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)',
+              color: on ? 'var(--gh-text)' : 'var(--gh-text-tertiary)', whiteSpace: 'nowrap', marginBottom: -1,
+            }}>{lab}</button>
           );
         })}
       </div>
 
+      {/* ── Top action buttons ── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', padding: '14px 0' }}>
+        <Btn size="sm" icon={<BellRing size={13} />} onClick={() => h.onToast('Reminders sent for all overdue items')}>Remind All Overdue</Btn>
+        <Btn size="sm" icon={<Download size={13} />} onClick={() => h.onToast('Exported the full data-call portfolio (CSV)')}>Export All</Btn>
+        <Btn size="sm" icon={<FileBarChart size={13} />} onClick={() => h.onToast('Generated a portfolio status report')}>Status Report</Btn>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {/* ── By Teammate ── */}
       {v.viewMode === 'teammate' && partners.map(p => {
         const calls = dataCalls.filter(c => c.partnerId === p.id);
@@ -79,7 +81,7 @@ export function ActiveDataCalls({ dataCalls, partners, h, v }: { dataCalls: Data
                 <ActionBar
                   label="PARTNER"
                   actions={[
-                    { label: 'Remind All Pending', icon: <BellRing size={13} />, onClick: () => h.onToast(`Reminder sent to ${p.name} for all pending items`), kind: 'orange' },
+                    { label: 'Remind All Pending', icon: <BellRing size={13} />, onClick: () => h.onToast(`Reminder sent to ${p.name} for all pending items`) },
                     { label: 'Call', icon: <Phone size={13} />, onClick: () => h.onToast(`${p.primaryContact.name} · ${p.primaryContact.phone}`) },
                     { label: 'Email', icon: <Mail size={13} />, onClick: () => h.onToast(`Drafted an email to ${p.primaryContact.email}`) },
                     { label: 'New Data Call', icon: <FilePlus2 size={13} />, onClick: () => h.onNewDataCall(p.id) },
@@ -100,6 +102,7 @@ export function ActiveDataCalls({ dataCalls, partners, h, v }: { dataCalls: Data
           {dataCalls.map(c => <CallCard key={c.id} call={c} h={h} v={v} partnerLabel={partnerName(c.partnerId)} />)}
         </div>
       )}
+      </div>
     </div>
   );
 }
@@ -137,7 +140,7 @@ function CallCard({ call, h, v, partnerLabel }: { call: DataCall; h: Handlers; v
               { label: 'Edit', icon: <Pencil size={13} />, onClick: () => h.onToast(`Editing ${call.id}`) },
               { label: 'Change Due Date', icon: <CalendarClock size={13} />, onClick: () => h.onChangeDue(call) },
               { label: 'Change Priority', icon: <Flag size={13} />, onClick: () => h.onChangePriority(call) },
-              { label: 'Remind', icon: <BellRing size={13} />, onClick: () => h.onToast(`Reminder sent for ${call.id}`), kind: 'orange' },
+              { label: 'Remind', icon: <BellRing size={13} />, onClick: () => h.onToast(`Reminder sent for ${call.id}`) },
               { label: 'Export', icon: <FileDown size={13} />, onClick: () => h.onToast(`Exported ${call.id}`) },
             ]}
             onAskAi={() => h.onAskAi('call', call.id, `${call.id} · ${call.title}`)}
@@ -155,7 +158,7 @@ function ItemRow({ item, h }: { item: DataCallItem; h: Handlers }) {
   const itemActions: BarAction[] = [
     { label: 'Accept', icon: <Check size={13} />, onClick: () => h.onAccept(item), kind: 'primary' },
     { label: 'Reject', icon: <X size={13} />, onClick: () => h.onReject(item), kind: 'danger' },
-    { label: 'Request Revision', icon: <RotateCcw size={13} />, onClick: () => h.onRevise(item), kind: 'orange' },
+    { label: 'Request Revision', icon: <RotateCcw size={13} />, onClick: () => h.onRevise(item) },
     { label: 'Preview', icon: <Eye size={13} />, onClick: () => h.onToast(`Preview: ${item.description}`) },
     { label: 'Download', icon: <Download size={13} />, onClick: () => h.onToast(`Downloaded ${item.format} for ${item.id}`) },
   ];

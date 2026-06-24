@@ -283,7 +283,7 @@ function IncumbentSubList({ lcat, people, cb }: { lcat: LCAT; people: IncumbentP
   const n = people.length;
   return (
     <div style={{ padding: '0 18px 14px 38px' }}>
-      <div style={{ borderRadius: 'var(--gh-radius-lg)', border: '1px solid var(--gh-warning-border)', borderLeft: '3px solid var(--gh-warning-fg)', background: 'var(--gh-warning-bg)', overflow: 'hidden' }}>
+      <div style={{ borderRadius: 'var(--gh-radius-lg)', border: '1px solid var(--gh-warning-border)', borderLeft: '3px solid var(--gh-warning-fg)', background: 'var(--gh-warning-subtle)', overflow: 'hidden' }}>
         <button onClick={() => setOpen(o => !o)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: F, textAlign: 'left' }}>
           {open ? <ChevronDown size={14} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} /> : <ChevronRight size={14} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} />}
           <Building2 size={14} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} />

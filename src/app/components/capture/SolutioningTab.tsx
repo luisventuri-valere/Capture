@@ -59,14 +59,14 @@ function verdictFg(v: string): string {
 }
 function verdictBg(v: string): string {
   if (v === 'PASSED' || v === 'PASS') return 'var(--gh-success-bg)';
-  if (v === 'CONDITIONAL') return 'var(--gh-warning-bg)';
+  if (v === 'CONDITIONAL') return 'var(--gh-warning-subtle)';
   return 'var(--gh-danger-bg)';
 }
 function confidenceFg(c: number): string {
   return c >= 75 ? 'var(--gh-success-fg)' : c >= 50 ? 'var(--gh-warning-fg)' : 'var(--gh-danger-fg-strong)';
 }
 function confidenceBg(c: number): string {
-  return c >= 75 ? 'var(--gh-success-bg)' : c >= 50 ? 'var(--gh-warning-bg)' : 'var(--gh-danger-bg)';
+  return c >= 75 ? 'var(--gh-success-bg)' : c >= 50 ? 'var(--gh-warning-subtle)' : 'var(--gh-danger-bg)';
 }
 function ruleLabel(v: string): string {
   if (v === 'PASS') return 'Pass';
@@ -304,7 +304,7 @@ function WinThemesPanel({ collapsed, onToggle }: { collapsed: boolean; onToggle:
               <div style={{
                 display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-4)',
                 padding: 'var(--gh-space-4) var(--gh-space-5)',
-                background: 'var(--gh-warning-bg)',
+                background: 'var(--gh-amber-950)',
                 border: '1px solid var(--gh-warning-border)',
                 borderRadius: 'var(--gh-radius-default)',
               }}>
@@ -318,7 +318,7 @@ function WinThemesPanel({ collapsed, onToggle }: { collapsed: boolean; onToggle:
                       {uncovered.factor}
                     </span>
                     <Chip
-                      bg="var(--gh-warning-bg)" fg="var(--gh-warning-fg)"
+                      bg="var(--gh-warning-subtle)" fg="var(--gh-warning-fg)"
                       style={{ border: '1px solid var(--gh-warning-border)', fontSize: 9 }}
                     >
                       <ArrowRight size={8} /> Staffing
@@ -360,12 +360,12 @@ function renderRailGroups({ selected, onSelect, filter, cascade, narrow }: {
       <div key={group.id}>
         {!narrow && (
           <div style={{
-            padding: 'var(--gh-space-2) var(--gh-space-6)',
+            padding: '24px var(--gh-space-6)',
             fontSize: 9, fontFamily: 'var(--gh-font)',
             fontWeight: 'var(--gh-font-weight-semibold)', letterSpacing: '0.04em',
             color: group.id === 'NO_THEME' ? 'var(--gh-warning-fg)' : 'var(--gh-text-tertiary)',
             borderBottom: '1px solid var(--gh-border)',
-            background: group.id === 'NO_THEME' ? 'var(--gh-warning-bg)' : 'var(--gh-bg-canvas)',
+            background: group.id === 'NO_THEME' ? 'var(--gh-warning-subtle)' : 'var(--gh-bg-canvas)',
             textTransform: 'none' as const,
           }}>
             {group.id === 'NO_THEME'
@@ -421,11 +421,11 @@ function renderRailGroups({ selected, onSelect, filter, cascade, narrow }: {
                 cursor: 'pointer',
               }}
             >
-              <DotIcon size={12} color={verdictFg(v)} style={{ marginTop: 2, flexShrink: 0 }} />
+              <DotIcon size={14} color={verdictFg(v)} style={{ marginTop: 2, flexShrink: 0 }} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{
                   fontSize: 'var(--gh-font-size-sm)', fontFamily: 'var(--gh-font)',
-                  fontWeight: 'var(--gh-font-weight-medium)',
+                  fontWeight: 'var(--gh-font-weight-semibold)',
                   color: isSelected ? 'var(--gh-text)' : 'var(--gh-text-secondary)',
                   marginBottom: 'var(--gh-space-2)', lineHeight: 1.35,
                   overflow: 'hidden', display: '-webkit-box',
@@ -434,7 +434,7 @@ function renderRailGroups({ selected, onSelect, filter, cascade, narrow }: {
                   {el.title}
                 </div>
                 <div style={{ display: 'flex', gap: 'var(--gh-space-2)', flexWrap: 'wrap' as const }}>
-                  <Chip bg="var(--gh-bg-surface)" fg="var(--gh-text-tertiary)" style={{ fontSize: 9 }}>
+                  <Chip bg="var(--gh-info-bg)" fg="var(--gh-info-fg)" style={{ fontSize: 9 }}>
                     {el.howRatio}% HOW
                   </Chip>
                   <Chip bg={confidenceBg(conf)} fg={confidenceFg(conf)} style={{ fontSize: 9 }}>
@@ -525,7 +525,7 @@ function SuggestionItem({ text, stateKey, states, onAction }: {
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, { bg: string; fg: string; label: string }> = {
     validated:    { bg: 'var(--gh-success-bg)', fg: 'var(--gh-success-fg)', label: 'Validated' },
-    'needs-work': { bg: 'var(--gh-warning-bg)', fg: 'var(--gh-warning-fg)', label: 'Needs Work' },
+    'needs-work': { bg: 'var(--gh-warning-subtle)', fg: 'var(--gh-warning-fg)', label: 'Needs Work' },
     shaping:      { bg: 'var(--gh-bg-surface-muted)', fg: 'var(--gh-text-tertiary)', label: 'Shaping' },
   };
   const s = map[status] ?? map['shaping'];
@@ -607,7 +607,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
           <Chip key={d} bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-tertiary)">{d}</Chip>
         ))}
         {el.linkage.capabilityGaps.map(cg => (
-          <Chip key={cg} bg="var(--gh-warning-bg)" fg="var(--gh-warning-fg)">{cg}</Chip>
+          <Chip key={cg} bg="var(--gh-warning-subtle)" fg="var(--gh-warning-fg)">{cg}</Chip>
         ))}
         {el.linkage.partner && (
           <Chip bg="var(--gh-bg-surface)" fg="var(--gh-text-secondary)">{el.linkage.partner}</Chip>
@@ -630,7 +630,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
           <div style={{
             display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-4)',
             padding: 'var(--gh-space-5) var(--gh-space-6)',
-            background: 'var(--gh-warning-bg)',
+            background: 'var(--gh-warning-subtle)',
             border: '1px solid var(--gh-warning-border)',
             borderRadius: 'var(--gh-radius-md)',
           }}>
@@ -653,7 +653,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
         <div style={{ display: 'flex', flexWrap: 'wrap' as const, gap: 'var(--gh-space-2)', marginBottom: 'var(--gh-space-3)' }}>
           <Chip bg="var(--gh-bg-surface-muted)" fg="var(--gh-text-tertiary)">{el.category}</Chip>
           {el.linkage.winThemes.map(wt => <Chip key={wt} bg="var(--gh-info-bg)" fg="var(--gh-info-fg)">{wt}</Chip>)}
-          {el.linkage.capabilityGaps.map(cg => <Chip key={cg} bg="var(--gh-warning-bg)" fg="var(--gh-warning-fg)">{cg}</Chip>)}
+          {el.linkage.capabilityGaps.map(cg => <Chip key={cg} bg="var(--gh-warning-subtle)" fg="var(--gh-warning-fg)">{cg}</Chip>)}
         </div>
         <SourceChips sources={el.envelope.sources} />
       </Band>
@@ -739,7 +739,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
         <div style={{
           display: 'flex', alignItems: 'flex-start', gap: 'var(--gh-space-5)',
           padding: 'var(--gh-space-5) var(--gh-space-6)',
-          background: el.howRatio >= 70 ? 'var(--gh-success-bg)' : 'var(--gh-warning-bg)',
+          background: el.howRatio >= 70 ? 'var(--gh-success-bg)' : 'var(--gh-warning-subtle)',
           border: `1px solid ${el.howRatio >= 70 ? 'var(--gh-success-border)' : 'var(--gh-warning-border)'}`,
           borderRadius: 'var(--gh-radius-default)', marginBottom: 'var(--gh-space-8)',
         }}>
@@ -754,7 +754,7 @@ function ElementDetail({ elementId, cascade, sugStates, onSugAction }: {
                 HOW-not-WHAT Check
               </span>
               <Chip
-                bg={el.howRatio >= 70 ? 'var(--gh-success-bg)' : 'var(--gh-warning-bg)'}
+                bg={el.howRatio >= 70 ? 'var(--gh-success-bg)' : 'var(--gh-warning-subtle)'}
                 fg={el.howRatio >= 70 ? 'var(--gh-success-fg)' : 'var(--gh-warning-fg)'}
                 style={{ border: `1px solid ${el.howRatio >= 70 ? 'var(--gh-success-border)' : 'var(--gh-warning-border)'}` }}
               >
@@ -935,7 +935,7 @@ export function SolutioningTab({ chromeHidden = false }: { chromeHidden?: boolea
             <span style={{ fontSize: 'var(--gh-font-size-lg)', fontWeight: 'var(--gh-font-weight-bold)', color: 'var(--gh-text)' }}>
               {validatedLabel} validated
             </span>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-bg)', color: 'var(--gh-warning-fg)', fontFamily: 'var(--gh-font)' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '3px 10px', borderRadius: 'var(--gh-radius-full)', fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', background: 'var(--gh-warning-subtle)', color: 'var(--gh-warning-fg)', fontFamily: 'var(--gh-font)' }}>
               {overallConfidence}% confidence
               <Info size={13} />
             </span>
@@ -944,9 +944,6 @@ export function SolutioningTab({ chromeHidden = false }: { chromeHidden?: boolea
             Drafted by Solutioning Agent (SOL-001) · validated by Strength Validator (STV-001) · v3 · 2026-02-10
           </p>
         </div>
-        <button style={{ height: 28, padding: '0 var(--gh-space-6)', background: 'transparent', color: 'var(--gh-text-tertiary)', border: '1px solid var(--gh-border)', borderRadius: 'var(--gh-radius-md)', fontSize: 'var(--gh-font-size-xs)', fontFamily: 'var(--gh-font)', fontWeight: 'var(--gh-font-weight-medium)', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 'var(--gh-space-3)' }}>
-          <Bot size={11} /> Regenerate
-        </button>
       </div>
 
       {/* Zone A — Win Themes panel (scrolls with content above the split) */}
@@ -959,17 +956,23 @@ export function SolutioningTab({ chromeHidden = false }: { chromeHidden?: boolea
         <SectionIndex
           title={`Solution Elements · ${sol.solutionElements.length}`}
           filter={(
-            <div style={{ padding: 8 }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', padding: 4, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-overlay-xs)' }}>
-                {FILTERS.map(f => {
-                  const on = filter === f;
-                  return (
-                    <button key={f} onClick={() => setFilter(f)} style={{ display: 'inline-flex', alignItems: 'center', padding: '5px 10px', borderRadius: 'var(--gh-radius-md)', border: 'none', cursor: 'pointer', fontFamily: 'var(--gh-font)', fontSize: 11, whiteSpace: 'nowrap' as const, background: on ? 'var(--gh-overlay-sm)' : 'transparent', color: on ? 'var(--gh-text)' : 'var(--gh-slate-400)', fontWeight: on ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)' }}>
-                      {f}
-                    </button>
-                  );
-                })}
-              </div>
+            <div style={{ padding: '6px 8px', display: 'flex', alignItems: 'center', gap: 4 }}>
+              {FILTERS.map(f => {
+                const on = filter === f;
+                return (
+                  <button key={f} onClick={() => setFilter(f)} style={{
+                    display: 'inline-flex', alignItems: 'center', padding: '4px 10px',
+                    borderRadius: 'var(--gh-radius-full)',
+                    border: `1px solid ${on ? 'var(--gh-border)' : 'transparent'}`,
+                    cursor: 'pointer', fontFamily: 'var(--gh-font)', fontSize: 11, whiteSpace: 'nowrap' as const,
+                    background: on ? 'var(--gh-overlay-sm)' : 'transparent',
+                    color: on ? 'var(--gh-text)' : 'var(--gh-slate-400)',
+                    fontWeight: on ? 'var(--gh-font-weight-medium)' : 'var(--gh-font-weight-normal)',
+                  }}>
+                    {f}
+                  </button>
+                );
+              })}
             </div>
           )}
           renderItems={(narrow) => renderRailGroups({ selected, onSelect: setSelected, filter, cascade: false, narrow })}

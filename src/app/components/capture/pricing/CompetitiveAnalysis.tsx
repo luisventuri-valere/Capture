@@ -82,10 +82,10 @@ export function CompetitiveAnalysis({ benchmarks, scenario, incumbent, rollup, w
                   )}
                 </div>
                 <RangeBar min={b.min} p25={b.p25} median={b.median} p75={b.p75} max={b.max} our={our} ourTone={mp.tone} />
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2, fontSize: 10, color: 'var(--gh-text-tertiary)', fontVariantNumeric: 'tabular-nums' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 2, fontSize: 14, color: 'var(--gh-text-tertiary)', fontVariantNumeric: 'tabular-nums' }}>
                   <span>{fmtRate(b.min)}</span><span>p25 {fmtRate(b.p25)}</span><span>med {fmtRate(b.median)}</span><span>p75 {fmtRate(b.p75)}</span><span>{fmtRate(b.max)}</span>
                 </div>
-                <p style={{ margin: '8px 0 0', fontSize: 'var(--gh-font-size-xs)', color: 'var(--gh-text-tertiary)', lineHeight: 1.5 }}>{b.recommendation}</p>
+                <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--gh-text-secondary)', lineHeight: 1.5 }}>{b.recommendation}</p>
               </div>
             );
           })}

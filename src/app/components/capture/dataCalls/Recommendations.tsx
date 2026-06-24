@@ -25,7 +25,7 @@ export function Recommendations({ recommendations, analyzing, onReAnalyze, onAct
           {visible.filter(r => r.status === 'active').length} active · {visible.filter(r => r.status === 'acted_on').length} acted on{dismissed ? ` · ${dismissed} dismissed` : ''}
         </span>
         <div style={{ marginLeft: 'auto' }}>
-          <Btn kind="orange" size="sm" icon={analyzing ? <RefreshCw size={13} className="gh-spin" /> : <RefreshCw size={13} />} onClick={onReAnalyze} disabled={analyzing}>
+          <Btn size="sm" icon={analyzing ? <RefreshCw size={13} className="gh-spin" /> : <RefreshCw size={13} />} onClick={onReAnalyze} disabled={analyzing}>
             {analyzing ? 'Re-analyzing…' : 'Re-Analyze'}
           </Btn>
         </div>

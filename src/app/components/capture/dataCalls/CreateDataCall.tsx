@@ -137,7 +137,7 @@ export function CreateDataCall({ templates, partners, presetTemplateId, presetPa
           <label style={{ ...lbl, marginBottom: 0 }}>Requested Items ({items.length})</label>
           <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
             <Btn size="sm" icon={<Plus size={13} />} onClick={() => setItems(p => [...p, { key: `c${Date.now()}`, description: '', format: 'Any', required: false }])}>Add Item</Btn>
-            <Btn size="sm" kind="orange" icon={autogen ? <Sparkles size={13} className="gh-spin" /> : <Sparkles size={13} />} onClick={doAutogen} disabled={autogen}>{autogen ? 'Customizing…' : 'Auto-Generate'}</Btn>
+            <Btn size="sm" icon={autogen ? <Sparkles size={13} className="gh-spin" /> : <Sparkles size={13} />} onClick={doAutogen} disabled={autogen}>{autogen ? 'Customizing…' : 'Auto-Generate'}</Btn>
           </div>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
@@ -154,7 +154,7 @@ export function CreateDataCall({ templates, partners, presetTemplateId, presetPa
 
       {/* send */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, paddingTop: 2 }}>
-        <Btn kind={blocked && override ? 'danger' : 'orange'} icon={blocked && override ? <Lock size={14} /> : <Send size={14} />} onClick={send} disabled={!canSend}>
+        <Btn kind={blocked && override ? 'danger' : 'primary'} icon={blocked && override ? <Lock size={14} /> : <Send size={14} />} onClick={send} disabled={!canSend}>
           {blocked && override ? 'Override & Send' : 'Send Data Call'}
         </Btn>
         {!partnerId && <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>Select a recipient to continue.</span>}

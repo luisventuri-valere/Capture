@@ -45,14 +45,13 @@ export function SeverityBadge({ severity }: { severity: Severity }) {
 
 // ─── Buttons ─────────────────────────────────────────────────────────────────
 export function Btn({ children, onClick, kind = 'secondary', size = 'md', icon, disabled, title, style }: {
-  children?: React.ReactNode; onClick?: () => void; kind?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'orange';
+  children?: React.ReactNode; onClick?: () => void; kind?: 'primary' | 'secondary' | 'ghost' | 'danger';
   size?: 'sm' | 'md'; icon?: React.ReactNode; disabled?: boolean; title?: string; style?: React.CSSProperties;
 }) {
   const pad = size === 'sm' ? '5px 10px' : '7px 13px';
   const fs = size === 'sm' ? 'var(--gh-font-size-xs)' : 'var(--gh-font-size-sm)';
   let bg = 'transparent', fg = 'var(--gh-text-secondary)', bd = '1px solid var(--gh-border)';
   if (kind === 'primary') { bg = 'var(--gh-accent)'; fg = 'var(--gh-accent-fg)'; bd = '1px solid var(--gh-accent)'; }
-  else if (kind === 'orange') { bg = ORANGE; fg = 'var(--gh-bg-canvas)'; bd = `1px solid ${ORANGE}`; }
   else if (kind === 'ghost') { bd = '1px solid transparent'; fg = 'var(--gh-text-tertiary)'; }
   else if (kind === 'danger') { fg = 'var(--gh-danger-fg)'; bd = '1px solid var(--gh-danger-border)'; }
   return (
@@ -77,7 +76,7 @@ export function AskAi({ onClick, size = 'sm' }: { onClick: () => void; size?: 's
 }
 
 // ─── Contextual action bar (4 levels) ────────────────────────────────────────
-export type BarAction = { label: string; icon?: React.ReactNode; onClick: () => void; kind?: 'secondary' | 'danger' | 'primary' | 'orange'; disabled?: boolean };
+export type BarAction = { label: string; icon?: React.ReactNode; onClick: () => void; kind?: 'secondary' | 'danger' | 'primary'; disabled?: boolean };
 export function ActionBar({ actions, onAskAi, label }: { actions: BarAction[]; onAskAi: () => void; label?: string }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', padding: '8px 10px', borderRadius: 'var(--gh-radius-md)', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)' }}>

@@ -1,14 +1,13 @@
 import React, { useMemo, useRef, useState } from 'react';
 import {
-  Compass, LayoutTemplate, FilePlus2, Inbox, Sparkles, ListTodo, Eye, AlertTriangle,
-  Crown, Check, Send, Lock, FileCheck2,
+  Compass, LayoutTemplate, FilePlus2, Inbox, Sparkles, ListTodo,
+  Check, Send, AlertTriangle,
 } from 'lucide-react';
 import { dataCallsData } from '../../../../data/capture/datacalls-data';
 import type {
   DataCall, DataCallItem, AIRecommendation, QueuedAction, ActivityEvent, Partner, Priority, ItemStatus, DataCallStatus, AIScope,
 } from '../../../../types/dataCalls';
-import { F, ORANGE, ORANGE_TINT, orangeTone, TODAY, fmtDate, isOverdue, awaitingReview, itemAccepted, partnerAgg, callProgress, phaseLabel, phaseSub } from './helpers';
-import { Stat } from '../staffing/ui';
+import { F, ORANGE, ORANGE_TINT, orangeTone, TODAY, fmtDate, isOverdue, awaitingReview, itemAccepted, partnerAgg, callProgress } from './helpers';
 import { SectionIndex, SectionIndexItem } from '../SectionIndex';
 import { Pill, Btn, PhaseBadge, StatusPill, QualityBadge } from './ui';
 import { CollectionStrategy } from './CollectionStrategy';
@@ -73,6 +72,8 @@ export function DataCallsScreen() {
       active: dataCalls.filter(c => c.status !== 'COMPLETE').length,
       awaiting: items.filter(awaitingReview).length,
       overdue,
+      preActive: dataCalls.filter(c => c.phase === 'pre-ta' && c.status !== 'COMPLETE').length,
+      postActive: dataCalls.filter(c => c.phase === 'post-ta' && c.status !== 'COMPLETE').length,
       partners: new Set(dataCalls.map(c => c.partnerId)).size,
       avgQuality: scored.length ? Math.round(scored.reduce((a, b) => a + b, 0) / scored.length) : 0,
     };
@@ -171,19 +172,33 @@ export function DataCallsScreen() {
         </div>
       </div>
 
-      {/* ── Dashboard stats ── */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 8, flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
-        <Stat label="Items Awaiting Review" value={stats.awaiting} tone={stats.awaiting ? 'warning' : 'neutral'} icon={<Eye size={15} />} />
-        <Stat label="Overdue Items" value={stats.overdue} tone={stats.overdue ? 'danger' : 'success'} icon={<AlertTriangle size={15} />} />
+      {/* ── Mode tabs ── */}
+      <div style={{ display: 'flex', alignItems: 'flex-end', borderBottom: '1px solid var(--gh-border)', flexShrink: 0, padding: '0 var(--gh-space-12)', gap: 0, margin: '16px 0 0' }}>
+        {(['prime', 'sub'] as const).map(m => {
+          const on = mode === m;
+          return (
+            <button key={m} onClick={() => setMode(m)} title={m === 'prime' ? 'You send data calls' : 'You receive data calls'} style={{
+              display: 'inline-flex', alignItems: 'center', padding: '10px 16px', cursor: 'pointer', fontFamily: F,
+              background: 'transparent', border: 'none', borderBottom: `2px solid ${on ? 'var(--gh-accent)' : 'transparent'}`,
+              fontSize: 'var(--gh-font-size-sm)', fontWeight: on ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)',
+              color: on ? 'var(--gh-text)' : 'var(--gh-text-tertiary)', whiteSpace: 'nowrap', marginBottom: -1,
+            }}>{m === 'prime' ? 'Prime Mode' : 'Sub Mode'}</button>
+          );
+        })}
       </div>
 
-      {/* ── Mode toggle ── */}
-      <div style={{ margin: '24px 0', flexShrink: 0, padding: '0 var(--gh-space-12)' }}>
-        <ModeToggle mode={mode} setMode={setMode} />
-      </div>
-
-      {/* ── Pre-TA / Post-TA phase indicator (prime mode) ── */}
-      {mode === 'prime' && <PhaseIndicator dataCalls={dataCalls} />}
+      {/* ── Overdue alert (hidden when count = 0; visible when items slip) ── */}
+      {stats.overdue > 0 && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '12px var(--gh-space-12) 0', padding: '11px 16px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-danger-bg)', border: '1px solid var(--gh-danger-border)', flexShrink: 0 }}>
+          <AlertTriangle size={15} style={{ color: 'var(--gh-danger-fg)', flexShrink: 0 }} />
+          <span style={{ flex: 1, fontSize: 'var(--gh-font-size-sm)', fontWeight: 'var(--gh-font-weight-semibold)', color: 'var(--gh-danger-fg)' }}>
+            {stats.overdue} item{stats.overdue !== 1 ? 's' : ''} overdue — may slip a proposal deadline
+          </span>
+          <button onClick={() => setSelectedSection('active')} style={{ background: 'none', border: '1px solid var(--gh-danger-border)', color: 'var(--gh-danger-fg)', cursor: 'pointer', fontFamily: F, fontSize: 'var(--gh-font-size-xs)', fontWeight: 'var(--gh-font-weight-semibold)', padding: '4px 10px', borderRadius: 'var(--gh-radius-md)', whiteSpace: 'nowrap' }}>
+            View items →
+          </button>
+        </div>
+      )}
 
       {mode === 'sub' ? (
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', padding: '0 var(--gh-space-12)' }}>
@@ -212,10 +227,10 @@ export function DataCallsScreen() {
               scrollKey={selectedSection}
               background="var(--gh-bg-canvas)"
               progressBar={false}
-              leftActions={selectedSection === 'strategy' ? (<Pill tone={provenance === 'User Confirmed' ? 'success' : 'accent'} soft><Sparkles size={11} /> {provenance}</Pill>) : undefined}
+              onAskAI={selectedSection === 'active' ? () => openAskAi('all', 'portfolio', 'Whole portfolio') : undefined}
             >
               <div style={{ padding: '16px 20px' }}>
-                {selectedSection === 'strategy' && <CollectionStrategy strategy={{ ...strategy, provenance }} onConfirm={() => { setProvenance('User Confirmed'); setToast('Strategy confirmed'); }} />}
+                {selectedSection === 'strategy' && <CollectionStrategy strategy={{ ...strategy, provenance }} preActive={stats.preActive} postActive={stats.postActive} onConfirm={() => { setProvenance('User Confirmed'); setToast('Strategy confirmed'); }} />}
                 {selectedSection === 'templates' && <Templates templates={templates} onUseTemplate={t => onUseTemplate(t.id)} />}
                 {selectedSection === 'create' && <CreateDataCall templates={templates} partners={partners} presetTemplateId={preset.tpl} presetPartnerId={preset.partner} onSend={onSend} onLogOverride={onLogOverride} onToast={setToast} />}
                 {selectedSection === 'active' && <ActiveDataCalls dataCalls={dataCalls} partners={partners} h={activeHandlers} v={viewState} />}
@@ -238,53 +253,7 @@ export function DataCallsScreen() {
   );
 }
 
-function PhaseIndicator({ dataCalls }: { dataCalls: DataCall[] }) {
-  const preActive = dataCalls.filter(c => c.phase === 'pre-ta' && c.status !== 'COMPLETE').length;
-  const postActive = dataCalls.filter(c => c.phase === 'post-ta' && c.status !== 'COMPLETE').length;
-  return (
-    <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexShrink: 0, padding: '0 var(--gh-space-12)', alignSelf: 'flex-start' }}>
-      <PhasePanel phase="pre-ta" activeCount={preActive}
-        rule="Evaluate partner fit with lightweight requests. Never request detailed rates, named personnel, or proprietary approach before a Teaming Agreement is signed." />
-      <PhasePanel phase="post-ta" activeCount={postActive}
-        rule="Collect RFP-formatted material — full resumes, complete rate cards — each mapped to Section L/M." />
-    </div>
-  );
-}
 
-function PhasePanel({ phase, activeCount, rule }: { phase: 'pre-ta' | 'post-ta'; activeCount: number; rule: string }) {
-  const isPre = phase === 'pre-ta';
-  return (
-    <div style={{
-      padding: '10px 14px', borderRadius: 'var(--gh-radius-lg)',
-      background: isPre ? 'var(--gh-warning-bg)' : 'var(--gh-info-bg)',
-      border: `1px solid ${isPre ? 'var(--gh-warning-border)' : 'var(--gh-info-border)'}`,
-      display: 'flex', flexDirection: 'column', gap: 5,
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
-        {isPre
-          ? <Lock size={12} style={{ color: 'var(--gh-warning-fg)', flexShrink: 0 }} />
-          : <FileCheck2 size={12} style={{ color: 'var(--gh-info-fg)', flexShrink: 0 }} />}
-        <span style={{ fontSize: 11, fontWeight: 700, color: isPre ? 'var(--gh-warning-fg)' : 'var(--gh-info-fg)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{phaseLabel(phase)}</span>
-        <span style={{ fontSize: 11, color: 'var(--gh-text-tertiary)' }}>{phaseSub(phase)}</span>
-        {activeCount > 0 && <Pill tone={isPre ? 'warning' : 'info'} soft>{activeCount} active</Pill>}
-      </div>
-      <p style={{ margin: 0, fontSize: 11, color: 'var(--gh-text-secondary)', lineHeight: 1.5, minWidth: 0 }}>{rule}</p>
-    </div>
-  );
-}
-
-function ModeToggle({ mode, setMode }: { mode: 'prime' | 'sub'; setMode: (m: 'prime' | 'sub') => void }) {
-  return (
-    <div style={{ display: 'inline-flex', gap: 3, padding: 3, borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-bg-surface-muted)', border: '1px solid var(--gh-border)' }}>
-      {([['prime', 'Prime', <Crown size={14} />], ['sub', 'Sub', <Inbox size={14} />]] as const).map(([k, lab, ic]) => {
-        const on = mode === k;
-        return (
-          <button key={k} onClick={() => setMode(k)} title={k === 'prime' ? 'You send data calls' : 'You receive data calls'} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '7px 15px', borderRadius: 'var(--gh-radius-md)', background: on ? ORANGE : 'transparent', color: on ? 'var(--gh-bg-canvas)' : 'var(--gh-text-secondary)', border: 'none', cursor: 'pointer', fontFamily: F, fontSize: 'var(--gh-font-size-sm)', fontWeight: on ? 'var(--gh-font-weight-semibold)' : 'var(--gh-font-weight-medium)' }}>{ic}{lab} mode</button>
-        );
-      })}
-    </div>
-  );
-}
 
 // ── Sub mode (lighter "incoming requests" variant) ──
 function SubMode({ dataCalls, partnerName, onToast }: { dataCalls: DataCall[]; partnerName: (id: string) => string; onToast: (m: string) => void }) {
@@ -314,7 +283,7 @@ function SubMode({ dataCalls, partnerName, onToast }: { dataCalls: DataCall[]; p
                   <span style={{ flex: 1, fontSize: 'var(--gh-font-size-sm)', color: 'var(--gh-text)' }}>{it.description}</span>
                   {it.qualityScore !== undefined && <QualityBadge score={it.qualityScore} />}
                   <StatusPill status={it.status} />
-                  {(it.status === 'PENDING' || it.status === 'REVISION_REQUESTED') && <Btn size="sm" kind="orange" icon={<Send size={12} />} onClick={() => onToast(`Submitted ${it.id} to the prime`)}>Submit</Btn>}
+                  {(it.status === 'PENDING' || it.status === 'REVISION_REQUESTED') && <Btn size="sm" kind="primary" icon={<Send size={12} />} onClick={() => onToast(`Submitted ${it.id} to the prime`)}>Submit</Btn>}
                 </div>
               ))}
             </div>

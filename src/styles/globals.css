@@ -56,6 +56,7 @@
   --gh-amber-700: #b45309;
   --gh-amber-800: #92400e;
   --gh-amber-900: #78350f;
+  --gh-amber-950: #431407;
 
   /* Red */
   --gh-red-100: #fee2e2;
@@ -110,6 +111,7 @@
   --gh-warning:         var(--gh-amber-500);
   --gh-warning-fg:      var(--gh-amber-400);
   --gh-warning-bg:      var(--gh-amber-900);
+  --gh-warning-subtle:  rgba(120, 53, 15, 0.40);
   --gh-warning-border:  var(--gh-amber-700);
 
   --gh-danger:          var(--gh-red-600);

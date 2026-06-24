@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, type ReactNode } from 'react';
-import { MessageCircle } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 const F = 'var(--gh-font)';
 
@@ -88,7 +88,7 @@ export function DetailPanel({ scrollKey, children, actions, leftActions, onAskAI
               aria-hidden={!scrolled}
               style={{ position: 'absolute', right: 24, top: -62, display: 'inline-flex', alignItems: 'center', gap: 8, minHeight: 44, padding: '12px 20px', borderRadius: 'var(--gh-radius-lg)', background: 'var(--gh-border-strong)', color: 'var(--gh-text-tertiary)', border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 'var(--gh-font-weight-semibold)', fontFamily: F, boxShadow: '0 12px 28px rgba(0,0,0,0.4)', opacity: scrolled ? 1 : 0, transform: scrolled ? 'translateY(0)' : 'translateY(8px)', pointerEvents: scrolled ? 'auto' : 'none', transition: 'opacity 0.2s ease, transform 0.2s ease' }}
             >
-              <MessageCircle size={16} /> {askAiLabel}
+              <Sparkles size={16} /> {askAiLabel}
             </button>
           )}
           {leftActions}
